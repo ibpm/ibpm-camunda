@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.ibpm.sys.dao.UserMapper">
+
+    <select id="get" parameterType="string" resultType="com.github.ibpm.common.result.sys.user.User">
+        SELECT * FROM ${tablePrefix}user
+        <where>
+            AND USER_NAME = #{1, jdbcType=VARCHAR}
+        </where>
+    </select>
+
+    <select id="getAdmin" resultType="com.github.ibpm.common.result.sys.user.User">
+        SELECT * FROM
+        ${tablePrefix}user
+        WHERE SUPER_ADMIN = 1
+    </select>
+
+    <select id="list" parameterType="map" resultType="com.github.ibpm.common.result.sys.user.User">
+        SELECT
+        USER_NAME,
+        DISPLAY_NAME,
+        EMAIL,
+        MOBILE,
+        STATUS,
+        SUPER_ADMIN,
+        SEND_CONFIG
+        FROM ${tablePrefix}user
+        <where>
+            <if test="userName != null">
+                AND LOWER(USER_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{userName, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="displayName != null">
+                AND LOWER(DISPLAY_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{displayName, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="email != null">
+                AND LOWER(EMAIL) LIKE CONCAT(CONCAT('%', LOWER(#{email, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="mobile != null">
+                AND LOWER(MOBILE) LIKE CONCAT(CONCAT('%', LOWER(#{mobile, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="status != null">
+                AND STATUS = #{status, jdbcType=INTEGER}
+            </if>
+        </where>
+        <choose>
+            <when test="sort == null">
+                ORDER BY USER_NAME
+            </when>
+            <otherwise>
+                ORDER BY ${sort}
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="add" parameterType="com.github.ibpm.common.result.sys.user.User">
+         INSERT INTO ${tablePrefix}user (
+            USER_NAME,
+            DISPLAY_NAME,
+            PASSWORD,
+            EMAIL,
+            MOBILE,
+            STATUS,
+            SUPER_ADMIN,
+            SEND_CONFIG
+            )
+         VALUES
+            (
+            #{userName, jdbcType=VARCHAR},
+            #{displayName, jdbcType=VARCHAR},
+            #{password, jdbcType=VARCHAR},
+            #{email, jdbcType=VARCHAR},
+            #{mobile, jdbcType=VARCHAR},
+            #{status, jdbcType=INTEGER},
+            #{superAdmin, jdbcType=INTEGER},
+            #{sendConfig, jdbcType=VARCHAR}
+            )
+    </insert>
+
+    <update id="update" parameterType="com.github.ibpm.common.result.sys.user.User">
+        UPDATE
+        ${tablePrefix}user
+        <set>
+            DISPLAY_NAME = #{displayName, jdbcType=VARCHAR},
+            EMAIL = #{email, jdbcType=VARCHAR},
+            MOBILE = #{mobile, jdbcType=VARCHAR},
+            STATUS = #{status, jdbcType=INTEGER},
+            SEND_CONFIG = #{sendConfig, jdbcType=VARCHAR},
+        </set>
+        <where>
+            <include refid="condUserName_" />
+        </where>
+    </update>
+
+    <update id="updatePassword" parameterType="map">
+        UPDATE
+        ${tablePrefix}user
+        <set>
+            PASSWORD = #{password, jdbcType=VARCHAR}
+        </set>
+        <where>
+            <include refid="condUserName_" />
+        </where>
+    </update>
+
+    <delete id="delete" parameterType="list">
+        DELETE FROM ${tablePrefix}user
+        <where>
+            USER_NAME in
+            <foreach item="userName" collection="list" open="(" separator="," close=")">
+                #{userName, jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </delete>
+
+    <select id="getResources" parameterType="map" resultType="java.lang.String">
+        SELECT tr.RESOURCE_NAME
+        FROM ${tablePrefix}role_resource tr
+        JOIN ${tablePrefix}role ta
+        ON tr.ROLE_NAME = ta.ROLE_NAME
+        JOIN ${tablePrefix}role_user tt
+        ON ta.ROLE_NAME = tt.ROLE_NAME
+        JOIN ${tablePrefix}user t
+        ON tt.USER_NAME = t.USER_NAME
+        <where>
+            <include refid="condUserName"/>
+        </where>
+    </select>
+
+    <select id="getRoles" parameterType="map" resultType="com.github.ibpm.common.result.sys.role.Role">
+        SELECT ta.*
+        FROM ${tablePrefix}role ta
+        JOIN ${tablePrefix}role_user tt
+        ON tt.ROLE_NAME = ta.ROLE_NAME
+        JOIN ${tablePrefix}user t
+        ON t.USER_NAME = tt.USER_NAME
+        <where>
+            <include refid="condUserName"/>
+        </where>
+        ORDER BY t.USER_NAME
+    </select>
+
+    <delete id="deleteRoles" parameterType="map">
+        DELETE FROM ${tablePrefix}role_user
+        WHERE USER_NAME = #{userName, jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="addRoles">
+        INSERT INTO ${tablePrefix}role_user
+        (
+        ROLE_NAME,
+        USER_NAME
+        )
+        values
+        <foreach item="roleName" collection="roleNames" separator=",">
+            (
+            #{roleName, jdbcType=VARCHAR},
+            #{userName, jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+    <sql id="condUserName">
+        AND t.USER_NAME = #{userName, jdbcType=VARCHAR}
+    </sql>
+
+    <sql id="condUserName_">
+        AND USER_NAME = #{userName, jdbcType=VARCHAR}
+    </sql>
+</mapper>

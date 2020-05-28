@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.ibpm.core.dao.instance.InstanceMapper">
+
+    <select id="getById" parameterType="java.lang.String"
+            resultType="com.github.ibpm.common.result.core.instance.Instance">
+        <include refid="instanceJoinJob" />
+        WHERE j.ID = #{1, jdbcType=VARCHAR}
+    </select>
+
+    <select id="getByInstId" parameterType="java.lang.String"
+            resultType="com.github.ibpm.common.result.core.instance.Instance">
+        <include refid="instanceJoinJob" />
+        WHERE j.PROC_INST_ID = #{1, jdbcType=VARCHAR}
+    </select>
+
+    <select id="getByIds" parameterType="list"
+            resultType="com.github.ibpm.common.result.core.instance.Instance">
+        SELECT * FROM ${tablePrefix}instance
+        <where>
+            AND ID in
+            <foreach item="id" collection="list" open="(" separator="," close=")">
+                #{id, jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </select>
+
+    <select id="count" parameterType="map" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM ${tablePrefix}execution j
+        <where>
+            <include refid="condJobName"/>
+            <if test="status != null &amp;&amp;status.size() &gt; 0">
+                AND STATUS IN
+                <foreach item="item" collection="status" open="(" separator="," close=")">
+                    #{item, jdbcType=INTEGER}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="countInstance" parameterType="map" resultType="java.lang.Integer">
+        SELECT COUNT(*)  FROM ${tablePrefix}instance j
+        <where>
+            <include refid="condJobName" />
+            <if test="lowerStartTime != null">
+                AND start_time &gt;= #{lowerStartTime, jdbcType=INTEGER}
+            </if>
+            <if test="upperStartTime != null">
+                AND start_time &lt;= #{upperStartTime, jdbcType=INTEGER}
+            </if>
+            <if test="status != null &amp;&amp;status.size() &gt; 0">
+                AND STATUS in
+                <foreach item="item" collection="status" open="(" separator="," close=")">
+                    #{item, jdbcType=INTEGER}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="countProcessChildren" parameterType="string" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM ${tablePrefix}instance WHERE super_proc_inst_id = #{1, jdbcType=VARCHAR}
+    </select>
+
+    <select id="listProcessChildren" parameterType="string"
+            resultType="com.github.ibpm.common.result.core.instance.InstanceWithChildren">
+        SELECT * FROM ${tablePrefix}instance WHERE super_proc_inst_id = #{1, jdbcType=VARCHAR} ORDER BY id
+    </select>
+
+    <select id="countRetriedChildren" parameterType="string" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM ${tablePrefix}instance WHERE parent_id = #{1, jdbcType=VARCHAR} AND id != parent_id
+    </select>
+
+    <select id="listRetriedChildren" parameterType="string"
+            resultType="com.github.ibpm.common.result.core.instance.InstanceWithChildren">
+        <include refid="instanceJoinJob" />
+        WHERE j.parent_id = #{1, jdbcType=VARCHAR} AND j.id != j.parent_id ORDER BY j.id DESC
+    </select>
+
+    <insert id="addExecution" parameterType="com.github.ibpm.common.result.core.instance.Instance">
+        INSERT INTO ${tablePrefix}execution
+        <include refid="insertSql"/>
+    </insert>
+
+    <insert id="addInstance" parameterType="com.github.ibpm.common.result.core.instance.Instance">
+        INSERT INTO ${tablePrefix}instance
+        <include refid="insertSql"/>
+    </insert>
+
+    <sql id="insertSql">
+        (
+            ID,
+            PROC_INST_ID,
+            ROOT_PROC_INST_ID,
+            SUPER_PROC_INST_ID,
+            JOB_NAME,
+            TRIGGER_NAME,
+            PROC_DEF_ID,
+            START_TIME,
+            END_TIME,
+            DURATION,
+            STATUS,
+            CODE,
+            MSG,
+            PARENT_ID,
+            SCHEDULER_URI,
+            EXECUTOR_URI
+        )
+        VALUES
+        (
+            #{id, jdbcType=VARCHAR},
+            #{procInstId, jdbcType=VARCHAR},
+            #{rootProcInstId, jdbcType=VARCHAR},
+            #{superProcInstId, jdbcType=VARCHAR},
+            #{jobName, jdbcType=VARCHAR},
+            #{triggerName, jdbcType=VARCHAR},
+            #{procDefId, jdbcType=VARCHAR},
+            #{startTime, jdbcType=INTEGER},
+            #{endTime, jdbcType=INTEGER},
+            #{duration, jdbcType=INTEGER},
+            #{status, jdbcType=INTEGER},
+            #{code, jdbcType=INTEGER},
+            #{msg, jdbcType=VARCHAR},
+            #{parentId, jdbcType=VARCHAR},
+            #{schedulerUri, jdbcType=VARCHAR},
+            #{executorUri, jdbcType=VARCHAR}
+        )
+    </sql>
+
+    <update id="updateExecution" parameterType="com.github.ibpm.common.result.core.instance.Instance">
+        UPDATE ${tablePrefix}execution
+        <include refid="updateSql"/>
+    </update>
+
+    <update id="updateInstance" parameterType="com.github.ibpm.common.result.core.instance.Instance">
+        UPDATE ${tablePrefix}instance
+        <include refid="updateSql"/>
+    </update>
+
+    <update id="updateDone" parameterType="com.github.ibpm.common.result.core.instance.Instance">
+        UPDATE ${tablePrefix}instance
+        <set>
+            <if test="endTime != null">
+                END_TIME = #{endTime, jdbcType=INTEGER},
+            </if>
+            <if test="duration != null">
+                DURATION = #{duration, jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                STATUS = #{status, jdbcType=INTEGER},
+            </if>
+            CODE = #{code, jdbcType=INTEGER},
+            MSG = #{msg, jdbcType=VARCHAR},
+            <if test="parentId != null">
+                PARENT_ID = #{parentId, jdbcType=VARCHAR},
+            </if>
+        </set>
+        <where>
+            <include refid="condId_"/>
+        </where>
+    </update>
+
+    <delete id="deleteExecution" parameterType="com.github.ibpm.common.result.core.instance.Instance">
+        DELETE FROM ${tablePrefix}execution
+        <where>
+            <include refid="condProcInstId_"/>
+        </where>
+    </delete>
+
+    <sql id="updateSql">
+        <set>
+            <if test="procInstId != null">
+                PROC_INST_ID = #{procInstId, jdbcType=VARCHAR},
+            </if>
+            <if test="rootProcInstId != null">
+                ROOT_PROC_INST_ID = #{rootProcInstId, jdbcType=VARCHAR},
+            </if>
+            <if test="superProcInstId != null">
+                SUPER_PROC_INST_ID = #{superProcInstId, jdbcType=VARCHAR},
+            </if>
+            <if test="procDefId != null">
+                PROC_DEF_ID = #{procDefId, jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                START_TIME = #{startTime, jdbcType=INTEGER},
+            </if>
+            <if test="endTime != null">
+                END_TIME = #{endTime, jdbcType=INTEGER},
+            </if>
+            <if test="duration != null">
+                DURATION = #{duration, jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                STATUS = #{status, jdbcType=INTEGER},
+            </if>
+            <if test="code != null">
+                CODE = #{code, jdbcType=INTEGER},
+            </if>
+            <if test="msg != null">
+                MSG = #{msg, jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                PARENT_ID = #{parentId, jdbcType=VARCHAR},
+            </if>
+        </set>
+        <where>
+            <include refid="condId_"/>
+        </where>
+    </sql>
+
+    <insert id="addAct" parameterType="com.github.ibpm.common.result.core.instance.InstanceAct">
+        INSERT INTO ${tablePrefix}instance_act
+        (
+            ID,
+            ACT_INST_ID,
+            PARENT_ACT_INST_ID,
+            PROC_INST_ID,
+            ROOT_PROC_INST_ID,
+            ACT_ID,
+            ACT_NAME,
+            ACT_TYPE,
+            START_TIME,
+            STATUS,
+            LOG_TEXT
+        )
+        VALUES
+        (
+            #{id, jdbcType=VARCHAR},
+            #{actInstId, jdbcType=VARCHAR},
+            #{parentActInstId, jdbcType=VARCHAR},
+            #{procInstId, jdbcType=VARCHAR},
+            #{rootProcInstId, jdbcType=VARCHAR},
+            #{actId, jdbcType=VARCHAR},
+            #{actName, jdbcType=VARCHAR},
+            #{actType, jdbcType=VARCHAR},
+            #{startTime, jdbcType=INTEGER},
+            #{status, jdbcType=INTEGER},
+            #{logText, jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="updateAct" parameterType="com.github.ibpm.common.result.core.instance.InstanceAct">
+        UPDATE ${tablePrefix}instance_act
+        <set>
+            <if test="status != null">
+                STATUS = #{status, jdbcType=INTEGER},
+            </if>
+            <if test="endTime != null">
+                END_TIME = #{endTime, jdbcType=INTEGER},
+            </if>
+            <if test="duration != null">
+                DURATION = #{duration, jdbcType=INTEGER},
+            </if>
+            <if test="bizUri != null">
+                BIZ_URI = #{bizUri, jdbcType=VARCHAR},
+            </if>
+            <if test="logKey != null">
+                LOG_KEY = #{logKey, jdbcType=VARCHAR},
+            </if>
+            <if test="logText != null">
+                LOG_TEXT = CONCAT(LOG_TEXT, #{logText, jdbcType=VARCHAR}),
+            </if>
+        </set>
+        <where>
+            <include refid="condId_"/>
+            <include refid="condProcInstId_"/>
+            <include refid="condActId_"/>
+        </where>
+    </update>
+
+    <select id="listInstance" parameterType="map"
+            resultType="com.github.ibpm.common.result.core.instance.InstanceWithChildren">
+        SELECT j.ID, j.PROC_INST_ID, j.ROOT_PROC_INST_ID, j.JOB_NAME, b.DISPLAY_NAME, j.TRIGGER_NAME,
+        j.PROC_DEF_ID, j.STATUS, j.CODE, j.MSG, j.PARENT_ID, j.SCHEDULER_URI, j.EXECUTOR_URI,
+        j.START_TIME, j.END_TIME, j.DURATION
+        FROM ${tablePrefix}instance j
+        LEFT JOIN ${tablePrefix}job b
+        ON j.JOB_NAME = b.JOB_NAME
+        <where>
+            AND j.SUPER_PROC_INST_ID IS NULL
+            <if test="isRetry != null">
+                AND j.PARENT_ID = j.ID
+            </if>
+            <if test="jobName != null">
+                AND LOWER(j.JOB_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{jobName, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="displayName != null">
+                AND LOWER(b.DISPLAY_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{displayName, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="status != null &amp;&amp;status.size() &gt; 0">
+                AND j.STATUS in
+                <foreach item="item" collection="status" open="(" separator="," close=")">
+                    #{item, jdbcType=INTEGER}
+                </foreach>
+            </if>
+            <if test="lowerStartTime != null">
+                AND j.START_TIME &gt;= #{lowerStartTime, jdbcType=INTEGER}
+            </if>
+            <if test="upperStartTime != null">
+                AND j.START_TIME &lt;= #{upperStartTime, jdbcType=INTEGER}
+            </if>
+            <if test="lowerEndTime != null">
+                AND j.END_TIME &gt; #{lowerEndTime, jdbcType=INTEGER}
+            </if>
+            <if test="upperEndTime != null">
+                AND j.END_TIME &lt;= #{upperEndTime, jdbcType=INTEGER}
+            </if>
+            <if test="lowerDuration != null">
+                AND j.DURATION &gt;= #{lowerDuration, jdbcType=INTEGER}
+            </if>
+            <if test="upperDuration != null">
+                AND j.DURATION &lt;= #{upperDuration, jdbcType=INTEGER}
+            </if>
+            <include refid="condProcInstId"/>
+        </where>
+        <choose>
+            <when test="sort == null">
+                order by id DESC
+            </when>
+            <otherwise>
+                order by ${sort}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="listAct" parameterType="map"
+            resultType="com.github.ibpm.common.result.core.instance.InstanceAct">
+        SELECT j.* FROM (
+        SELECT jia.ID, jia.ACT_INST_ID, jia.PARENT_ACT_INST_ID, jia.PROC_INST_ID,jia.ROOT_PROC_INST_ID,
+        jia.ACT_ID, jia.ACT_NAME, jia.ACT_TYPE, jia.STATUS, jia.LOG_KEY, jia.BIZ_URI,
+        jia.START_TIME, jia.END_TIME, jia.DURATION, jia.LOG_TEXT, hi.INCIDENT_MSG_ AS INCIDENT_MSG
+        FROM ${tablePrefix}instance_act jia
+        LEFT JOIN act_hi_incident hi ON jia.PROC_INST_ID = hi.PROC_INST_ID_ AND jia.ACT_ID = hi.ACTIVITY_ID_) j
+        <where>
+            <include refid="condProcInstId" />
+            <include refid="condActId_" />
+        </where>
+    </select>
+
+    <select id="listRunningOfExecutor" parameterType="string"
+            resultType="com.github.ibpm.common.result.core.instance.Instance">
+        SELECT j.*, b.DISPLAY_NAME FROM ${tablePrefix}execution j
+        LEFT JOIN ${tablePrefix}job b
+        ON j.JOB_NAME = b.JOB_NAME
+        <where>
+            AND j.EXECUTOR_URI LIKE CONCAT(CONCAT('%', #{1, jdbcType=VARCHAR}), '%')
+            AND j.STATUS = 0
+        </where>
+    </select>
+
+    <sql id="instanceJoinJob">
+        SELECT j.*, b.DISPLAY_NAME FROM ${tablePrefix}instance j
+        LEFT JOIN ${tablePrefix}job b
+        ON j.JOB_NAME = b.JOB_NAME
+    </sql>
+
+    <sql id="condId">
+        <if test="id != null">
+            AND j.ID = #{id, jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <sql id="condId_">
+        <if test="id != null">
+            AND ID = #{id, jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <sql id="condProcInstId">
+        <if test="procInstId != null">
+            AND j.PROC_INST_ID = #{procInstId, jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <sql id="condProcInstId_">
+        <if test="procInstId != null">
+            AND PROC_INST_ID = #{procInstId, jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <sql id="condJobName">
+        <if test="jobName != null">
+            AND j.JOB_NAME = #{jobName, jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <sql id="condActId_">
+        <if test="actId != null">
+            AND ACT_ID = #{actId, jdbcType=VARCHAR}
+        </if>
+    </sql>
+</mapper>

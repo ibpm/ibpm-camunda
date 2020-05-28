@@ -1,0 +1,51 @@
+server:
+    port: 8080
+
+spring:
+    application: 
+        name: ibpm-camunda-web
+    datasource:
+        driverClassName: com.mysql.jdbc.Driver
+        hikari:
+            first:
+                jdbc-url: jdbc:mysql://127.0.0.1:3306/ibpm-camunda?allowMultiQueries=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+                username: root
+                password: Hn180301
+                connection-test-query: select 1  # mysql/sqlserver/postgresql
+                # connection-test-query: select 1 from dual  # oracle
+                minimum-idle: 5
+                maximum-pool-size: 10
+                pool-name: first
+                max-lifetime: 1800000
+            second:
+                jdbc-url: jdbc:mysql://127.0.0.1:3306/ibpm-camunda?allowMultiQueries=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+                username: root
+                password: Hn180301
+                connection-test-query: select 1  # mysql/sqlserver/postgresql
+                # connection-test-query: select 1 from dual  # oracle
+                minimum-idle: 5
+                maximum-pool-size: 10
+                pool-name: second
+                max-lifetime: 1800000
+    jackson:
+        date-format: yyyy-MM-dd HH:mm:ss
+        time-zone: GMT+8
+        defaultPropertyInclusion: non_null
+        deserialization: 
+            FAIL_ON_UNKNOWN_PROPERTIES: false
+
+mybatis:
+    mapperLocations: classpath*:mapper/*Mapper.xml
+    configuration:
+      map-underscore-to-camel-case: true
+      variables:
+        tablePrefix: ibpm_
+
+logging:
+  level:
+    com.github.ibpm: debug
+
+app:
+  snow-flake:
+    data-center-id: 0
+    machine-id: 1

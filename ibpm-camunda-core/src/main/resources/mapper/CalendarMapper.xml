@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.ibpm.core.dao.core.CalendarMapper">
+
+    <update id="saveDay" parameterType="map">
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            SELECT COUNT(*)
+            FROM ${tablePrefix}calendar_day cd
+            <where>
+                <include refid="condCalendarName"/>
+                <include refid="condDayName"/>
+            </where>
+        </selectKey>
+        <choose>
+            <when test="count == 0">
+                INSERT INTO ${tablePrefix}calendar_day (
+                CALENDAR_NAME,
+                DAY_NUM,
+                REMARK
+                )
+                VALUES
+                (
+                #{calendarName, jdbcType=VARCHAR},
+                #{dayNum, jdbcType=INTEGER},
+                #{remark, jdbcType=VARCHAR}
+                )
+            </when>
+            <otherwise>
+                UPDATE
+                ${tablePrefix}calendar_day cd
+                SET
+                REMARK = #{remark, jdbcType=VARCHAR}
+                <where>
+                    <include refid="condCalendarName"/>
+                    <include refid="condDayName"/>
+                </where>
+            </otherwise>
+        </choose>
+    </update>
+
+    <delete id="deleteDays" parameterType="map">
+        DELETE FROM ${tablePrefix}calendar_day
+        <where>
+            CALENDAR_NAME = #{calendarName, jdbcType=VARCHAR}
+            AND DAY_NUM IN
+            <foreach item="item" collection="dayNums" open="(" separator="," close=")">
+                #{item, jdbcType=INTEGER}
+            </foreach>
+        </where>
+    </delete>
+
+    <insert id="addDays" parameterType="list">
+        INSERT INTO ${tablePrefix}calendar_day (
+            CALENDAR_NAME,
+            DAY_NUM,
+            REMARK
+        )
+        VALUES
+        <foreach item="item" collection="list" separator=",">
+            (
+                #{item.calendarName, jdbcType=VARCHAR},
+                #{item.dayNum, jdbcType=INTEGER},
+                #{item.remark, jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+    <select id="list" resultType="com.github.ibpm.common.result.core.calendar.CalendarInfo">
+        SELECT *
+        FROM ${tablePrefix}calendar
+        ORDER BY CALENDAR_NAME
+    </select>
+
+    <select id="get" parameterType="com.github.ibpm.common.param.core.calendar.CalendarNameParam"
+            resultType="com.github.ibpm.common.result.core.calendar.CalendarInfo">
+        SELECT *
+        FROM ${tablePrefix}calendar cd
+        <where>
+            <include refid="condCalendarName"/>
+        </where>
+    </select>
+
+    <select id="listDay" parameterType="com.github.ibpm.common.param.core.calendar.DayCalendarListParam"
+            resultType="com.github.ibpm.common.result.core.calendar.DayCalendarConfig">
+        SELECT cd.DAY_NUM, cd.REMARK
+        FROM ${tablePrefix}calendar c
+        JOIN ${tablePrefix}calendar_day cd
+        ON c.CALENDAR_NAME = cd.CALENDAR_NAME
+        <where>
+            <if test="lowerDayNum != null">
+              AND DAY_NUM &gt;= #{lowerDayNum, jdbcType=INTEGER}
+            </if>
+            <if test="upperDayNum != null">
+              AND DAY_NUM &lt;= #{upperDayNum, jdbcType=INTEGER}
+            </if>
+            <include refid="condCalendarName"/>
+        </where>
+        ORDER BY DAY_NUM
+    </select>
+
+    <delete id="deleteDay" parameterType="com.github.ibpm.common.param.core.calendar.DayCalendarRemoveParam">
+        DELETE FROM ${tablePrefix}calendar_day
+        WHERE DAY_NUM = #{dayNum, jdbcType=INTEGER}
+        AND CALENDAR_NAME = #{calendarName, jdbcType=VARCHAR}
+    </delete>
+
+    <sql id="condDayName">
+        AND cd.DAY_NUM = #{dayNum, jdbcType=INTEGER}
+    </sql>
+
+    <sql id="condCalendarName">
+        AND cd.CALENDAR_NAME = #{calendarName, jdbcType=VARCHAR}
+    </sql>
+
+</mapper>

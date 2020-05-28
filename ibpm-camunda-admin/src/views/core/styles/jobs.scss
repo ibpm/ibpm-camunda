@@ -1,0 +1,18 @@
+.row{
+  &-bottom {
+    margin-top: 10px;
+  }
+  &-hr {
+    border: 1px dashed #E4E7ED;
+    color: #E4E7ED;
+    size: 1px;
+  }
+}
+
+.table {
+  &-external {
+    &-button {
+      margin-left: 10px;
+    }
+  }
+}

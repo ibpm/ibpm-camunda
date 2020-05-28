@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.ibpm.web.dao.statistics.CountMapper">
+
+    <select id="getUserCount" resultType="com.github.ibpm.common.result.MapResult">
+        SELECT STATUS AS name, COUNT(*) AS value
+        FROM ${tablePrefix}user WHERE SUPER_ADMIN = 0
+        GROUP BY STATUS
+    </select>
+
+    <select id="getJobCount" parameterType="map" resultType="com.github.ibpm.common.result.MapResult">
+        SELECT STATUS AS name, COUNT(*) AS value
+        FROM ${tablePrefix}job j
+        GROUP BY STATUS
+    </select>
+
+    <select id="getInstanceCount" parameterType="map" resultType="com.github.ibpm.common.result.MapResult">
+        SELECT STATUS AS name, COUNT(*) AS value
+        FROM ${tablePrefix}instance j
+        <where>
+            <if test="lowerStartTime != null">
+                AND START_TIME &gt;= #{lowerStartTime, jdbcType=INTEGER}
+            </if>
+            <if test="upperStartTime != null">
+                AND START_TIME &lt;= #{upperStartTime, jdbcType=INTEGER}
+            </if>
+            <if test="firedSource != null">
+                AND TRIGGER_NAME ${firedSource}
+            </if>
+            <include refid="condJobName"/>
+        </where>
+        GROUP BY STATUS
+    </select>
+
+    <sql id="condJobName">
+        <if test="jobName != null">
+            AND j.JOB_NAME = #{jobName, jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+</mapper>

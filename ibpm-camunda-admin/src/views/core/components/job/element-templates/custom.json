@@ -1,0 +1,1142 @@
+[
+  {
+    "name": "Http(Sync)",
+    "id": "SyncHttpTask",
+    "appliesTo": [
+      "bpmn:ServiceTask"
+    ],
+    "properties": [
+      {
+        "label": "Executor Component",
+        "type": "String",
+        "editable": false,
+        "value": "${syncHttpTask}",
+        "binding": {
+          "type": "property",
+          "name": "camunda:delegateExpression"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Bean Name",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:property",
+          "name": "beanName"
+        }
+      },
+      {
+        "label": "Method Name",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:property",
+          "name": "methodName"
+        }
+      },
+      {
+        "label": "Timeout",
+        "type": "String",
+        "value": "3600",
+        "binding": {
+          "type": "camunda:property",
+          "name": "timeout",
+          "expression": false
+        },
+        "constraints": {
+          "notEmpty": true,
+          "pattern": {
+            "value": "^[1-9]\\d*$",
+            "message": "Must be positive number"
+          }
+        }
+      },
+      {
+        "label": "Sub URL",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:property",
+          "name": "subUrl"
+        }
+      },
+      {
+        "label": "Request Method",
+        "type": "Dropdown",
+        "value": "POST",
+        "choices": [
+          {
+            "name": "POST",
+            "value": "POST"
+          },
+          {
+            "name": "GET",
+            "value": "GET"
+          },
+          {
+            "name": "PUT",
+            "value": "PUT"
+          },
+          {
+            "name": "DELETE",
+            "value": "DELETE"
+          }
+        ],
+        "binding": {
+          "type": "camunda:property",
+          "name": "requestMethod"
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "delegate": false,
+      "implementation": false,
+      "fields": false,
+      "field-name": false,
+      "field-type": false,
+      "field-value": false
+    }
+  },
+  {
+    "name": "Http(Async)",
+    "id": "AsyncHttpTask",
+    "appliesTo": [
+      "bpmn:ServiceTask"
+    ],
+    "properties": [
+      {
+        "label": "Executor Component",
+        "type": "String",
+        "editable": false,
+        "value": "${asyncHttpTask}",
+        "binding": {
+          "type": "property",
+          "name": "camunda:delegateExpression"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Bean Name",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:property",
+          "name": "beanName"
+        }
+      },
+      {
+        "label": "Method Name",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:property",
+          "name": "methodName"
+        }
+      },
+      {
+        "label": "Timeout",
+        "type": "String",
+        "value": "3600",
+        "binding": {
+          "type": "camunda:property",
+          "name": "timeout",
+          "expression": false
+        },
+        "constraints": {
+          "notEmpty": true,
+          "pattern": {
+            "value": "^[1-9]\\d*$",
+            "message": "Must be positive number"
+          }
+        }
+      },
+      {
+        "label": "Sub URL",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:property",
+          "name": "subUrl"
+        }
+      },
+      {
+        "label": "Request Method",
+        "type": "Dropdown",
+        "value": "POST",
+        "choices": [
+          {
+            "name": "POST",
+            "value": "POST"
+          },
+          {
+            "name": "GET",
+            "value": "GET"
+          },
+          {
+            "name": "PUT",
+            "value": "PUT"
+          },
+          {
+            "name": "DELETE",
+            "value": "DELETE"
+          }
+        ],
+        "binding": {
+          "type": "camunda:property",
+          "name": "requestMethod"
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "delegate": false,
+      "implementation": false,
+      "fields": false,
+      "field-name": false,
+      "field-type": false,
+      "field-value": false
+    }
+  },
+  {
+    "name": "Ftp2Local",
+    "id": "Ftp2LocalTask",
+    "appliesTo": [
+      "bpmn:ServiceTask"
+    ],
+    "properties": [
+      {
+        "label": "Executor Component",
+        "type": "String",
+        "editable": false,
+        "value": "${ftp2LocalTask}",
+        "binding": {
+          "type": "property",
+          "name": "camunda:delegateExpression"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Remote Path",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "remotePath"
+        }
+      },
+      {
+        "label": "File Name",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "fileName"
+        }
+      },
+      {
+        "label": "Suffix",
+        "type": "Dropdown",
+        "choices": [
+          {
+            "name": ".txt",
+            "value": ".txt"
+          },
+          {
+            "name": ".zip",
+            "value": ".zip"
+          },
+          {
+            "name": ".csv",
+            "value": ".csv"
+          },
+          {
+            "name": ".xml",
+            "value": ".xml"
+          },
+          {
+            "name": ".dbf",
+            "value": ".dbf"
+          },
+          {
+            "name": ".xls",
+            "value": ".xls"
+          },
+          {
+            "name": ".pdf",
+            "value": ".pdf"
+          },
+          {
+            "name": ".doc",
+            "value": ".doc"
+          },
+          {
+            "name": ".docx",
+            "value": ".docx"
+          }
+        ],
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "suffix"
+        }
+      },
+      {
+        "label": "Local Directory",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "localDirectory"
+        }
+      },
+      {
+        "label": "Ftp Prefix",
+        "type": "String",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "ftp_prefix"
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "delegate": false,
+      "implementation": false,
+      "fields": false,
+      "field-name": false,
+      "field-type": false,
+      "field-value": false
+    }
+  },
+  {
+    "name": "Local2Ftp",
+    "id": "Local2FtpTask",
+    "appliesTo": [
+      "bpmn:ServiceTask"
+    ],
+    "properties": [
+      {
+        "label": "Executor Component",
+        "type": "String",
+        "editable": false,
+        "value": "${local2FtpTask}",
+        "binding": {
+          "type": "property",
+          "name": "camunda:delegateExpression"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Remote Path",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "remotePath"
+        }
+      },
+      {
+        "label": "File Name",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "fileName"
+        }
+      },
+      {
+        "label": "Suffix",
+        "type": "Dropdown",
+        "choices": [
+          {
+            "name": ".txt",
+            "value": ".txt"
+          },
+          {
+            "name": ".zip",
+            "value": ".zip"
+          },
+          {
+            "name": ".csv",
+            "value": ".csv"
+          },
+          {
+            "name": ".xml",
+            "value": ".xml"
+          },
+          {
+            "name": ".dbf",
+            "value": ".dbf"
+          },
+          {
+            "name": ".xls",
+            "value": ".xls"
+          },
+          {
+            "name": ".pdf",
+            "value": ".pdf"
+          },
+          {
+            "name": ".doc",
+            "value": ".doc"
+          },
+          {
+            "name": ".docx",
+            "value": ".docx"
+          }
+        ],
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "suffix"
+        }
+      },
+      {
+        "label": "Local Directory",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "localDirectory"
+        }
+      },
+      {
+        "label": "Ftp Prefix",
+        "type": "String",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "ftp_prefix"
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "delegate": false,
+      "implementation": false,
+      "fields": false,
+      "field-name": false,
+      "field-type": false,
+      "field-value": false
+    }
+  },
+  {
+    "name": "Sql",
+    "id": "SqlTask",
+    "appliesTo": [
+      "bpmn:ServiceTask"
+    ],
+    "properties": [
+      {
+        "label": "Executor Component",
+        "type": "String",
+        "editable": false,
+        "value": "${sqlTask}",
+        "binding": {
+          "type": "property",
+          "name": "camunda:delegateExpression"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Sql",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "sql"
+        }
+      },
+      {
+        "label": "Result Type",
+        "type": "Dropdown",
+        "value": "0",
+        "choices": [
+          {
+            "name": "Object",
+            "value": "0"
+          },
+          {
+            "name": "Map<String, Object>",
+            "value": "1"
+          },
+          {
+            "name": "List<Map<String, Object>>",
+            "value": "2"
+          }
+        ],
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "resultType"
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "delegate": false,
+      "implementation": false,
+      "fields": false,
+      "field-name": false,
+      "field-type": false,
+      "field-value": false
+    }
+  },
+  {
+    "name": "Custom Mail",
+    "id": "CustomMailTask",
+    "appliesTo": [
+      "bpmn:ServiceTask"
+    ],
+    "properties": [
+      {
+        "label": "Executor Component",
+        "type": "String",
+        "value": "${customMailTask}",
+        "editable": false,
+        "binding": {
+          "type": "property",
+          "name": "camunda:delegateExpression"
+        }
+      },
+      {
+        "label": "From",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "customMailFrom"
+        },
+        "constraints": {
+          "pattern": {
+            "value": "^[A-z0-9._%+-]+@[A-z0-9.-]+\\.[A-z]{2,}$",
+            "message": "Must be a valid email."
+          }
+        }
+      },
+      {
+        "label": "To",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "customMailTo"
+        },
+        "constraints": {
+          "pattern": {
+            "value": "^[A-z0-9._%+-]+@[A-z0-9.-]+\\.[A-z]{2,}$",
+            "message": "Must be a valid email."
+          },
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Subject",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "customMailSubject"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Content",
+        "value": "Hello ${userName}!",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "customMailContent",
+          "scriptFormat": "freemarker"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "delegate": false,
+      "implementation": false,
+      "fields": false,
+      "field-name": false,
+      "field-type": false,
+      "field-value": false
+    }
+  },
+  {
+    "name": "Custom DingTalk",
+    "id": "CustomDingTalkTask",
+    "appliesTo": [
+      "bpmn:ServiceTask"
+    ],
+    "properties": [
+      {
+        "label": "Executor Component",
+        "type": "String",
+        "value": "${customDingTalkTask}",
+        "editable": false,
+        "binding": {
+          "type": "property",
+          "name": "camunda:delegateExpression"
+        }
+      },
+      {
+        "label": "WebHook url",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "customDingTalkUrl"
+        }
+      },
+      {
+        "label": "Secret",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "customDingTalkSecret"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Subject",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "customDingTalkSubject"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Content",
+        "type": "Text",
+        "value": "Job ${execution.id}!",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "customDingTalkContent",
+          "scriptFormat": "freemarker"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "delegate": false,
+      "implementation": false,
+      "fields": false,
+      "field-name": false,
+      "field-type": false,
+      "field-value": false
+    }
+  },
+  {
+    "name": "Custom WxWork",
+    "id": "CustomWxWorkTask",
+    "appliesTo": [
+      "bpmn:ServiceTask"
+    ],
+    "properties": [
+      {
+        "label": "Executor Component",
+        "type": "String",
+        "value": "${customWxWorkTask}",
+        "editable": false,
+        "binding": {
+          "type": "property",
+          "name": "camunda:delegateExpression"
+        }
+      },
+      {
+        "label": "WebHook url",
+        "type": "Text",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "customWxWorkUrl"
+        }
+      },
+      {
+        "label": "Content",
+        "type": "Text",
+        "value": "Job ${execution.id}!",
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "customWxWorkContent",
+          "scriptFormat": "freemarker"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "delegate": false,
+      "implementation": false,
+      "fields": false,
+      "field-name": false,
+      "field-type": false,
+      "field-value": false
+    }
+  },
+  {
+    "name": "Job Caller",
+    "id": "Job Call Activity",
+    "appliesTo": [
+      "bpmn:CallActivity"
+    ],
+    "properties": [
+      {
+        "label": "Called Element",
+        "type": "Text",
+        "binding": {
+          "type": "property",
+          "name": "calledElement"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "User Id",
+        "type": "Text",
+        "value": "${execution.userId}",
+        "binding": {
+          "type": "property",
+          "name": "camunda:calledElementUserId"
+        }
+      },
+      {
+        "label": "Input all",
+        "type": "Hidden",
+        "binding": {
+          "type": "camunda:in",
+          "variables": "all"
+        }
+      },
+      {
+        "label": "Input local",
+        "type": "Hidden",
+        "binding": {
+          "type": "camunda:in",
+          "variables": "local"
+        }
+      },
+      {
+        "label": "Output all",
+        "type": "Hidden",
+        "binding": {
+          "type": "camunda:out",
+          "variables": "all"
+        }
+      },
+      {
+        "label": "Output local",
+        "type": "Hidden",
+        "binding": {
+          "type": "camunda:out",
+          "variables": "local"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Shell(File Path)",
+    "id": "Shell File Path Script Task",
+    "appliesTo": [
+      "bpmn:ScriptTask"
+    ],
+    "properties": [
+      {
+        "label": "Script Format",
+        "type": "String",
+        "editable": false,
+        "value": "shell",
+        "binding": {
+          "type": "property",
+          "name": "scriptFormat"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Script",
+        "type": "Text",
+        "binding": {
+          "type": "property",
+          "name": "script"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "script-implementation": false
+    }
+  },
+  {
+    "name": "Groovy(File Path)",
+    "id": "Groovy File Path Script Task",
+    "appliesTo": [
+      "bpmn:ScriptTask"
+    ],
+    "properties": [
+      {
+        "label": "Script Format",
+        "type": "String",
+        "editable": false,
+        "value": "groovy",
+        "binding": {
+          "type": "property",
+          "name": "scriptFormat"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Script",
+        "type": "Text",
+        "binding": {
+          "type": "property",
+          "name": "script"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "script-implementation": false
+    }
+  },
+  {
+    "name": "Shell(Text)",
+    "id": "Shell Text Script Task",
+    "appliesTo": [
+      "bpmn:ScriptTask"
+    ],
+    "properties": [
+      {
+        "label": "Script Format",
+        "type": "String",
+        "editable": false,
+        "value": "shell",
+        "binding": {
+          "type": "property",
+          "name": "scriptFormat"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Script",
+        "type": "Text",
+        "binding": {
+          "type": "property",
+          "name": "script"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Language",
+        "type": "Dropdown",
+        "choices": [
+          {
+            "name": "Cmd(Bat)",
+            "value": ".bat"
+          },
+          {
+            "name": "Go",
+            "value": ".go"
+          },
+          {
+            "name": "Groovy",
+            "value": ".groovy"
+          },
+          {
+            "name": "Perl",
+            "value": ".pl"
+          },
+          {
+            "name": "Php",
+            "value": ".php"
+          },
+          {
+            "name": "Python",
+            "value": ".py"
+          },
+          {
+            "name": "Ruby",
+            "value": ".rb"
+          },
+          {
+            "name": "Shell(Bash)",
+            "value": ".sh"
+          }
+        ],
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "shell_language"
+        }
+      },
+      {
+        "label": "Charset",
+        "type": "Dropdown",
+        "choices": [
+          {
+            "name": "UTF-8",
+            "value": "UTF-8"
+          },
+          {
+            "name": "ISO-8859-1",
+            "value": "ISO-8859-1"
+          },
+          {
+            "name": "GBK",
+            "value": "GBK"
+          },
+          {
+            "name": "GB2312",
+            "value": "GB2312"
+          },
+          {
+            "name": "GB18030",
+            "value": "GB18030"
+          },
+          {
+            "name": "US-ASCII",
+            "value": "US-ASCII"
+          },
+          {
+            "name": "UTF-16",
+            "value": "UTF-16"
+          },
+          {
+            "name": "UTF-16BE",
+            "value": "UTF-16BE"
+          },
+          {
+            "name": "UTF-16LE",
+            "value": "UTF-16LE"
+          }
+        ],
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "shell_charset_command"
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "script-implementation": false
+    }
+  },
+  {
+    "name": "Groovy(Text)",
+    "id": "Groovy Text Script Task",
+    "appliesTo": [
+      "bpmn:ScriptTask"
+    ],
+    "properties": [
+      {
+        "label": "Script Format",
+        "type": "String",
+        "editable": false,
+        "value": "groovy",
+        "binding": {
+          "type": "property",
+          "name": "scriptFormat"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Script",
+        "type": "Text",
+        "binding": {
+          "type": "property",
+          "name": "script"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "script-implementation": false
+    }
+  },
+  {
+    "name": "Shell(Expression)",
+    "id": "Shell Expression Script Task",
+    "appliesTo": [
+      "bpmn:ScriptTask"
+    ],
+    "properties": [
+      {
+        "label": "Script Format",
+        "type": "String",
+        "editable": false,
+        "value": "shell",
+        "binding": {
+          "type": "property",
+          "name": "scriptFormat"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Expression",
+        "type": "Text",
+        "value": "${}",
+        "binding": {
+          "type": "property",
+          "name": "script"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Language",
+        "type": "Dropdown",
+        "choices": [
+          {
+            "name": "Cmd(Bat)",
+            "value": ".bat"
+          },
+          {
+            "name": "Go",
+            "value": ".go"
+          },
+          {
+            "name": "Groovy",
+            "value": ".groovy"
+          },
+          {
+            "name": "Perl",
+            "value": ".pl"
+          },
+          {
+            "name": "Php",
+            "value": ".php"
+          },
+          {
+            "name": "Python",
+            "value": ".py"
+          },
+          {
+            "name": "Ruby",
+            "value": ".rb"
+          },
+          {
+            "name": "Shell(Bash)",
+            "value": ".sh"
+          }
+        ],
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "shell_language"
+        }
+      },
+      {
+        "label": "Charset",
+        "type": "Dropdown",
+        "choices": [
+          {
+            "name": "UTF-8",
+            "value": "UTF-8"
+          },
+          {
+            "name": "ISO-8859-1",
+            "value": "ISO-8859-1"
+          },
+          {
+            "name": "GBK",
+            "value": "GBK"
+          },
+          {
+            "name": "GB2312",
+            "value": "GB2312"
+          },
+          {
+            "name": "GB18030",
+            "value": "GB18030"
+          },
+          {
+            "name": "US-ASCII",
+            "value": "US-ASCII"
+          },
+          {
+            "name": "UTF-16",
+            "value": "UTF-16"
+          },
+          {
+            "name": "UTF-16BE",
+            "value": "UTF-16BE"
+          },
+          {
+            "name": "UTF-16LE",
+            "value": "UTF-16LE"
+          }
+        ],
+        "binding": {
+          "type": "camunda:inputParameter",
+          "name": "shell_charset_command"
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "script-implementation": false
+    }
+  },
+  {
+    "name": "Groovy(Expression)",
+    "id": "Groovy Expression Script Task",
+    "appliesTo": [
+      "bpmn:ScriptTask"
+    ],
+    "properties": [
+      {
+        "label": "Script Format",
+        "type": "String",
+        "editable": false,
+        "value": "groovy",
+        "binding": {
+          "type": "property",
+          "name": "scriptFormat"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      },
+      {
+        "label": "Expression",
+        "type": "Text",
+        "value": "${}",
+        "binding": {
+          "type": "property",
+          "name": "script"
+        },
+        "constraints": {
+          "notEmpty": true
+        }
+      }
+    ],
+    "entriesVisible": {
+      "_all": true,
+      "script-implementation": false
+    }
+  }
+]
