@@ -3,15 +3,12 @@ package com.github.ibpm.web.service.core;
 import com.github.ibpm.common.constant.CommonConstants;
 import com.github.ibpm.common.enums.JobStatus;
 import com.github.ibpm.common.exception.RTException;
-import com.github.ibpm.common.param.core.arg.ArgNamesParam;
 import com.github.ibpm.common.param.core.job.*;
-import com.github.ibpm.common.result.core.arg.Arg;
 import com.github.ibpm.common.result.core.job.Job;
 import com.github.ibpm.common.result.core.job.JobExportAndImportResult;
 import com.github.ibpm.common.result.core.job.JobWithVersionResult;
 import com.github.ibpm.config.util.BeanUtil;
 import com.github.ibpm.core.dao.core.JobMapper;
-import com.github.ibpm.core.service.core.ArgService;
 import com.github.ibpm.core.service.core.JobService;
 import com.github.ibpm.core.util.FileUtil;
 import com.github.ibpm.sys.service.BaseServiceAdapter;
@@ -40,7 +37,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -281,18 +277,12 @@ public class JobOperatedService extends BaseServiceAdapter {
      */
     public void exportModel(HttpServletResponse response, JobExportParam param) {
         List<JobExportAndImportResult> jobModels = new ArrayList<>();
-        Set<Arg> argModels = new HashSet<>();
         for (String jobName : param.getJobNames()) {
             Job job = jobService.get(jobName);
             job.setUpdateTime(null) // import will init it
                 .setContent(null); // reject temporary design
             JobExportAndImportResult mainModel = new JobExportAndImportResult();
             mainModel.setJob(job);
-            List<Arg> args = jobService.getArg(jobName);
-            if (args.size() > 0) {
-                mainModel.setArgs(args.stream().map(Arg::getArgName).collect(Collectors.toList()));
-                argModels.addAll(args);
-            }
             jobModels.add(mainModel);
         }
         response.setHeader("Content-Disposition", "attachment; filename=" + param.getFileName());
@@ -302,10 +292,6 @@ public class JobOperatedService extends BaseServiceAdapter {
             if (jobModels.size() > 0) {
                 String jobModelStr = BeanUtil.bean2JsonStr(jobModels);
                 createZipEntry(zipOutputStream, JSON_FILE_JOB, IoUtil.stringAsInputStream(jobModelStr));
-            }
-            if (argModels.size() > 0) {
-                String argModelStr = BeanUtil.bean2JsonStr(argModels);
-                createZipEntry(zipOutputStream, JSON_FILE_ARG, IoUtil.stringAsInputStream(argModelStr));
             }
             List<ProcessDefinition> processDefinitions = repositoryService.createProcessDefinitionQuery()
                     .processDefinitionKeysIn(param.getJobNames().toArray(new String[]{}))
@@ -320,9 +306,6 @@ public class JobOperatedService extends BaseServiceAdapter {
         }
     }
 
-    @Autowired
-    private ArgService argService;
-
     public Void importModel(MultipartFile file) {
         Map<String, String> nameDataMap = new HashMap<>();
         try (InputStream is = file.getInputStream();
@@ -333,25 +316,6 @@ public class JobOperatedService extends BaseServiceAdapter {
             }
         } catch (IOException e) {
             throw new RTException(1100, e);
-        }
-        if (nameDataMap.containsKey(JSON_FILE_ARG)) {
-            String argModelStr = nameDataMap.get(JSON_FILE_ARG);
-            if (StringUtils.isNotBlank(argModelStr)) {
-                List<Map<String, Object>> argModels = BeanUtil.jsonStr2Bean(argModelStr, List.class);
-                if (argModels.size() > 0) {
-                    List<Arg> args = new ArrayList<>(argModels.size());
-                    List<String> argNames = new ArrayList<>(argModels.size());
-                    for (Map<String, Object> map : argModels) {
-                        Arg arg = BeanUtil.map2Bean(Arg.class, map);
-                        argNames.add(arg.getArgName());
-                        args.add(arg);
-                    }
-                    // 1.remove args
-                    argService.remove(new ArgNamesParam().setArgNames(argNames));
-                    // 2. insert args
-                    argService.addBatch(args);
-                }
-            }
         }
         if (nameDataMap.containsKey(JSON_FILE_JOB)) {
             String jobModelStr = nameDataMap.get(JSON_FILE_JOB);
@@ -383,10 +347,6 @@ public class JobOperatedService extends BaseServiceAdapter {
                                     job.setUpdateTime(System.currentTimeMillis()).setContent(jobInDb.getContent());
                                 }
                                 mapper.update(job);
-                            }
-                            List<String> argNames = exportedModel.getArgs();
-                            if (argNames != null && argNames.size() > 0) {
-                                saveJobArg(job.getJobName(), argNames);
                             }
                         }
                     }
@@ -423,28 +383,6 @@ public class JobOperatedService extends BaseServiceAdapter {
         zipOutputStream.putNextEntry(zipEntry);
         zipOutputStream.write(IoUtil.inputStreamAsByteArray(is));
         zipOutputStream.closeEntry();
-    }
-
-    public Void addArg(JobArgAllocatedParam param) {
-        Map<String, Object> paramMap = BeanUtil.bean2Map(param);
-        mapper.addArg(paramMap);
-        return null;
-    }
-
-    public Void removeArg(JobArgAllocatedParam param) {
-        Map<String, Object> paramMap = BeanUtil.bean2Map(param);
-        mapper.deleteArg(paramMap);
-        return null;
-    }
-
-    public void saveJobArg(String jobName, List<String> argNames) {
-        JobArgSaveParam param = new JobArgSaveParam().setArgNames(argNames);
-        param.setJobName(jobName);
-        Map<String, Object> paramMap = BeanUtil.bean2Map(param);
-        mapper.deleteJobArg(paramMap);
-        if (param.getArgNames() != null && param.getArgNames().size() > 0) {
-            mapper.addJobArg(paramMap);
-        }
     }
 
     private Deployment deploy(Job job) {

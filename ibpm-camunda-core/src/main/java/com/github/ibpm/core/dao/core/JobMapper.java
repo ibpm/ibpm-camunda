@@ -1,7 +1,5 @@
 package com.github.ibpm.core.dao.core;
 
-import com.github.ibpm.common.result.core.arg.Arg;
-import com.github.ibpm.common.result.core.job.ArgAllocatedResult;
 import com.github.ibpm.common.result.core.job.Job;
 import com.github.ibpm.common.result.core.job.JobWithVersionResult;
 import org.apache.ibatis.annotations.Mapper;
@@ -30,15 +28,4 @@ public interface JobMapper {
 
     void updateStatus(Map<String, Object> paramMap);
 
-    List<ArgAllocatedResult> listArg(Map<String, Object> paramMap);
-
-    List<Arg> getArg(Map<String, Object> paramMap);
-
-    void addArg(Map<String, Object> paramMap);
-
-    void deleteArg(Map<String, Object> paramMap);
-
-    void addJobArg(Map<String, Object> paramMap);
-
-    void deleteJobArg(Map<String, Object> paramMap);
 }

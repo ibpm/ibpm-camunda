@@ -17,7 +17,6 @@ import com.github.ibpm.core.dao.instance.InstanceMapper;
 import com.github.ibpm.core.ext.notice.MessageBean;
 import com.github.ibpm.core.ext.notice.NoticeService;
 import com.github.ibpm.core.ext.notice.channel.Sender;
-import com.github.ibpm.core.service.core.ArgService;
 import com.github.ibpm.sys.service.BaseServiceAdapter;
 import com.github.ibpm.sys.service.UserService;
 import com.github.ibpm.sys.util.PageUtil;
@@ -50,9 +49,6 @@ public class InstanceService extends BaseServiceAdapter {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private ArgService argService;
 
     @Autowired
     private ScheduledExecutorService scheduledExecutorService;
@@ -177,8 +173,6 @@ public class InstanceService extends BaseServiceAdapter {
                 instance,
                 user,
                 noticeTime);
-        Map<String, Object> alarmArgMap = argService.listStartsWith(CommonConstants.KEY_ALARM_ARG);
-        messageBean.setExtraMap(alarmArgMap);
         String sendConfig = user.getSendConfig();
         if (StringUtils.isNotBlank(sendConfig)) {
             for (int i = 0; i < sendConfig.length(); i++) {

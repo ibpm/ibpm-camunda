@@ -6,9 +6,6 @@
       <el-select v-model="page.status" :placeholder="$t('columns.status')" multiple clearable collapse-tags class="filter-item search-select">
         <el-option v-for="item in jobStatuses" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
-      <!--<el-select v-model="page.sort" style="width: 140px" class="filter-item" @change="search">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key"/>
-      </el-select>-->
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="search" />
       <el-button class="filter-item table-external-button" type="success" icon="el-icon-plus" @click="add" />
       <el-button :disabled="!selections || !selections.length" class="filter-item table-external-button" type="danger" icon="el-icon-delete" @click="remove" />
@@ -81,18 +78,6 @@
           <el-tag :type="scope.row.status | renderJobStatus">{{ formatStatus(scope.row.status) }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('actions.handle')" align="center" min-width="240" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <div style="padding-top: 6px;">
-            <el-button
-              type="primary"
-              @click="openArgDialog(scope.row)"
-            >
-              {{ $t('core.job.actions.param') }}
-            </el-button>
-          </div>
-        </template>
-      </el-table-column>
     </el-table>
 
     <pagination
@@ -105,7 +90,7 @@
 
     <el-dialog
       :title="editDialog.title"
-      :visible.sync="editDialog.base.visible || editDialog.arg.visible || editDialog.param.visible || editDialog.chart.visible"
+      :visible.sync="editDialog.base.visible || editDialog.chart.visible"
       :center="true"
       :modal="true"
       :close-on-click-modal="false"
@@ -116,55 +101,6 @@
       <div v-show="editDialog.base.visible">
         <job-info-form ref="jobInfoForm" :job="job" @save="save" />
       </div>
-      <div v-show="editDialog.arg.visible">
-        <div class="filter-container">
-          <el-input v-model="argPage.argName" :placeholder="$t('core.arg.columns.argName')" class="filter-item search-input" @keyup.enter.native="argSearch" />
-          <el-select v-model="argPage.argType" :placeholder="$t('core.arg.columns.argType')" clearable collapse-tags class="filter-item search-select">
-            <el-option v-for="item in argTypes" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-          <el-input v-model="argPage.argValue" :placeholder="$t('core.arg.columns.argValue')" class="filter-item search-input" @keyup.enter.native="argSearch" />
-          <el-button class="filter-item" type="primary" icon="el-icon-search" @click="argSearch" />
-        </div>
-
-        <el-table
-          v-loading="argListLoading"
-          :data="argList"
-          border
-          fit
-          highlight-current-row
-          style="width: 100%;"
-        >
-          <el-table-column :label="$t('core.arg.columns.argName')" prop="id" sortable="custom" align="center" min-width="100px">
-            <template slot-scope="scope">
-              <span>{{ scope.row.argName }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column :label="$t('core.arg.columns.argType')" align="center" width="100">
-            <template slot-scope="scope">
-              <span>{{ formatArgType(scope.row.argType) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column :label="$t('core.arg.columns.argValue')" min-width="150px">
-            <template slot-scope="scope">
-              <span>{{ scope.row.argValue }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column :label="$t('actions.handle')" align="center" min-width="120" class-name="small-padding fixed-width">
-            <template slot-scope="scope">
-              <el-button :type="scope.row.allocated > 0 ? 'danger' : 'primary'" :icon="scope.row.allocated > 0 ? 'el-icon-minus' : 'el-icon-plus'" @click="operateArg(scope.row)" />
-            </template>
-          </el-table-column>
-        </el-table>
-        <pagination v-show="argPage.total>0" :total="argPage.total" :page.sync="argPage.currentPage" :limit.sync="argPage.pageSize" @pagination="argSearch" />
-      </div>
-      <div v-show="editDialog.param.visible">
-        <code-editor v-model="jsonData" :read-only="false" extension=".json" />
-        <div style="text-align: center; margin-top: 10px">
-          <el-button type="danger" @click="manual">
-            <svg-icon icon-class="hand" />{{ $t('actions.manual') }}
-          </el-button>
-        </div>
-      </div>
       <div v-show="editDialog.chart.visible">
         <ChartArea ref="chartArea" :job-charts="jobCharts" :job-name="job.jobName" />
       </div>
@@ -173,13 +109,12 @@
 </template>
 
 <script>
-import { listReq, /* getReq,*/ removeReq, addReq, updateReq, enableReq, disableReq, publishReq, manualBatchReq, importModelReq, exportModelReq, listArgReq, addArgReq, removeArgReq, getJsonArgReq, manualReq } from '@/api/core/job'
+import { listReq, /* getReq,*/ removeReq, addReq, updateReq, enableReq, disableReq, publishReq, manualBatchReq, importModelReq, exportModelReq, manualReq } from '@/api/core/job'
 import * as calendarApi from '@/api/core/calendar'
 import * as toolApi from '@/api/core/tool'
 import { buildMsg, getTimeStr, download } from '@/utils/tools'
 import Pagination from '@/components/Pagination'
 import JobInfoForm from './components/job/jobInfoForm'
-import CodeEditor from '@/components/CodeEditor'
 import ChartArea from './components/job/chart/chartArea'
 
 const DEF_OBJ = {
@@ -194,7 +129,6 @@ export default {
   components: {
     Pagination,
     JobInfoForm,
-    CodeEditor,
     ChartArea
   },
   data() {
@@ -210,38 +144,18 @@ export default {
         status: [],
         sort: 'JOB_NAME'
       },
-      argList: null,
-      argListLoading: true,
-      argPage: {
-        jobName: undefined,
-        currentPage: 1,
-        pageSize: 10,
-        total: 0,
-        argName: undefined,
-        argValue: undefined,
-        argType: null,
-        sort: 'ARG_NAME'
-      },
-      argTypes: [],
       jobStatuses: [],
       milliSecondTimeUnits: [],
       inDayTimeUnits: [],
       dayTimeUnit: [],
       overDayTimeUnits: [],
       daysOfWeek: [],
-      /* sortOptions: [{ label: this.$t('core.sort.nameAsc'), key: 'JOB_NAME' }, { label: this.$t('core.sort.nameDesc'), key: 'JOB_NAME DESC' }],*/
       showCreateTime: false,
       job: DEF_OBJ,
       editDialog: {
         oper: undefined,
         title: undefined,
         base: {
-          visible: false
-        },
-        arg: {
-          visible: false
-        },
-        param: {
           visible: false
         },
         chart: {
@@ -296,9 +210,7 @@ export default {
     },
     close() {
       this.editDialog.base.visible =
-          this.editDialog.arg.visible =
-                this.editDialog.param.visible =
-                  this.editDialog.chart.visible = false
+          this.editDialog.chart.visible = false
     },
     add() {
       this.editDialog.oper = 'add'
@@ -359,34 +271,6 @@ export default {
     },
     ofKeys() {
       return this.selections.map(sel => sel.jobName)
-    },
-    openArgDialog(row) {
-      this.editDialog.title = this.$t('core.job.actions.param')
-      this.selectRow(row)
-      this.editDialog.arg.visible = true
-      this.argSearch()
-    },
-    argSearch() {
-      this.argListLoading = true
-      this.argPage.jobName = this.job.jobName
-      listArgReq(this.argPage).then(response => {
-        this.argList = response.data.result.list
-        Object.assign(this.argPage, response.data.result.page)
-        setTimeout(() => {
-          this.argListLoading = false
-        }, 200)
-      })
-    },
-    operateArg(row) {
-      const req = (row.allocated === 0 ? addArgReq : removeArgReq)
-      const data = {
-        jobName: this.job.jobName,
-        argName: row.argName
-      }
-      req(data).then(res => {
-        this.$message.success(res.data.msg)
-        this.argSearch()
-      })
     },
     remove() {
       const jobNames = this.ofKeys()
@@ -482,21 +366,6 @@ export default {
         this.jobCharts = array.jobCharts
         this.search()
       })
-      this.initArgTypes()
-    },
-    initArgTypes() {
-      toolApi.argTypesReq().then(res => {
-        this.argTypes = res.data.result
-      })
-    },
-    formatArgType(item) {
-      for (let i = 0; i < this.argTypes.length; i++) {
-        const option = this.argTypes[i]
-        if (option.value === item) {
-          return option.label
-        }
-      }
-      return item
     },
     openDesignDialog(row) {
       this.editDialog.title = this.$t('core.job.actions.design')
@@ -523,16 +392,7 @@ export default {
           this.$message.warning(this.$t('tip.disabledJobError') + ':' + this.selections[0].jobName)
           return
         }
-        this.jsonData = null
-        getJsonArgReq({ jobName: this.selections[0].jobName }).then(res => {
-          if (!res.data.result) {
-            this.manual()
-          } else {
-            this.editDialog.title = this.$t('core.job.actions.param')
-            this.editDialog.param.visible = true
-            this.jsonData = JSON.parse(res.data.result)
-          }
-        })
+        this.manual()
       } else {
         const jobNames = []
         for (let i = 0; i < this.selections.length; i++) {
@@ -561,7 +421,6 @@ export default {
             jobName: this.selections[0].jobName,
             jsonData: (!this.jsonData ? null : (typeof this.jsonData === 'string' ? JSON.parse(this.jsonData) : this.jsonData))
           }).then(res => {
-            this.editDialog.param.visible = false
             this.$message.success(res.data.msg)
             setTimeout(() => {
               this.$router.push({ name: 'total', replace: true })

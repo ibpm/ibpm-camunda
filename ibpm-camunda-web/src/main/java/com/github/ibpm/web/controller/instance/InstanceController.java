@@ -60,12 +60,6 @@ public class InstanceController {
         return CommonResult.putResult(instanceService.listAct(param));
     }
 
-    @Operation(summary = "Args of one instance", parameters = {@Parameter(name = "param", required = true)})
-    @GetMapping(APIPath.InstancePath.ARG)
-    public CommonResult<String> getInstanceArgs(InstanceIdParam param) {
-        return CommonResult.putResult(instanceOperatedService.getInstanceArgs(param));
-    }
-
     @Operation(summary = "Terminate", parameters = {@Parameter(name = "param", required = true)})
     @PostMapping(value = APIPath.InstancePath.TERMINATE)
     public CommonResult<Void> terminate(@RequestBody IdsParam param) {

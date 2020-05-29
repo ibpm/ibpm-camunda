@@ -24,16 +24,6 @@ const coreRouter = {
       }
     },
     {
-      path: 'arg',
-      component: () => import('@/views/core/arg'),
-      name: 'arg',
-      meta: {
-        title: 'arg',
-        icon: 'arg',
-        noCache: false
-      }
-    },
-    {
       path: 'calendar',
       component: () => import('@/views/core/calendar'),
       name: 'calendar',

@@ -2,7 +2,8 @@
 SQLyog Ultimate v12.09 (64 bit)
 MySQL - 5.7.27-log : Database - ibpm-camunda
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -383,7 +384,6 @@ insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','user-add');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','user-remove');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','user-update');
-insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','arg');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','calendar');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','core');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','job');

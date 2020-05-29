@@ -2,7 +2,6 @@ package com.github.ibpm.core.service.tool;
 
 import com.github.ibpm.common.constant.APIPath;
 import com.github.ibpm.common.constant.CommonConstants;
-import com.github.ibpm.common.enums.ArgType;
 import com.github.ibpm.common.enums.PredefinedDateArgType;
 import com.github.ibpm.common.enums.UriType;
 import com.github.ibpm.common.exception.RTException;
@@ -144,17 +143,6 @@ public class ToolService extends BaseServiceAdapter {
 
     public Date getCurrentTime() {
         return new Date();
-    }
-
-    public List<Map<String, Object>> listArgType() {
-        List<Map<String, Object>> list = new ArrayList<>(20);
-        for (ArgType type : ArgType.values()) {
-            Map<String, Object> map = new HashMap<>(2);
-            map.put(CommonConstants.label, type.getName());
-            map.put(CommonConstants.value, type.getValue());
-            list.add(map);
-        }
-        return list;
     }
 
     public List<String> listTradeDateUnit() {

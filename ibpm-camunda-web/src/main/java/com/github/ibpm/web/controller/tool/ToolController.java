@@ -59,12 +59,6 @@ public class ToolController {
         return CommonResult.putResult(service.getCurrentTime());
     }
 
-    @Operation(summary = "Get arg types")
-    @GetMapping(APIPath.ToolPath.ARG_TYPES)
-    public CommonResult<List<Map<String, Object>>> listArgType() {
-        return CommonResult.putResult(service.listArgType());
-    }
-
     @Operation(summary = "Get trade date units")
     @GetMapping(APIPath.ToolPath.TRADE_DATE_UNITS)
     public CommonResult<List<String>> listTradeDateUnit() {

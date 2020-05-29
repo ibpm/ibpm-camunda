@@ -111,14 +111,6 @@ CREATE TABLE `ibpm_job` (
   PRIMARY KEY (`JOB_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-/*Table structure for table `ibpm_job_arg` */
-
-CREATE TABLE `ibpm_job_arg` (
-  `JOB_NAME` varchar(64) COLLATE utf8_bin NOT NULL,
-  `ARG_NAME` varchar(64) COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`JOB_NAME`,`ARG_NAME`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
 /*Table structure for table `ibpm_role` */
 
 CREATE TABLE `ibpm_role` (

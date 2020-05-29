@@ -118,28 +118,4 @@ public class JobController {
 		return CommonResult.putResult(jobOperatedService.importModel(file));
 	}
 
-	@Operation(summary = "List args of job", parameters = {@Parameter(name = "param", required = true)})
-	@GetMapping(APIPath.JobPath.ARG)
-	public CommonResult<Map<String, Object>> listArg(JobArgListParam param) {
-		return CommonResult.putResult(jobService.listArg(param));
-	}
-
-	@Operation(summary = "Add arg", parameters = {@Parameter(name = "param", required = true)})
-	@PostMapping(APIPath.JobPath.ARG)
-	public CommonResult<Void> addArg(@RequestBody JobArgAllocatedParam param) {
-		return CommonResult.putResult(jobOperatedService.addArg(param));
-	}
-
-	@Operation(summary = "Remove arg", parameters = {@Parameter(name = "param", required = true)})
-	@DeleteMapping(APIPath.JobPath.ARG)
-	public CommonResult<Void> removeArg(@RequestBody JobArgAllocatedParam param) {
-		return CommonResult.putResult(jobOperatedService.removeArg(param));
-	}
-
-	@Operation(summary = "Get json arg", parameters = {@Parameter(name = "param", required = true)})
-	@GetMapping(APIPath.JobPath.JSON_ARG)
-	public CommonResult<String> getJsonArg(JobNameParam param) {
-		return CommonResult.putResult(jobService.getJsonArg(param));
-	}
-
 }

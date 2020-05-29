@@ -1,13 +1,13 @@
 package com.github.ibpm.core.conf;
 
 import com.github.ibpm.core.controller.ServerInfoController;
-import com.github.ibpm.core.dao.core.*;
+import com.github.ibpm.core.dao.core.CalendarMapper;
+import com.github.ibpm.core.dao.core.JobMapper;
 import com.github.ibpm.core.dao.instance.InstanceMapper;
 import com.github.ibpm.core.ext.notice.NoticeService;
 import com.github.ibpm.core.ext.notice.channel.dingtalk.DingTalkSender;
 import com.github.ibpm.core.ext.notice.channel.mail.MailSender;
 import com.github.ibpm.core.ext.notice.channel.wxwork.WxWorkSender;
-import com.github.ibpm.core.service.core.ArgService;
 import com.github.ibpm.core.service.core.CalendarService;
 import com.github.ibpm.core.service.core.JobService;
 import com.github.ibpm.core.service.instance.InstanceService;
@@ -30,13 +30,11 @@ import javax.validation.ValidatorFactory;
 @Configuration
 @ComponentScan(basePackageClasses = {
         JobMapper.class,
-        ArgMapper.class,
         InstanceMapper.class,
         CalendarMapper.class,
 
         //service
         JobService.class,
-        ArgService.class,
         ToolService.class,
         InstanceService.class,
         CalendarService.class,

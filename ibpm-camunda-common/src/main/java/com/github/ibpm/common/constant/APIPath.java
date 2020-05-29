@@ -8,8 +8,6 @@ public class APIPath {
 
     private static final String CORE = "/core";
 
-    private static final String APP = "/app";
-
     private static final String STATISTICS = "/statistics";
 
     private static final String EXECUTOR = "/executor";
@@ -82,53 +80,8 @@ public class APIPath {
 
         public static final String IMPORT_MODEL = $ + "/import/model";
 
-        public static final String GET_PROJECT = $ + "/project";
-
-        public static final String SAVE_PROJECT = $ + "/project";
-
-        public static final String ARG = $ + ArgPath.SUB_PATH;
-
-        public static final String JSON_ARG = $ + ArgPath.SUB_PATH + "/json";
-
-        public static final String CONDITION = $ + "/condition";
-
-        public static final String GET_CONDITION = CONDITION + "/get";
-
         public static final String TRIGGER = $ + "/trigger";
 
-        public static final String GET_TRIGGER = TRIGGER + _GET;
-
-        private static final String TEST_TRIGGER = TRIGGER + "/test";
-
-        public static final String TEST_CRON = TEST_TRIGGER + "/cron";
-
-        public static final String TEST_CALENDAR_OFFSET = TEST_TRIGGER + "/calendarOffset";
-
-        public static final String TEST_DAILY_TIME_INTERVAL = TEST_TRIGGER + "/dailyTimeInterval";
-
-        public static final String TEST_CALENDAR_INTERVAL = TEST_TRIGGER + "/calendarInterval";
-    }
-
-    public static final class ArgPath {
-        public static final String SUB_PATH = "/arg";
-
-        public static final String $ = API_PATH + CORE + SUB_PATH;
-
-        public static final String GET = $ + _GET;
-
-        public static final String GET_SQL_RESULT = $ + "/sql";
-
-        public static final String GET_TRADE_DATE = $ + "/trade_date";
-    }
-
-    public static final class DataSourcePath {
-        public static final String SUB_PATH = "/datasource";
-
-        public static final String $ = API_PATH + CORE + SUB_PATH;
-
-        public static final String GET = $ + _GET;
-
-        public static final String TEST_CONNECTION = $ + "/test";
 
     }
 
@@ -140,30 +93,6 @@ public class APIPath {
         public static final String DAY = $ + "/day";
 
         public static final String IMPORT = DAY + "/import";
-    }
-
-    public static final class ProjectPath {
-        public static final String SUB_PATH = "/project";
-
-        public static final String $ = API_PATH + APP + SUB_PATH;
-
-        public static final String LIST_TREE = API_PATH + APP + SUB_PATH + "/treeList";
-
-        public static final String INFO = API_PATH + APP + SUB_PATH + "/info";
-
-        public static final String EXECUTOR = API_PATH + APP + SUB_PATH + "/executor";
-
-    }
-
-    public static final class GistPath {
-        public static final String SUB_PATH = "/gist";
-
-        public static final String $ = API_PATH + APP + SUB_PATH;
-
-        public static final String INFO = $ + "/info";
-
-        public static final String CONTENT = INFO + "/content";
-
     }
 
     public static final class InstancePath {
@@ -181,7 +110,6 @@ public class APIPath {
 
         public static final String ACT = $ + "/act";
 
-        public static final String ARG = $ + "/arg";
 
     }
 
@@ -193,15 +121,6 @@ public class APIPath {
         public static final String JOB = API_PATH + STATISTICS + SUB_PATH + JobPath.SUB_PATH;
 
         public static final String INSTANCE = API_PATH + STATISTICS + SUB_PATH + InstancePath.SUB_PATH;
-    }
-
-    public static final class AnalysisPath {
-        private static final String SUB_PATH = "/analysis";
-
-        public static final String PLAN_APP = API_PATH + STATISTICS + SUB_PATH + "/plan/app";
-
-        public static final String INSTANCE_DURATION = API_PATH + STATISTICS + SUB_PATH + "/instance/duration";
-
     }
 
     public static final class ToolPath {
@@ -227,15 +146,7 @@ public class APIPath {
 
     public static final class ExecutorPath {
 
-        public static final String JOB_INVOKING = API_PATH + EXECUTOR + "/invoke";
-
         public static final String TERMINATE = API_PATH + EXECUTOR + "/terminate";
-
-        public static final String LOAD_PACKAGE = API_PATH + EXECUTOR + "/package/load";
-
-        public static final String UNLOAD_PACKAGE = API_PATH + EXECUTOR + "/package/unload";
-
-        public static final String REMOVE_DATA_SOURCE = API_PATH + EXECUTOR + "/datasource/remove";
     }
 
     public static final class CommonPath {
