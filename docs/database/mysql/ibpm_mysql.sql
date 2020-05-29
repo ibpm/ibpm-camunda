@@ -2,7 +2,8 @@
 SQLyog Ultimate v12.09 (64 bit)
 MySQL - 5.7.27-log : Database - ibpm-camunda
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -105,8 +106,6 @@ CREATE TABLE `ibpm_job` (
   `DISPLAY_NAME` varchar(255) COLLATE utf8_bin NOT NULL,
   `CONTENT` text COLLATE utf8_bin,
   `STATUS` int(11) DEFAULT NULL,
-  `CONCURRENT` tinyint(1) DEFAULT NULL,
-  `ONCE` tinyint(1) DEFAULT NULL,
   `UPDATE_TIME` bigint(13) DEFAULT NULL,
   `REMARK` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`JOB_NAME`)

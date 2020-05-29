@@ -7,7 +7,7 @@ export default {
     role: '角色管理',
     calendar: '日历管理',
     core: '流程管理',
-    job: '任务管理',
+    job: '流程管理',
     arg: '参数管理',
     monitor: '监控管理',
     total: '执行监控',
@@ -188,10 +188,7 @@ export default {
       columns: {
         reversion: '模型版本',
         version: '发布版本',
-        jobName: '任务名称',
-        nextFireTime: '下次执行时间',
-        concurrent: '是否支持并行',
-        once: '当日仅执行一次'
+        jobName: '任务名称'
       },
       placeholder: {
         jobName: '请输入任务名称'
@@ -251,7 +248,7 @@ export default {
       executorUri: '执行器地址'
     },
     label: {
-      job: '任务',
+      job: '流程',
       record: '执行记录',
       task: '任务节点'
     }
@@ -311,12 +308,12 @@ export default {
   statistics: {
     chart: '图表',
     instance: '实例',
-    job: '任务',
+    job: '流程',
     user: '用户'
   },
   chart: {
     instance: '实例状态分布',
-    job: '任务状态分布',
+    job: '流程状态分布',
     user: '用户状态分布',
     instanceDuration: '执行时长趋势图'
   },

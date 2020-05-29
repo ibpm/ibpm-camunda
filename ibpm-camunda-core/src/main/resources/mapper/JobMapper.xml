@@ -10,8 +10,6 @@
             DISPLAY_NAME,
             CONTENT,
             STATUS,
-            CONCURRENT,
-            ONCE,
             UPDATE_TIME,
             REMARK
         )
@@ -21,8 +19,6 @@
             #{displayName, jdbcType=VARCHAR},
             #{content, jdbcType=VARCHAR},
             #{status, jdbcType=INTEGER},
-            #{concurrent, jdbcType=INTEGER},
-            #{once, jdbcType=INTEGER},
             #{updateTime, jdbcType=INTEGER},
             #{remark, jdbcType=VARCHAR}
         )
@@ -32,8 +28,6 @@
         UPDATE ${tablePrefix}job
         <set>
             STATUS = #{status, jdbcType=INTEGER},
-            CONCURRENT = #{concurrent, jdbcType=INTEGER},
-            ONCE = #{once, jdbcType=INTEGER},
             UPDATE_TIME = #{updateTime, jdbcType=INTEGER},
             REMARK = #{remark, jdbcType=VARCHAR},
         </set>
@@ -54,7 +48,7 @@
     </update>
 
     <select id="get" parameterType="map" resultType="com.github.ibpm.common.result.core.job.Job">
-        SELECT JOB_NAME, DISPLAY_NAME, CONTENT, CONCURRENT, ONCE, STATUS, UPDATE_TIME,REMARK
+        SELECT JOB_NAME, DISPLAY_NAME, CONTENT, STATUS, UPDATE_TIME,REMARK
         FROM ${tablePrefix}job j
         <where>
             <include refid="condJobName"/>
@@ -62,7 +56,7 @@
     </select>
 
     <select id="list" parameterType="map" resultType="com.github.ibpm.common.result.core.job.Job">
-        SELECT JOB_NAME, DISPLAY_NAME, CONCURRENT, ONCE, STATUS, UPDATE_TIME,REMARK
+        SELECT JOB_NAME, DISPLAY_NAME, STATUS, UPDATE_TIME,REMARK
         FROM ${tablePrefix}job j
         <where>
             <if test="jobName != null">
@@ -97,8 +91,6 @@
         a.JOB_NAME,
         a.DISPLAY_NAME,
         a.STATUS,
-        a.CONCURRENT,
-        a.ONCE,
         a.REMARK,
         b.ID_ AS PROC_DEF_ID,
         b.VERSION_ AS VERSION,

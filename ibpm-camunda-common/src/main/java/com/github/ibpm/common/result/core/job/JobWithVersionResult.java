@@ -13,10 +13,6 @@ public class JobWithVersionResult {
 
     protected int status;
 
-    protected int concurrent;
-
-    protected int once;
-
     protected Date updateTime;
 
     protected String remark;
@@ -58,24 +54,6 @@ public class JobWithVersionResult {
 
     public JobWithVersionResult setStatus(int status) {
         this.status = status;
-        return this;
-    }
-
-    public int getConcurrent() {
-        return concurrent;
-    }
-
-    public JobWithVersionResult setConcurrent(int concurrent) {
-        this.concurrent = concurrent;
-        return this;
-    }
-
-    public int getOnce() {
-        return once;
-    }
-
-    public JobWithVersionResult setOnce(int once) {
-        this.once = once;
         return this;
     }
 

@@ -177,8 +177,6 @@ public class JobOperatedService extends BaseServiceAdapter {
                 .setDisplayName(saveParam.getDisplayName())
                 .setContent(saveParam.getContent())
                 .setStatus(saveParam.getStatus())
-                .setConcurrent(saveParam.getConcurrent())
-                .setOnce(saveParam.getOnce())
                 .setRemark(saveParam.getRemark());
     }
 
@@ -415,7 +413,6 @@ public class JobOperatedService extends BaseServiceAdapter {
     private JobSaveParam toParam(Job job) {
         JobSaveParam param = new JobSaveParam()
                 .setDisplayName(job.getDisplayName()).setStatus(job.getStatus())
-                .setConcurrent(job.getConcurrent()).setOnce(job.getOnce())
                 .setRemark(job.getRemark());
         param.setJobName(job.getJobName());
         return param;

@@ -26,6 +26,10 @@ export default class CustomPalette {
     }
     */
 
+    function createUserTask(event) {
+      createShape(event, 'UserTask')
+    }
+
     function createServiceTask(event) {
       createShape(event, 'ServiceTask')
     }
@@ -50,6 +54,15 @@ export default class CustomPalette {
         }
       },
        */
+      'create.user-task': {
+        group: 'activity',
+        className: 'bpmn-icon-user-task',
+        title: translate('Create UserTask'),
+        action: {
+          dragstart: createUserTask,
+          click: createUserTask
+        }
+      },
       'create.service-task': {
         group: 'activity',
         className: 'bpmn-icon-service-task',

@@ -18,12 +18,6 @@
         <el-option v-for="item in jobStatuses" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
     </el-form-item>
-    <el-form-item :label="$t('core.job.columns.concurrent')">
-      <el-switch v-model="job.concurrent" :active-value="1" :inactive-value="0" />
-    </el-form-item>
-    <el-form-item :label="$t('core.job.columns.once')">
-      <el-switch v-model="job.once" :active-value="1" :inactive-value="0" />
-    </el-form-item>
     <el-form-item :label="$t('columns.remark')">
       <el-input
         v-model="job.remark"

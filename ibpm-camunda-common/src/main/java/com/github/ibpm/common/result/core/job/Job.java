@@ -16,13 +16,7 @@ public class Job {
 
     protected int status;
 
-    protected int concurrent;
-
-    protected int once;
-
     protected Long updateTime;
-
-    protected List<Date> nextFireTimes;
 
     protected String remark;
 
@@ -62,39 +56,12 @@ public class Job {
         return this;
     }
 
-    public int getConcurrent() {
-        return concurrent;
-    }
-
-    public Job setConcurrent(int concurrent) {
-        this.concurrent = concurrent;
-        return this;
-    }
-
-    public int getOnce() {
-        return once;
-    }
-
-    public Job setOnce(int once) {
-        this.once = once;
-        return this;
-    }
-
     public Long getUpdateTime() {
         return updateTime;
     }
 
     public Job setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
-        return this;
-    }
-
-    public List<Date> getNextFireTimes() {
-        return nextFireTimes;
-    }
-
-    public Job setNextFireTimes(List<Date> nextFireTimes) {
-        this.nextFireTimes = nextFireTimes;
         return this;
     }
 

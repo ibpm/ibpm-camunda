@@ -51,12 +51,6 @@
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="table-expand">
-            <el-form-item :label="$t('core.job.columns.concurrent')">
-              <el-tag :type="props.row.concurrent > 0 ? 'success' : 'info'">{{ props.row.concurrent ? $t('tip.yes') : $t('tip.no') }}</el-tag>
-            </el-form-item>
-            <el-form-item :label="$t('core.job.columns.once')">
-              <el-tag :type="props.row.once > 0 ? 'success' : 'info'">{{ props.row.once ? $t('tip.yes') : $t('tip.no') }}</el-tag>
-            </el-form-item>
             <el-form-item :label="$t('columns.updateTime')">
               <span>{{ props.row.updateTime | parseTime }}</span>
             </el-form-item>
@@ -85,20 +79,6 @@
       <el-table-column :label="$t('columns.status')" align="center" class-name="status-col" width="80">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status | renderJobStatus">{{ formatStatus(scope.row.status) }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('core.job.columns.nextFireTime')" width="160px">
-        <template slot-scope="scope">
-          <el-popover trigger="hover" placement="left">
-            <div v-if="scope.row.nextFireTimes && scope.row.nextFireTimes.length > 0">
-              <p v-for="item in scope.row.nextFireTimes" :key="item + Math.random()">
-                {{ item }}
-              </p>
-            </div>
-            <div slot="reference">
-              <span>{{ scope.row.nextFireTimes && scope.row.nextFireTimes.length > 0 ? scope.row.nextFireTimes[0] : null }}</span>
-            </div>
-          </el-popover>
         </template>
       </el-table-column>
       <el-table-column :label="$t('actions.handle')" align="center" min-width="240" class-name="small-padding fixed-width">
@@ -206,8 +186,6 @@ const DEF_OBJ = {
   jobName: undefined,
   displayName: '',
   status: 0,
-  concurrent: 0,
-  once: 0,
   remark: '',
   content: ''
 }

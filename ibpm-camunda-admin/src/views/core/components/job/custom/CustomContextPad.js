@@ -35,12 +35,21 @@ export default class CustomContextPad {
     }
 
     // ParallelGateway
-    function appendParallelGateway(event, element) {
+    /* function appendParallelGateway(event, element) {
       append(event, element, 'ParallelGateway')
     }
 
     function appendParallelGatewayStart(event) {
       appendStart(event, element, 'ParallelGateway')
+    }*/
+
+    // UserTask
+    function appendUserTask(event, element) {
+      append(event, element, 'UserTask')
+    }
+
+    function appendUserTaskStart(event) {
+      appendStart(event, element, 'UserTask')
     }
 
     // ServiceTask
@@ -71,13 +80,22 @@ export default class CustomContextPad {
     }
 
     return {
-      'append.parallel-gateway': {
+      /* 'append.parallel-gateway': {
         group: 'model',
         className: 'bpmn-icon-gateway-parallel',
         title: translate('Append ParallelGateway'),
         action: {
           click: appendParallelGateway,
           dragstart: appendParallelGatewayStart
+        }
+      },*/
+      'append.user-task': {
+        group: 'model',
+        className: 'bpmn-icon-user-task',
+        title: translate('Append UserTask'),
+        action: {
+          click: appendUserTask,
+          dragstart: appendUserTaskStart
         }
       },
       'append.service-task': {

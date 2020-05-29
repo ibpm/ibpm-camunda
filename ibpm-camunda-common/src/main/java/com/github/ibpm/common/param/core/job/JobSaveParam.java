@@ -11,10 +11,6 @@ public class JobSaveParam extends JobContentSaveParam {
 
     protected Integer status;
 
-    protected int concurrent;
-
-    protected int once;
-
     protected String remark;
 
     public String validate() {
@@ -42,24 +38,6 @@ public class JobSaveParam extends JobContentSaveParam {
 
     public JobSaveParam setStatus(Integer status) {
         this.status = status;
-        return this;
-    }
-
-    public int getConcurrent() {
-        return concurrent;
-    }
-
-    public JobSaveParam setConcurrent(int concurrent) {
-        this.concurrent = concurrent;
-        return this;
-    }
-
-    public int getOnce() {
-        return once;
-    }
-
-    public JobSaveParam setOnce(int once) {
-        this.once = once;
         return this;
     }
 

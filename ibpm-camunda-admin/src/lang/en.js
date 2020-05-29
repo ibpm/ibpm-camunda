@@ -188,10 +188,7 @@ export default {
       columns: {
         reversion: 'Reversion',
         version: 'Version',
-        jobName: 'Job name',
-        nextFireTime: 'Next fire time',
-        concurrent: 'Concurrent',
-        once: 'Only once a day'
+        jobName: 'Job name'
       },
       placeholder: {
         jobName: 'Please entry job name'
