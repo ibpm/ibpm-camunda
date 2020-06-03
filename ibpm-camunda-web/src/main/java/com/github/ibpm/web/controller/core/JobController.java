@@ -106,6 +106,18 @@ public class JobController {
 		return CommonResult.putResult(jobOperatedService.exchange(param));
 	}
 
+	@Operation(summary = "Manual start jobs", parameters = {@Parameter(name = "param", required = true)})
+	@PostMapping(APIPath.JobPath.MANUAL_BATCH)
+	public CommonResult<Void> manualBatch(@RequestBody JobNamesParam param) {
+		return CommonResult.putResult(jobOperatedService.manualBatch(param));
+	}
+
+	@Operation(summary = "Manual start job with param", parameters = {@Parameter(name = "param", required = true)})
+	@PostMapping(APIPath.JobPath.MANUAL)
+	public CommonResult<Void> manual(@RequestBody JobNameParam param) {
+		return CommonResult.putResult(jobOperatedService.manual(param));
+	}
+
 	@Operation(summary = "Export model", parameters = {@Parameter(name = "param", required = true)})
 	@GetMapping(APIPath.JobPath.EXPORT_MODEL)
 	public void exportModel(HttpServletResponse response, JobExportParam param) {

@@ -18,8 +18,10 @@ import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.camunda.bpm.engine.RepositoryService;
+import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.repository.Deployment;
 import org.camunda.bpm.engine.repository.ProcessDefinition;
+import org.camunda.bpm.engine.runtime.ProcessInstantiationBuilder;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.instance.Process;
@@ -37,6 +39,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -243,6 +247,53 @@ public class JobOperatedService extends BaseServiceAdapter {
                 .setContent(IoUtil.inputStreamAsString(is));
         saveParam.setJobName(oldReversionJob.getJobName());
         return updateContent(saveParam);
+    }
+
+    /**
+     * manual run jobs
+     *
+     * @param param
+     * @return
+     */
+    public Void manualBatch(JobNamesParam param) {
+        List<String> jobNames = param.getJobNames();
+        ExecutorService executorService = Executors.newFixedThreadPool(jobNames.size());
+        for (String jobName : jobNames) {
+            executorService.submit(() -> {
+                manual(new JobNameParam().setJobName(jobName));
+            });
+        }
+        executorService.shutdown();
+        return null;
+    }
+
+    @Autowired
+    private RuntimeService runtimeService;
+
+    /**
+     * manual run job with param
+     *
+     * @param param
+     * @return
+     */
+    public Void manual(JobNameParam param) {
+        List<ProcessDefinition> processDefinitions = repositoryService
+                .createProcessDefinitionQuery()
+                .processDefinitionKey(param.getJobName())
+                .latestVersion()
+                .list();
+        if (processDefinitions.size() == 1) {
+            ProcessDefinition processDefinition = processDefinitions.get(0);
+            ProcessInstantiationBuilder builder = runtimeService.createProcessInstanceById(processDefinition.getId());
+            builder.execute();
+        } else if (processDefinitions.isEmpty()) {
+            log.error("process not exists:{}", param.getJobName());
+            throw new RTException(2002);
+        } else {
+            log.error("process more than 1:{}", param.getJobName());
+            throw new RTException(2003);
+        }
+        return null;
     }
 
     /**
