@@ -376,6 +376,7 @@ insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','calendar-saveDate');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','core');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','executor');
+insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','job');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','monitor');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','role');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','scheduler');
@@ -386,7 +387,6 @@ insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','user-update');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','calendar');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','core');
-insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','job');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','monitor');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','retry');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','sys');
@@ -396,14 +396,12 @@ insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common',
 
 /*Data for the table `ibpm_role_user` */
 
-insert  into `ibpm_role_user`(`ROLE_NAME`,`USER_NAME`) values ('admin','attemper');
 insert  into `ibpm_role_user`(`ROLE_NAME`,`USER_NAME`) values ('admin','ibpm');
 insert  into `ibpm_role_user`(`ROLE_NAME`,`USER_NAME`) values ('common','sample');
 insert  into `ibpm_role_user`(`ROLE_NAME`,`USER_NAME`) values ('common','test');
 
 /*Data for the table `ibpm_user` */
 
-insert  into `ibpm_user`(`USER_NAME`,`DISPLAY_NAME`,`PASSWORD`,`EMAIL`,`MOBILE`,`STATUS`,`SUPER_ADMIN`,`SEND_CONFIG`) values ('attemper','调度中心','ZPARvFp+rhOK2hl1WZu2LMb60dsQCRKKOQ43ak2NYFE=',NULL,NULL,0,1,'000');
 insert  into `ibpm_user`(`USER_NAME`,`DISPLAY_NAME`,`PASSWORD`,`EMAIL`,`MOBILE`,`STATUS`,`SUPER_ADMIN`,`SEND_CONFIG`) values ('ibpm','管理员','r8w3fbouT2kSyuzve6yB9N2HaDa+DE9sZfg4bQdz2BE=',NULL,NULL,0,1,'000');
 insert  into `ibpm_user`(`USER_NAME`,`DISPLAY_NAME`,`PASSWORD`,`EMAIL`,`MOBILE`,`STATUS`,`SUPER_ADMIN`,`SEND_CONFIG`) values ('sample','样例','7ZXF+IWQUpHhG93taoynzM6izTDS8Rc1zm2JwaMeM9E=','820704815@qq.com',NULL,0,0,'111');
 insert  into `ibpm_user`(`USER_NAME`,`DISPLAY_NAME`,`PASSWORD`,`EMAIL`,`MOBILE`,`STATUS`,`SUPER_ADMIN`,`SEND_CONFIG`) values ('test','测试','fFhvd/erAJNNoj4/GwYe1PHe1Ic9cYc2oxxCUlYE/wc=',NULL,NULL,0,0,'0');
