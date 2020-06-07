@@ -20,17 +20,13 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>${project.parent.artifactId}-sys</artifactId>
+            <artifactId>${project.parent.artifactId}-engine</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.attemper</groupId>
             <artifactId>alarm-core</artifactId>
             <version>${alarm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-commons</artifactId>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>

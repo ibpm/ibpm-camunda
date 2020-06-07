@@ -13,6 +13,7 @@
 		<module>${project.artifactId}-core</module>
 		<module>${project.artifactId}-security</module>
 		<module>${project.artifactId}-web</module>
+		<module>${project.artifactId}-engine</module>
 	</modules>
 	<packaging>pom</packaging>
 

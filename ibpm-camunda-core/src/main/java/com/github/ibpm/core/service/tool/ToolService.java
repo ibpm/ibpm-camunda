@@ -3,7 +3,6 @@ package com.github.ibpm.core.service.tool;
 import com.github.ibpm.common.constant.APIPath;
 import com.github.ibpm.common.constant.CommonConstants;
 import com.github.ibpm.common.enums.PredefinedDateArgType;
-import com.github.ibpm.common.enums.UriType;
 import com.github.ibpm.common.exception.RTException;
 import com.github.ibpm.common.param.tool.server.ServerInfoGetParam;
 import com.github.ibpm.common.result.CommonResult;
@@ -14,8 +13,6 @@ import com.github.ibpm.core.ext.server.*;
 import com.github.ibpm.sys.service.BaseServiceAdapter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -23,10 +20,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import oshi.SystemInfo;
 import reactor.core.publisher.Mono;
 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.util.*;
 
 @Slf4j
@@ -34,68 +27,10 @@ import java.util.*;
 public class ToolService extends BaseServiceAdapter {
 
     @Autowired
-    private DiscoveryClient discoveryClient;
-
-    @Autowired
     private AppProperties appProperties;
 
     public String[] listTimeZone() {
         return TimeZone.getAvailableIDs();
-    }
-
-    public Boolean ping(String uri, Integer uriType) {
-        if (uri == null) {
-            log.error("uri is null");
-            return false;
-        }
-        try {
-            if (log.isDebugEnabled()) {
-                log.debug(uri);
-            }
-            uri = uri.replace("https://", "").replace("http://", "");
-            if (uriType == UriType.DiscoveryClient.getType()) {
-                if (log.isDebugEnabled()) {
-                    log.debug("discovery client");
-                }
-                List<ServiceInstance> instances = discoveryClient.getInstances(uri);
-                if (instances.isEmpty()) {
-                    throw new RTException(800);
-                }
-                for (ServiceInstance item : instances) {
-                    if (!ping(item.getUri().toString(), UriType.IpWithPort.getType())) {
-                        return false;
-                    }
-                }
-            } else if (uriType == UriType.IpWithPort.getType()) {
-                if (log.isDebugEnabled()) {
-                    log.debug("ip:port");
-                }
-                String[] arr = uri.split(":");
-                SocketAddress socketAddr = new InetSocketAddress(arr[0], Integer.parseInt(arr[1]));
-                new Socket().connect(socketAddr, 10000);
-            } else if (uriType == UriType.DomainName.getType()) {
-                if (log.isDebugEnabled()) {
-                    log.debug("domain");
-                }
-                InetAddress.getByName(uri).isReachable(10000);
-            }
-            return true;
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return false;
-        }
-    }
-
-    public List<ServiceInstance> listSchedulerService() {
-        return listService(appProperties.getScheduler().getName());
-    }
-
-    public List<ServiceInstance> listExecutorService() {
-        return listService(appProperties.getExecutor().getName());
-    }
-
-    private List<ServiceInstance> listService(String serviceId) {
-        return discoveryClient.getInstances(serviceId);
     }
 
     public Map<String, Object> requestServerInfo(ServerInfoGetParam param) {

@@ -47,7 +47,7 @@
         </el-tooltip>
         <el-tooltip :content="$t('actions.manual')" effect="dark" placement="top-start">
           <span style="margin-left: 10px;">
-            <el-button :disabled="!job.procDefId && job.version === 0" type="danger" @click="openParam">
+            <el-button :disabled="!job.procDefId && job.version === 0" type="danger" @click="manual">
               <svg-icon icon-class="hand" />
             </el-button>
           </span>
@@ -58,7 +58,7 @@
     <!-- dialog -->
     <el-dialog
       :title="editDialog.title"
-      :visible.sync="editDialog.copy.visible || editDialog.param.visible "
+      :visible.sync="editDialog.copy.visible"
       :center="true"
       :modal="true"
       :close-on-click-modal="false"
@@ -68,20 +68,12 @@
       <div v-show="editDialog.copy.visible">
         <job-info-form :job="targetJobParam" @save="copy" @cancel="editDialog.copy.visible = false" />
       </div>
-      <div v-show="editDialog.param.visible">
-        <code-editor v-model="jsonData" :read-only="false" extension=".json" />
-        <div style="text-align: center; margin-top: 10px">
-          <el-button type="danger" @click="manual">
-            <svg-icon icon-class="hand" />{{ $t('actions.manual') }}
-          </el-button>
-        </div>
-      </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getContentReq, updateContentReq, versionsReq, copyReq, exchangeReq, publishReq, manualReq, getJsonArgReq } from '@/api/core/job'
+import { getContentReq, updateContentReq, versionsReq, copyReq, exchangeReq, publishReq, manualReq } from '@/api/core/job'
 import BpmnModeler from 'bpmn-js/lib/Modeler'
 import propertiesPanelModule from 'bpmn-js-properties-panel'
 import propertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/camunda'
@@ -92,13 +84,11 @@ import JobInfoForm from './components/job/jobInfoForm'
 import { getTimeStr } from '@/utils/tools'
 import customElementTemplate from './components/job/element-templates/custom'
 import customControlsModule from './components/job/custom'
-import CodeEditor from '@/components/CodeEditor'
 
 export default {
   name: 'flow',
   components: {
-    JobInfoForm,
-    CodeEditor
+    JobInfoForm
   },
   data() {
     return {
@@ -110,9 +100,6 @@ export default {
       editDialog: {
         title: undefined,
         copy: {
-          visible: false
-        },
-        param: {
           visible: false
         }
       },
@@ -277,7 +264,7 @@ export default {
           })
         })
     },
-    openParam() {
+    manual() {
       if (!this.job.version) {
         this.$message.warning(this.$t('tip.manualWithNoVersion'))
         return
@@ -285,25 +272,12 @@ export default {
         this.$message.warning(this.$t('tip.disabledJobError'))
         return
       }
-      this.jsonData = null
-      getJsonArgReq({ jobName: this.job.jobName }).then(res => {
-        if (!res.data.result) {
-          this.manual()
-        } else {
-          this.editDialog.title = this.$t('core.job.actions.param')
-          this.editDialog.param.visible = true
-          this.jsonData = JSON.parse(res.data.result)
-        }
-      })
-    },
-    manual() {
       this.$confirm(this.$t('tip.confirm'), this.$t('tip.confirmMsg'), { type: 'warning' })
         .then(() => {
           manualReq({
             jobName: this.job.jobName,
             jsonData: (!this.jsonData ? null : (typeof this.jsonData === 'string' ? JSON.parse(this.jsonData) : this.jsonData))
           }).then(res => {
-            this.editDialog.param.visible = false
             this.$message.success(res.data.msg)
             setTimeout(() => {
               this.$router.push({ name: 'total', replace: true })
@@ -404,8 +378,7 @@ export default {
       }, 200)
     },
     close() {
-      this.editDialog.copy.visible =
-          this.editDialog.param.visible = false
+      this.editDialog.copy.visible = false
     }
   }
 }

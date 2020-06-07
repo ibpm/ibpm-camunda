@@ -12,7 +12,7 @@ import com.github.ibpm.core.service.core.CalendarService;
 import com.github.ibpm.core.service.core.JobService;
 import com.github.ibpm.core.service.instance.InstanceService;
 import com.github.ibpm.core.service.tool.ToolService;
-import com.github.ibpm.sys.conf.SysConfiguration;
+import com.github.ibpm.engine.conf.EngineConfiguration;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -25,7 +25,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 @Import({
-        SysConfiguration.class
+        EngineConfiguration.class
 })
 @Configuration
 @ComponentScan(basePackageClasses = {

@@ -7,7 +7,7 @@ export default {
     role: '角色管理',
     calendar: '日历管理',
     core: '流程管理',
-    job: '流程管理',
+    job: '流程设计',
     arg: '参数管理',
     monitor: '监控管理',
     total: '执行监控',
