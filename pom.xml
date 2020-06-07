@@ -10,10 +10,10 @@
 		<module>${project.artifactId}-common</module>
 		<module>${project.artifactId}-config</module>
 		<module>${project.artifactId}-sys</module>
+		<module>${project.artifactId}-engine</module>
 		<module>${project.artifactId}-core</module>
 		<module>${project.artifactId}-security</module>
 		<module>${project.artifactId}-web</module>
-		<module>${project.artifactId}-engine</module>
 	</modules>
 	<packaging>pom</packaging>
 
