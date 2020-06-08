@@ -6,13 +6,13 @@ import com.github.ibpm.config.dao.ApiLogMapper;
 import com.github.ibpm.config.datasource.DataSourceConfig;
 import com.github.ibpm.config.datasource.DataSourceProperties;
 import com.github.ibpm.config.exception.GlobalExceptionAdvisor;
+import com.github.ibpm.config.id.MyIdGenerator;
+import com.github.ibpm.config.id.MyStrongUuidGenerator;
 import com.github.ibpm.config.id.SnowFlakeIdGenerator;
 import com.github.ibpm.config.property.AppProperties;
 import com.github.ibpm.config.service.ApiLogService;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
-import org.camunda.bpm.engine.impl.cfg.IdGenerator;
-import org.camunda.bpm.engine.impl.persistence.StrongUuidGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -48,14 +48,14 @@ public class ConfigConfiguration {
     private AppProperties appProperties;
 
     @Bean
-    public IdGenerator idGenerator() {
+    public MyIdGenerator myIdGenerator() {
         if (appProperties.getSnowFlake().getDataCenterId() != null &&
                 appProperties.getSnowFlake().getMachineId() != null) {
             return new SnowFlakeIdGenerator(
                     appProperties.getSnowFlake().getDataCenterId(),
                     appProperties.getSnowFlake().getMachineId());
         }
-        return new StrongUuidGenerator();
+        return new MyStrongUuidGenerator();
     }
 
     @Bean

@@ -1,10 +1,9 @@
 package com.github.ibpm.config.id;
 
 import lombok.extern.slf4j.Slf4j;
-import org.camunda.bpm.engine.impl.cfg.IdGenerator;
 
 @Slf4j
-public class SnowFlakeIdGenerator implements IdGenerator {
+public class SnowFlakeIdGenerator implements MyIdGenerator {
 
     private final static long START_TIMESTAMP = 946656000000L;  //2000-01-01 00:00:00
 

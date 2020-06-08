@@ -3,8 +3,8 @@ package com.github.ibpm.config.service;
 import com.github.ibpm.config.annotation.MultiDataSource;
 import com.github.ibpm.config.dao.ApiLogMapper;
 import com.github.ibpm.config.entity.ApiLog;
+import com.github.ibpm.config.id.MyIdGenerator;
 import org.apache.commons.lang.StringUtils;
-import org.camunda.bpm.engine.impl.cfg.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApiLogService {
 
 	@Autowired
-	private IdGenerator idGenerator;
+	private MyIdGenerator myIdGenerator;
 
 	@Autowired
 	private ApiLogMapper mapper;
@@ -32,7 +32,7 @@ public class ApiLogService {
 		if (StringUtils.length(apiLog.getMsg()) > 2000) {
 			apiLog.setMsg(apiLog.getMsg().substring(0, 2000));
 		}
-		apiLog.setId(idGenerator.getNextId());
+		apiLog.setId(myIdGenerator.getNextId());
 		mapper.add(apiLog);
 	}
 }
