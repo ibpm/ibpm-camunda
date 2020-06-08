@@ -88,7 +88,7 @@ public class JobController {
 		return CommonResult.putResult(jobOperatedService.versions(param));
 	}
 
-	@Operation(summary = "Publish job to quartz and camunda", parameters = {@Parameter(name = "param", required = true)})
+	@Operation(summary = "Publish job to engine", parameters = {@Parameter(name = "param", required = true)})
 	@PutMapping(APIPath.JobPath.PUBLISH)
 	public CommonResult<Void> publish(@RequestBody JobNamesParam param) {
 		return CommonResult.putResult(jobOperatedService.publish(param));

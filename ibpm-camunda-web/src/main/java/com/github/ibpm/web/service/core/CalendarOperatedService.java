@@ -7,9 +7,9 @@ import com.github.ibpm.common.param.core.calendar.DayCalendarSaveParam;
 import com.github.ibpm.common.util.DateUtil;
 import com.github.ibpm.config.util.BeanUtil;
 import com.github.ibpm.core.dao.core.CalendarMapper;
+import com.github.ibpm.engine.util.IoUtils;
 import com.github.ibpm.sys.service.BaseServiceAdapter;
 import org.apache.commons.lang.StringUtils;
-import org.camunda.commons.utils.IoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -40,7 +43,7 @@ public class CalendarOperatedService extends BaseServiceAdapter {
     public Void importDate(String calendarName, MultipartFile file) {
         try (InputStream is = file.getInputStream()) {
             InputStreamReader isr = new InputStreamReader(is, "GB18030");
-            String lines = IoUtil.readerAsString(isr);
+            String lines = IoUtils.readerAsString(isr);
             String[] lineArray;
             if (lines.contains("\r\n")) {
                 lineArray = lines.split("\r\n");

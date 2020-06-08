@@ -1,4 +1,4 @@
-package com.github.ibpm.web.conf;
+package com.github.ibpm.engine.conf;
 
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.camunda.bpm.spring.boot.starter.configuration.impl.AbstractCamundaConfiguration;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Order(-1)
 @Component
-public class CustomProcessEngineConfiguration extends AbstractCamundaConfiguration {
+public class CustomCamundaConfiguration extends AbstractCamundaConfiguration {
 
     @Override
     public void preInit(ProcessEngineConfigurationImpl processEngineConfiguration) {
