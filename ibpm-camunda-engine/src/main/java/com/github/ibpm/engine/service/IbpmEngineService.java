@@ -6,6 +6,7 @@ import com.github.ibpm.engine.model.BpmnResource;
 import com.github.ibpm.engine.util.EngineUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.repository.Deployment;
@@ -33,6 +34,9 @@ public class IbpmEngineService {
     @Autowired
     private RuntimeService runtimeService;
 
+    @Autowired
+    private IdentityService identityService;
+
     public long deploy(String id, String name, String xmlContent) {
         Deployment deployment = repositoryService.createDeployment()
                 .addModelInstance(id + EngineConstant.SUFFIX_BPMN_XML,
@@ -51,6 +55,7 @@ public class IbpmEngineService {
         if (definitions.size() == 1) {
             ProcessDefinition processDefinition = definitions.get(0);
             ProcessInstantiationBuilder builder = runtimeService.createProcessInstanceById(processDefinition.getId());
+            identityService.setAuthenticatedUserId("ibpm");
             builder.execute();
         } else if (definitions.isEmpty()) {
             log.error("process not exists:{}", id);
