@@ -381,6 +381,7 @@ insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','role');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','scheduler');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','sys');
+insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','total');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','user');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','user-add');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','user-remove');

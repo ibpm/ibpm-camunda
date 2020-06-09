@@ -1,11 +1,13 @@
 package com.github.ibpm.engine.service;
 
 import com.github.ibpm.common.exception.RTException;
+import com.github.ibpm.common.result.sys.user.User;
 import com.github.ibpm.engine.constant.EngineConstant;
 import com.github.ibpm.engine.model.BpmnResource;
 import com.github.ibpm.engine.util.EngineUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.RuntimeService;
@@ -53,10 +55,11 @@ public class IbpmEngineService {
                 .latestVersion()
                 .list();
         if (definitions.size() == 1) {
-            ProcessDefinition processDefinition = definitions.get(0);
-            ProcessInstantiationBuilder builder = runtimeService.createProcessInstanceById(processDefinition.getId());
-            identityService.setAuthenticatedUserId("ibpm");
+            ProcessDefinition definition = definitions.get(0);
+            ProcessInstantiationBuilder builder = runtimeService.createProcessInstanceById(definition.getId());
+            identityService.setAuthenticatedUserId(((User) SecurityUtils.getSubject().getPrincipal()).getUserName());
             builder.execute();
+            identityService.setAuthenticatedUserId(null);
         } else if (definitions.isEmpty()) {
             log.error("process not exists:{}", id);
             throw new RTException(2002);
@@ -87,7 +90,7 @@ public class IbpmEngineService {
         if (definition == null) {
             throw new RTException(6059, procDefId);
         }
-        InputStream is = repositoryService.getResourceAsStream(definition.getDeploymentId(), definition.getResourceName());
+        InputStream is = getResourceAsStream(definition);
         return IoUtil.inputStreamAsString(is);
     }
     
@@ -99,7 +102,7 @@ public class IbpmEngineService {
         if (definition == null) {
             throw new RTException(6059, id);
         }
-        InputStream is = repositoryService.getResourceAsStream(definition.getDeploymentId(), definition.getResourceName());
+        InputStream is = getResourceAsStream(definition);
         String latestContent = IoUtil.inputStreamAsString(is);
         if (StringUtils.equals(xmlContent, latestContent)) {
             throw new RTException(6056);
@@ -113,10 +116,14 @@ public class IbpmEngineService {
                 .list();
         List<BpmnResource> bpmnResources = new ArrayList<>(definitions.size());
         for (ProcessDefinition definition : definitions) {
-            InputStream is = repositoryService.getResourceAsStream(definition.getDeploymentId(), definition.getResourceName());
+            InputStream is = getResourceAsStream(definition);
             bpmnResources.add(new BpmnResource().setResourceName(definition.getResourceName()).setInputStream(is));
         }
         return bpmnResources;
+    }
+
+    private InputStream getResourceAsStream(ProcessDefinition definition) {
+        return repositoryService.getResourceAsStream(definition.getDeploymentId(), definition.getResourceName());
     }
 
     public String createSimpleTemplate(String id, String name) {
