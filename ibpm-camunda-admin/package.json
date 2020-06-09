@@ -45,7 +45,6 @@
     "bpmn-js": "7.0.0",
     "bpmn-js-properties-panel": "0.33.1",
     "camunda-bpmn-moddle": "4.3.0",
-    "codemirror": "5.50.2",
     "diagram-js-minimap": "2.0.3",
     "echarts": "4.6.0",
     "element-ui": "2.13.2",
