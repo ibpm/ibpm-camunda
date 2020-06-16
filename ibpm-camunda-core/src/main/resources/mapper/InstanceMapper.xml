@@ -349,6 +349,123 @@
         </where>
     </select>
 
+    <sql id="todoListWrapperSql">
+        SELECT
+          *
+        FROM
+            (SELECT
+                ta.instanceId,
+                GROUP_CONCAT(DISTINCT ta.taskId SEPARATOR ',') AS taskId,
+                ta.procDefId,
+                ta.`version`,
+                ta.processName,
+                ta.processNameCn,
+                ta.requester,
+                GROUP_CONCAT(DISTINCT ta.assignee SEPARATOR ',') AS currentUsers,
+                GROUP_CONCAT(DISTINCT ta.assigneeName SEPARATOR ',') AS currentUserNames,
+                GROUP_CONCAT(DISTINCT ta.grantor SEPARATOR ',') AS grantorUsers,
+                GROUP_CONCAT(DISTINCT ta.grantorName SEPARATOR ',') AS grantorUserNames,
+                ta.activityName,
+                ta.activityNameCn,
+                DATE_FORMAT(ta.reqTime, '%Y-%m-%d %H:%i:%S') AS reqTime,
+                NULL AS handleTime,
+                DATE_FORMAT(ta.assignedTime,'%Y-%m-%d %H:%i:%S') AS assignedTime
+            FROM
+              (<include refid="todoListSql" />) ta
+            GROUP BY ta.instanceId, ta.activityName) s
+    </sql>
+
+    <sql id="todoListSql">
+        SELECT
+            task.instanceId,
+            task.taskId,
+            task.procDefId,
+            task.`version`,
+            task.processName,
+            task.processNameCn,
+            task.requester,
+            task.reqTime,
+            task.activityName,
+            task.activityNameCn,
+            task.assignee AS grantor,
+            u.DISPLAY_NAME AS grantorName,
+            IFNULL(o.SURROGATOR_, task.assignee) AS assignee,
+            IFNULL(
+            o.SURROGATOR_NAME_,
+            u.DISPLAY_NAME
+            ) AS assigneeName,
+            task.assignedTime
+        FROM
+            (SELECT
+                t.PROC_INST_ID_ AS instanceId,
+                t.ID_ AS taskId,
+                t.PROC_DEF_ID_ AS procDefId,
+                d.VERSION_ AS `version`,
+                d.KEY_ AS processName,
+                d.NAME_ AS processNameCn,
+                t.TASK_DEF_KEY_ AS activityName,
+                t.NAME_ AS activityNameCn,
+                IFNULL(t.ASSIGNEE_, l.USER_ID_) AS assignee,
+                t.CREATE_TIME_ AS assignedTime,
+                ins.START_USER_ID_ AS requester,
+                ins.START_TIME_ AS reqTime
+            FROM act_ru_task t
+            LEFT JOIN act_ru_identitylink l
+              ON t.ID_ = l.TASK_ID_
+                AND l.TYPE_ = 'candidate'
+                AND l.USER_ID_ IS NOT NULL
+                AND t.ASSIGNEE_ IS NULL
+            JOIN act_hi_procinst ins
+              ON t.proc_inst_id_ = ins.proc_inst_id_
+            JOIN act_re_procdef d
+              ON d.ID_ = ins.proc_def_id_) task
+            LEFT JOIN (<include refid="proxySql"/>) o
+              ON task.assignee = o.GRANTOR_
+                AND (ISNULL(o.PROC_DEF_KEY_) OR task.processName = o.PROC_DEF_KEY_)
+            LEFT JOIN ibpm_user u
+              ON task.assignee = u.USER_NAME
+    </sql>
+
+    <sql id="proxySql">
+        SELECT
+          r.ID_,
+          p.PROC_DEF_KEY_,
+          OPER_USER_,
+          OPER_USER_NAME_,
+          CREATE_TIME_,
+          GRANTOR_,
+          GRANTOR_NAME_,
+          SURROGATOR_,
+          SURROGATOR_NAME_,
+          UPDATE_TIME_,
+          `STATUS_`,
+          COMMENT_
+        FROM
+          ${tablePrefix}proxy_relation r
+          LEFT JOIN ${tablePrefix}proxy_proc p
+            ON r.ID_ = p.RELATION_ID_
+        <where>
+            and r.STATUS_ = '0'
+            <if test="grantorId != null">
+                and r.GRANTOR_ = #{grantorId, jdbcType=VARCHAR}
+            </if>
+            <if test="surrogateId != null">
+                and r.SURROGATOR_ = #{surrogateId, jdbcType=VARCHAR}
+            </if>
+            <choose>
+                <when test="isValid == 'true'">
+                    and r.`STATUS_` = '0'
+                </when>
+                <when test="isValid == 'false'">
+                    and r.`STATUS_` = '1'
+                </when>
+            </choose>
+            <if test="comment != null">
+                and lower(r.COMMENT_) like CONCAT('%', lower(#{comment, jdbcType=VARCHAR}), '%')
+            </if>
+        </where>
+    </sql>
+
     <sql id="instanceJoinJob">
         SELECT j.*, b.DISPLAY_NAME FROM ${tablePrefix}instance j
         LEFT JOIN ${tablePrefix}job b

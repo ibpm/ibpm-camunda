@@ -111,6 +111,38 @@ CREATE TABLE `ibpm_job` (
   PRIMARY KEY (`JOB_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+/*Table structure for table `ibpm_proxy_proc` */
+
+CREATE TABLE `ibpm_proxy_proc` (
+  `ID_` varchar(64) NOT NULL COMMENT '主键',
+  `RELATION_ID_` int(64) DEFAULT NULL COMMENT '表natasha_proxy_relation的ID_值',
+  `PROC_DEF_KEY_` varchar(150) COLLATE utf8_bin DEFAULT NULL COMMENT '流程名称',
+  PRIMARY KEY (`ID_`),
+  UNIQUE KEY `UNIQUE_NATASHA_PROXY_PROC_RELATION_PROC` (`RELATION_ID_`,`PROC_DEF_KEY_`),
+  KEY `IDX_PROXY_PROC_RELATION_ID` (`RELATION_ID_`),
+  KEY `IDX_PROXY_PROC_PROC_DEF_KEY` (`PROC_DEF_KEY_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+/*Table structure for table `ibpm_proxy_relation` */
+
+CREATE TABLE `ibpm_proxy_relation` (
+  `ID_` varchar(64) NOT NULL COMMENT '主键',
+  `OPER_USER_` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '操作员账号',
+  `OPER_USER_NAME_` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '操作员中文名',
+  `CREATE_TIME_` timestamp(3) NULL DEFAULT NULL COMMENT '创建时间',
+  `GRANTOR_` varchar(150) COLLATE utf8_bin DEFAULT NULL COMMENT '委托人账号',
+  `GRANTOR_NAME_` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '委托人中文名',
+  `SURROGATOR_` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '被委托人账号',
+  `SURROGATOR_NAME_` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '被委托人中文名',
+  `UPDATE_TIME_` timestamp(3) NULL DEFAULT NULL COMMENT '更新时间',
+  `STATUS_` char(2) COLLATE utf8_bin DEFAULT NULL COMMENT '0:正常，1失效，2删除',
+  `COMMENT_` varchar(4000) COLLATE utf8_bin DEFAULT NULL COMMENT '委托意见/说明/备注',
+  `TENANT_ID_` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '租户编号',
+  PRIMARY KEY (`ID_`),
+  KEY `IDX_PROXY_RELATION_GRANTOR` (`GRANTOR_`),
+  KEY `IDX_PROXY_RELATION_STATUS` (`STATUS_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
 /*Table structure for table `ibpm_role` */
 
 CREATE TABLE `ibpm_role` (
