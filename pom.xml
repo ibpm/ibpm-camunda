@@ -24,9 +24,10 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 
-		<spring.boot.version>2.2.7.RELEASE</spring.boot.version>
-		<spring.cloud.version>Hoxton.SR4</spring.cloud.version>
+		<spring.boot.version>2.2.8.RELEASE</spring.boot.version>
+		<spring.cloud.version>Hoxton.SR6</spring.cloud.version>
 
+		<camunda.version>7.13.0</camunda.version>
 		<alarm.version>0.1.0</alarm.version>
 
 		<commons.logging.version>1.2</commons.logging.version>
@@ -80,6 +81,15 @@
 				<version>${spring.cloud.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+
+			<!-- camunda -->
+			<dependency>
+				<groupId>org.camunda.bpm</groupId>
+				<artifactId>camunda-bom</artifactId>
+				<version>${camunda.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
 			</dependency>
 
 			<dependency>

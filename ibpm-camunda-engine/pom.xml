@@ -11,10 +11,6 @@
 
     <artifactId>${project.parent.artifactId}-engine</artifactId>
 
-    <properties>
-        <camunda.version>7.13.0</camunda.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -24,7 +20,6 @@
         <dependency>
             <groupId>org.camunda.bpm.springboot</groupId>
             <artifactId>camunda-bpm-spring-boot-starter</artifactId>
-            <version>${camunda.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.mybatis</groupId>
