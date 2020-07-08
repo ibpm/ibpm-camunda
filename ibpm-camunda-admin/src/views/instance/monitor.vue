@@ -7,7 +7,7 @@
         <el-option v-for="item in instanceStatuses" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="search" />
-      <el-button :disabled="retryDisabled" class="filter-item" type="warning" icon="el-icon-s-operation" @click="openParam">{{ $t('actions.retry') }}</el-button>
+      <el-button :disabled="retryDisabled" class="filter-item" type="warning" icon="el-icon-s-operation" @click="retry">{{ $t('actions.retry') }}</el-button>
       <el-button :disabled="terminateDisabled" class="filter-item" type="danger" icon="el-icon-stopwatch" @click="terminate">{{ $t('actions.terminate') }}</el-button>
       <div style="float: right">
         <el-popover
@@ -144,40 +144,19 @@
       :limit.sync="page.pageSize"
       @pagination="search"
     />
-
-    <el-dialog
-      :title="editDialog.title"
-      :visible.sync="editDialog.param.visible "
-      :center="true"
-      :modal="true"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      :before-close="close"
-    >
-      <div v-show="editDialog.param.visible">
-        <code-editor v-model="jsonData" :read-only="false" extension=".json" />
-        <div style="text-align: center; margin-top: 10px">
-          <el-button type="danger" @click="retry">
-            <svg-icon icon-class="hand" />{{ $t('actions.manual') }}
-          </el-button>
-        </div>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listReq, listRetryReq, listChildrenReq, listRetryChildrenReq, retryReq, terminateReq, getArgsReq } from '@/api/instance/instance'
+import { listReq, listRetryReq, listChildrenReq, listRetryChildrenReq, retryReq, terminateReq } from '@/api/instance/instance'
 import { getTimeStr } from '@/utils/tools'
 import Pagination from '@/components/Pagination'
 import DateTimeGenerator from '@/components/DateTimeGenerator'
-import CodeEditor from '@/components/CodeEditor'
 
 export default {
   name: 'Monitor',
   components: {
     DateTimeGenerator,
-    CodeEditor,
     Pagination
   },
   props: {
@@ -209,14 +188,7 @@ export default {
       instanceStatuses: [],
       instance: null,
       downloadLoading: false,
-      selections: [],
-      jsonData: null,
-      editDialog: {
-        title: undefined,
-        param: {
-          visible: false
-        }
-      }
+      selections: []
     }
   },
   computed: {
@@ -245,27 +217,17 @@ export default {
     */
   },
   methods: {
-    openParam() {
+    retry() {
       if (!this.selections[0].procInstId) {
         this.$message.info(this.$t('tip.flowNotStart'))
         return
       }
-      this.jsonData = null
-      getArgsReq({ procInstId: this.instance.procInstId }).then(res => {
-        this.editDialog.title = this.$t('core.job.actions.param')
-        this.editDialog.param.visible = true
-        this.jsonData = JSON.parse(res.data.result)
-      })
-    },
-    retry() {
       this.$confirm(this.$t('tip.confirmMsg'), this.$t('tip.confirm'), { type: 'info' })
         .then(() => {
           retryReq({
-            procInstId: this.instance.procInstId,
-            jsonData: (!this.jsonData ? null : (typeof this.jsonData === 'string' ? JSON.parse(this.jsonData) : this.jsonData))
+            procInstId: this.instance.procInstId
           })
             .then(res => {
-              this.editDialog.param.visible = false
               this.$message.success(res.data.msg)
               this.search()
             })
@@ -411,14 +373,12 @@ export default {
         }
       }))
     },
-    close() {
-      this.editDialog.param.visible = false
-    },
     loadConst() {
-      import(`@/constant/array/${localStorage.getItem('language')}.js`).then((array) => {
-        this.doingInstanceStatuses = array.doingInstanceStatuses
-        this.doneInstanceStatuses = array.doneInstanceStatuses
-        this.instanceStatuses = array.instanceStatuses
+      const lang = localStorage.getItem('language')
+      import('@/lang/dict.js').then(array => {
+        this.doingInstanceStatuses = array['doingInstanceStatuses_' + lang]
+        this.doneInstanceStatuses = array['doneInstanceStatuses_' + lang]
+        this.instanceStatuses = array['instanceStatuses_' + lang]
         this.search()
       })
     }

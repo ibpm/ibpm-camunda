@@ -19,8 +19,9 @@ export default {
   },
   methods: {
     loadConstant() {
-      import(`@/constant/array/${localStorage.getItem('language')}.js`).then((array) => {
-        this.firedSources = array.firedSources
+      const lang = localStorage.getItem('language')
+      import('@/lang/dict.js').then(array => {
+        this.firedSources = array['firedSources_' + lang]
       })
     }
   }

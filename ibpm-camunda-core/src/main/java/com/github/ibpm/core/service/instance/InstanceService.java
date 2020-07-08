@@ -30,11 +30,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -155,7 +153,7 @@ public class InstanceService extends BaseServiceAdapter {
     }
 
     public void noticeWithInstance(Instance instance) {
-        if (InstanceStatus.FAILURE.getStatus() == instance.getStatus()) {
+        /*if (InstanceStatus.FAILURE.getStatus() == instance.getStatus()) {
             String noticeTime = DateUtil.format(new Date(), DateUtil.DATE_FORMAT_YYYYMMDDHHMMSS);
             scheduledExecutorService.schedule(() -> {
                 try {
@@ -164,7 +162,7 @@ public class InstanceService extends BaseServiceAdapter {
                     log.error(e.getMessage(), e);
                 }
             }, 5 + (int) (Math.random() * 3), TimeUnit.SECONDS);
-        }
+        }*/
     }
 
     private void sendNotice(Instance instance, String noticeTime) {
@@ -243,8 +241,8 @@ public class InstanceService extends BaseServiceAdapter {
             }
         } else {
             alarmPosition = TipProperty.getValue(10052);
-            logKeySB.append(instance.getCode());
-            errorMsgSB.append(instance.getMsg());
+            /*logKeySB.append(instance.getCode());
+            errorMsgSB.append(instance.getMsg());*/
         }
         String subject = MessageFormat.format(TipProperty.getValue(10050),
                 instance.getJobName(),
@@ -255,11 +253,11 @@ public class InstanceService extends BaseServiceAdapter {
                 user.getDisplayName(),
                 instance.getJobName(),
                 instance.getDisplayName(),
-                instance.getStartTime() == null ? CommonConstants.EMPTY : DateUtil.format(new Date(instance.getStartTime()), DateUtil.DATE_FORMAT_YYYYMMDDHHMMSS),
+                instance.getStartTime() == null ? CommonConstants.EMPTY : DateUtil.format(instance.getStartTime(), DateUtil.DATE_FORMAT_YYYYMMDDHHMMSS),
                 actIdSB,
                 actNameSB,
-                instance.getSchedulerUri(),
-                StringUtils.trimToEmpty(instance.getExecutorUri()),
+                //instance.getSchedulerUri(),
+                //StringUtils.trimToEmpty(instance.getExecutorUri()),
                 bizUriSB,
                 alarmPosition,
                 logKeySB,

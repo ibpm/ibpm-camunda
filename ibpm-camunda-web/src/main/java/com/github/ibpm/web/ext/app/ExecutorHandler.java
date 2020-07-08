@@ -1,9 +1,7 @@
 package com.github.ibpm.web.ext.app;
 
-import com.github.ibpm.common.constant.APIPath;
 import com.github.ibpm.common.constant.CommonConstants;
 import com.github.ibpm.common.exception.RTException;
-import com.github.ibpm.common.param.IdParam;
 import com.github.ibpm.common.result.CommonResult;
 import com.github.ibpm.common.result.core.instance.Instance;
 import com.github.ibpm.config.property.AppProperties;
@@ -28,7 +26,7 @@ public class ExecutorHandler extends CrossSystemHandler {
     private AppProperties appProperties;
 
     public void terminate(Instance instance) {
-        call(instance.getExecutorUri(), APIPath.ExecutorPath.TERMINATE, new IdParam().setId(instance.getId()));
+        //call(instance.getExecutorUri(), APIPath.ExecutorPath.TERMINATE, new IdParam().setId(instance.getId()));
     }
 
     private void call(String baseUrl, String apiSubPath, Object param) {

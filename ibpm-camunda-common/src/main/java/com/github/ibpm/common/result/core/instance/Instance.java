@@ -2,6 +2,8 @@ package com.github.ibpm.common.result.core.instance;
 
 import lombok.ToString;
 
+import java.util.Date;
+
 @ToString
 public class Instance {
 
@@ -13,34 +15,39 @@ public class Instance {
 
     protected String superProcInstId;
 
+
+    protected String taskId;
+
+    protected Integer version;
+
+    protected String starter;
+
+    protected String assignees;
+
+    protected String assignNames;
+
+    protected String granters;
+
+    protected String grantNames;
+
+    protected String nodeId;
+
+    protected String nodeName;
+
+    protected Date startTime;
+
+    protected Date endTime;
+
+    protected Date assignTime;
+
+
     protected String jobName;
 
     protected String displayName;
 
-    protected String triggerName;
-
     protected String procDefId;
 
-    protected Long startTime;
-
-    protected Long endTime;
-
     protected Long duration;
-
-    protected Integer status;
-
-    protected Integer code;
-
-    protected String msg;
-
-    /**
-     * when you retried, the field point to the parent id
-     */
-    protected String parentId;
-
-    protected String schedulerUri;
-
-    protected String executorUri;
 
     public String getId() {
         return id;
@@ -78,15 +85,6 @@ public class Instance {
         return this;
     }
 
-    public String getParentId() {
-        return parentId;
-    }
-
-    public Instance setParentId(String parentId) {
-        this.parentId = parentId;
-        return this;
-    }
-
     public String getJobName() {
         return jobName;
     }
@@ -105,39 +103,12 @@ public class Instance {
         return this;
     }
 
-    public String getTriggerName() {
-        return triggerName;
-    }
-
-    public Instance setTriggerName(String triggerName) {
-        this.triggerName = triggerName;
-        return this;
-    }
-
     public String getProcDefId() {
         return procDefId;
     }
 
     public Instance setProcDefId(String procDefId) {
         this.procDefId = procDefId;
-        return this;
-    }
-
-    public Long getStartTime() {
-        return startTime;
-    }
-
-    public Instance setStartTime(Long startTime) {
-        this.startTime = startTime;
-        return this;
-    }
-
-    public Long getEndTime() {
-        return endTime;
-    }
-
-    public Instance setEndTime(Long endTime) {
-        this.endTime = endTime;
         return this;
     }
 
@@ -150,48 +121,111 @@ public class Instance {
         return this;
     }
 
-    public Integer getStatus() {
-        return status;
+    public String getTaskId() {
+        return taskId;
     }
 
-    public Instance setStatus(Integer status) {
-        this.status = status;
+    public Instance setTaskId(String taskId) {
+        this.taskId = taskId;
         return this;
     }
 
-    public Integer getCode() {
-        return code;
+    public Integer getVersion() {
+        return version;
     }
 
-    public Instance setCode(Integer code) {
-        this.code = code;
+    public Instance setVersion(Integer version) {
+        this.version = version;
         return this;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getStarter() {
+        return starter;
     }
 
-    public Instance setMsg(String msg) {
-        this.msg = msg;
+    public Instance setStarter(String starter) {
+        this.starter = starter;
         return this;
     }
 
-    public String getSchedulerUri() {
-        return schedulerUri;
+    public String getAssignees() {
+        return assignees;
     }
 
-    public Instance setSchedulerUri(String schedulerUri) {
-        this.schedulerUri = schedulerUri;
+    public Instance setAssignees(String assignees) {
+        this.assignees = assignees;
         return this;
     }
 
-    public String getExecutorUri() {
-        return executorUri;
+    public String getAssignNames() {
+        return assignNames;
     }
 
-    public Instance setExecutorUri(String executorUri) {
-        this.executorUri = executorUri;
+    public Instance setAssignNames(String assignNames) {
+        this.assignNames = assignNames;
+        return this;
+    }
+
+    public String getGranters() {
+        return granters;
+    }
+
+    public Instance setGranters(String granters) {
+        this.granters = granters;
+        return this;
+    }
+
+    public String getGrantNames() {
+        return grantNames;
+    }
+
+    public Instance setGrantNames(String grantNames) {
+        this.grantNames = grantNames;
+        return this;
+    }
+
+    public String getNodeId() {
+        return nodeId;
+    }
+
+    public Instance setNodeId(String nodeId) {
+        this.nodeId = nodeId;
+        return this;
+    }
+
+    public String getNodeName() {
+        return nodeName;
+    }
+
+    public Instance setNodeName(String nodeName) {
+        this.nodeName = nodeName;
+        return this;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public Instance setStartTime(Date startTime) {
+        this.startTime = startTime;
+        return this;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public Instance setEndTime(Date endTime) {
+        this.endTime = endTime;
+        return this;
+    }
+
+    public Date getAssignTime() {
+        return assignTime;
+    }
+
+    public Instance setAssignTime(Date assignTime) {
+        this.assignTime = assignTime;
         return this;
     }
 }
