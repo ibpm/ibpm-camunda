@@ -63,11 +63,32 @@
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="table-expand">
-            <el-form-item :label="$t('monitor.columns.schedulerUri')">
-              <span>{{ props.row.schedulerUri }}</span>
+            <el-form-item :label="$t('core.job.columns.version')">
+              <span>{{ props.row.version }}</span>
             </el-form-item>
-            <el-form-item :label="$t('monitor.columns.executorUri')">
-              <span>{{ props.row.executorUri }}</span>
+            <el-form-item :label="$t('monitor.columns.starter')">
+              <span>{{ props.row.starter }}</span>
+            </el-form-item>
+            <el-form-item :label="$t('columns.startTime')">
+              <span v-show="props.row.startTime">{{ props.row.startTime | parseTime }}</span>
+            </el-form-item>
+            <el-form-item :label="$t('columns.endTime')">
+              <span v-show="props.row.endTime">{{ props.row.endTime | parseTime }}</span>
+            </el-form-item>
+            <el-form-item :label="$t('monitor.columns.duration')">
+              <span v-show="props.row.duration">{{ props.row.duration | parseDuration }}</span>
+            </el-form-item>
+            <el-form-item :label="$t('columns.granters')">
+              <span>{{ props.row.granters }}</span>
+            </el-form-item>
+            <el-form-item :label="$t('columns.grantNames')">
+              <span>{{ props.row.grantNames }}</span>
+            </el-form-item>
+            <el-form-item :label="$t('columns.assignees')">
+              <span>{{ props.row.assignees }}</span>
+            </el-form-item>
+            <el-form-item :label="$t('columns.nodeId')">
+              <span>{{ props.row.nodeId }}</span>
             </el-form-item>
           </el-form>
         </template>
@@ -91,48 +112,19 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('columns.startTime')" width="160px" align="center">
+      <el-table-column :label="$t('columns.assignNames')" show-overflow-tooltip align="center" class-name="status-col" width="100px">
         <template slot-scope="scope">
-          <span>{{ scope.row.startTime | parseTime }}</span>
+          <span>{{ scope.row.assignNames }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('columns.endTime')" width="160px" align="center">
+      <el-table-column :label="$t('columns.nodeName')" show-overflow-tooltip align="center" class-name="status-col" width="100px">
         <template slot-scope="scope">
-          <span v-show="scope.row.endTime">{{ scope.row.endTime | parseTime }}</span>
+          <span>{{ scope.row.nodeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('monitor.columns.duration')" min-width="80px" align="center">
+      <el-table-column :label="$t('columns.assignTime')" width="160px" align="center">
         <template slot-scope="scope">
-          <span v-show="scope.row.duration">{{ scope.row.duration | parseDuration }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('columns.status')" align="center" class-name="status-col" width="100px">
-        <template slot-scope="scope">
-          <span v-show="!scope.row.triggerName"><svg-icon icon-class="hand" /></span>
-          <el-tag :type="scope.row.status | renderInstanceStatus">{{ formatStatus(scope.row.status) }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('monitor.columns.msg')" min-width="100px">
-        <template slot-scope="scope">
-          <div v-if="scope.row.code || scope.row.msg">
-            <el-popover trigger="hover" placement="bottom">
-              <p>{{ scope.row.code }}</p>
-              <p>{{ scope.row.msg }}</p>
-              <div slot="reference">
-                <el-link v-if="scope.row.procInstId && scope.row.executorUri" :type="scope.row.status | renderInstanceStatus" @click="openTrace(scope.row)">
-                  <div>{{ scope.row.code }}</div>
-                  <div class="single-line">{{ scope.row.msg }}</div>
-                </el-link>
-                <div v-else>
-                  <div>{{ scope.row.code }}</div>
-                  <div class="single-line">{{ scope.row.msg }}</div>
-                </div>
-              </div>
-            </el-popover>
-          </div>
-          <div v-else>
-            <el-link class="el-icon-link" :type="scope.row.status | renderInstanceStatus" @click="openTrace(scope.row)">{{ $t('tip.detail') }}</el-link>
-          </div>
+          <span>{{ scope.row.assignTime | parseTime }}</span>
         </template>
       </el-table-column>
     </el-table>

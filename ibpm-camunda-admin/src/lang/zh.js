@@ -123,7 +123,14 @@ export default {
     startTime: '开始时间',
     endTime: '结束时间',
     repeatInterval: '周期',
-    prefix: '前缀'
+    prefix: '前缀',
+    nodeId: '节点编号',
+    nodeName: '节点名称',
+    assignTime: '接收时间',
+    assignees: '待办人账号',
+    assignNames: '待办人名称',
+    granters: '授权人账号',
+    grantNames: '授权人名称'
   },
   rules: {
     userName: '用户名不能为空',
@@ -243,9 +250,7 @@ export default {
   monitor: {
     columns: {
       duration: '执行时长',
-      msg: '日志',
-      schedulerUri: '调度器地址',
-      executorUri: '执行器地址'
+      starter: '发起人'
     },
     label: {
       job: '流程',

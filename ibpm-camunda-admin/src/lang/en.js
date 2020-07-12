@@ -123,7 +123,14 @@ export default {
     startTime: 'Start time',
     endTime: 'End time',
     repeatInterval: 'Repeat Interval',
-    prefix: 'Prefix'
+    prefix: 'Prefix',
+    nodeId: 'Node Id',
+    nodeName: 'Node Name',
+    assignTime: 'Assign Time',
+    assignees: 'Assignees',
+    assignNames: 'Assign Names',
+    granters: 'Granters',
+    grantNames: 'Grant Names'
   },
   rules: {
     userName: 'The user name can not be blank',
@@ -243,9 +250,7 @@ export default {
   monitor: {
     columns: {
       duration: 'duration',
-      msg: 'msg',
-      schedulerUri: 'scheduler uri',
-      executorUri: 'executor uri'
+      starter: 'starter'
     },
     label: {
       job: 'Job',
