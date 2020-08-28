@@ -11,7 +11,7 @@ import com.github.ibpm.core.ext.notice.channel.Sender;
 import com.github.ibpm.core.ext.notice.MessageBean;
 import com.github.ibpm.core.ext.notice.channel.Sender;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Slf4j

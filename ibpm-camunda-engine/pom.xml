@@ -11,6 +11,11 @@
 
     <artifactId>${project.parent.artifactId}-engine</artifactId>
 
+    <properties>
+        <groovy.version>2.4.15</groovy.version>
+        <jsr223.shell.version>1.0.0</jsr223.shell.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -26,6 +31,20 @@
                     <artifactId>mybatis</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.camunda.template-engines</groupId>
+            <artifactId>camunda-template-engines-freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.attemper</groupId>
+            <artifactId>jsr223-shell</artifactId>
+            <version>${jsr223.shell.version}</version>
         </dependency>
     </dependencies>
 </project>

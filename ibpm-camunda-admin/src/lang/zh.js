@@ -12,9 +12,15 @@ export default {
     monitor: '监控管理',
     total: '执行监控',
     retry: '重试监控',
-    scheduler: '调度器监控',
-    executor: '执行器监控',
-    application: '应用管理'
+    start: '发起流程',
+    todo: '待办列表',
+    doing: '经办列表',
+    done: '办结列表',
+    draft: '草稿箱',
+    application: '应用管理',
+    biz: '业务流程',
+    demo01Form: '出差申请',
+    demo02Form: '请假申请'
   },
   actions: {
     handle: '操作',
@@ -37,7 +43,8 @@ export default {
     ok: '确定',
     download: '下载',
     use: '使用',
-    manual: '发起',
+    start: '启动流程',
+    draft: '拟稿',
     showCurrent: '显示当前',
     showAll: '显示全部',
     highOperation: '高级操作',
@@ -68,7 +75,7 @@ export default {
     saveConfirm: '确定保存',
     publishConfirm: '确定发布',
     saveAndPublishConfirm: '确定保存并发布',
-    disabledJobError: '禁用的任务不可被发起',
+    disabledJobError: '禁用的流程不可被发起',
     adminUserCannotBeRemoved: '超管用户不能删除',
     preview: '预览',
     selectSql: '必须是查询语句(以select开头)',
@@ -124,13 +131,14 @@ export default {
     endTime: '结束时间',
     repeatInterval: '周期',
     prefix: '前缀',
-    nodeId: '节点编号',
-    nodeName: '节点名称',
+    actId: '节点编号',
+    actName: '节点名称',
     assignTime: '接收时间',
-    assignees: '待办人账号',
-    assignNames: '待办人名称',
-    granters: '授权人账号',
-    grantNames: '授权人名称'
+    assignee: '待办人账号',
+    assignName: '待办人名称',
+    granter: '授权人账号',
+    grantName: '授权人名称',
+    title: '标题'
   },
   rules: {
     userName: '用户名不能为空',
@@ -190,15 +198,15 @@ export default {
     title: '流程',
     job: {
       rules: {
-        jobName: '任务名称不能为空'
+        jobName: '流程名称不能为空'
       },
       columns: {
         reversion: '模型版本',
         version: '发布版本',
-        jobName: '任务名称'
+        jobName: '流程名称'
       },
       placeholder: {
-        jobName: '请输入任务名称'
+        jobName: '请输入流程名称'
       },
       actions: {
         design: '设计',
@@ -223,7 +231,7 @@ export default {
         exchange: '将当前模型切换为最新的版本',
         copyConfirm: '确定复制',
         exchangeConfirm: '确定将当前模型切换为最新的版本',
-        jobNameNotChanged: '复制任务时，任务名称必须修改',
+        jobNameNotChanged: '复制任务时，流程名称必须修改',
         versionIsLatest: '当前版本已为最新，无需切换'
       }
     },
@@ -343,5 +351,18 @@ export default {
     theme: '主题色',
     tagsView: '开启 Tags-View',
     sidebarLogo: '侧边栏 Logo'
+  },
+  biz: {
+    startDate: '开始日期',
+    dayNum: '天数',
+    destination: '目的地',
+    trafficTool: '交通工具',
+    reason: '理由',
+    bei_jing: '北京',
+    shang_hai: '上海',
+    guang_zhou: '广州',
+    shen_zhen: '深圳',
+    air_plane: '飞机',
+    high_speed_railway: '高铁'
   }
 }

@@ -48,7 +48,7 @@
       ref="tables"
       v-loading="listLoading"
       :data="list"
-      row-key="id"
+      row-key="procInstId"
       border
       fit
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
@@ -78,17 +78,17 @@
             <el-form-item :label="$t('monitor.columns.duration')">
               <span v-show="props.row.duration">{{ props.row.duration | parseDuration }}</span>
             </el-form-item>
-            <el-form-item :label="$t('columns.granters')">
+            <el-form-item :label="$t('columns.granter')">
               <span>{{ props.row.granters }}</span>
             </el-form-item>
-            <el-form-item :label="$t('columns.grantNames')">
+            <el-form-item :label="$t('columns.grantName')">
               <span>{{ props.row.grantNames }}</span>
             </el-form-item>
-            <el-form-item :label="$t('columns.assignees')">
+            <el-form-item :label="$t('columns.assignee')">
               <span>{{ props.row.assignees }}</span>
             </el-form-item>
-            <el-form-item :label="$t('columns.nodeId')">
-              <span>{{ props.row.nodeId }}</span>
+            <el-form-item :label="$t('columns.actId')">
+              <span>{{ props.row.actId }}</span>
             </el-form-item>
           </el-form>
         </template>
@@ -112,7 +112,7 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('columns.assignNames')" show-overflow-tooltip align="center" class-name="status-col" width="100px">
+      <el-table-column :label="$t('columns.assignName')" show-overflow-tooltip align="center" class-name="status-col" width="100px">
         <template slot-scope="scope">
           <span>{{ scope.row.assignNames }}</span>
         </template>

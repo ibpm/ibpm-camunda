@@ -20,16 +20,15 @@ export default class CustomPalette {
       create.start(event, shape)
     }
 
-    /**
     function createParallelGateway(event) {
       createShape(event, 'ParallelGateway')
     }
-    */
 
     function createUserTask(event) {
       createShape(event, 'UserTask')
     }
 
+    /*
     function createServiceTask(event) {
       createShape(event, 'ServiceTask')
     }
@@ -37,13 +36,13 @@ export default class CustomPalette {
     function createScriptTask(event) {
       createShape(event, 'ScriptTask')
     }
+    */
 
     function createCallActivity(event) {
       createShape(event, 'CallActivity')
     }
 
     return {
-      /**
       'append.parallel-gateway': {
         group: 'activity',
         className: 'bpmn-icon-gateway-parallel',
@@ -53,7 +52,6 @@ export default class CustomPalette {
           click: createParallelGateway
         }
       },
-       */
       'create.user-task': {
         group: 'activity',
         className: 'bpmn-icon-user-task',
@@ -62,7 +60,7 @@ export default class CustomPalette {
           dragstart: createUserTask,
           click: createUserTask
         }
-      },
+      }, /*
       'create.service-task': {
         group: 'activity',
         className: 'bpmn-icon-service-task',
@@ -80,7 +78,7 @@ export default class CustomPalette {
           dragstart: createScriptTask,
           click: createScriptTask
         }
-      },
+      },*/
       'create.call-activity': {
         group: 'activity',
         className: 'bpmn-icon-call-activity',

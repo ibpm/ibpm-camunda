@@ -20,7 +20,7 @@ import com.github.ibpm.sys.util.PageUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -202,32 +202,31 @@ public class JobOperatedService extends BaseServiceAdapter {
     }
 
     /**
-     * manual run jobs
+     * manual start process(es)
      *
      * @param param
      * @return
      */
-    public Void manualBatch(JobNamesParam param) {
+    public String start(JobNamesParam param) {
         List<String> jobNames = param.getJobNames();
-        ExecutorService executorService = Executors.newFixedThreadPool(jobNames.size());
-        for (String jobName : jobNames) {
-            executorService.submit(() -> {
-                manual(new JobNameParam().setJobName(jobName));
-            });
+        if (jobNames.size() == 1) {
+            String formKey = ibpmEngineService.getStartFormKeyByDefinitionKey(jobNames.get(0));
+            if (StringUtils.isBlank(formKey)) {
+                ibpmEngineService.create(jobNames.get(0), null, null);
+                return null;
+            } else {
+                return formKey;
+            }
+        } else {
+            ExecutorService executorService = Executors.newFixedThreadPool(jobNames.size());
+            for (String jobName : jobNames) {
+                executorService.submit(() -> {
+                    ibpmEngineService.create(jobName, null, null);
+                });
+            }
+            executorService.shutdown();
+            return null;
         }
-        executorService.shutdown();
-        return null;
-    }
-
-    /**
-     * manual run job with param
-     *
-     * @param param
-     * @return
-     */
-    public Void manual(JobNameParam param) {
-        ibpmEngineService.createProcessInstance(param.getJobName());
-        return null;
     }
 
     /**
@@ -252,8 +251,6 @@ public class JobOperatedService extends BaseServiceAdapter {
     }
 
     private static final String JSON_FILE_JOB = "job.json";
-
-    private static final String JSON_FILE_ARG = "arg.json";
 
     /**
      * export job and(or) trigger and(or) arg and(or) project

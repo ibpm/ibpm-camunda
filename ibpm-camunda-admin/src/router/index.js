@@ -10,6 +10,7 @@ import Layout from '@/layout'
 import sysRouter from './modules/sys'
 import coreRouter from './modules/core'
 import monitorRouter from './modules/monitor'
+import bizRouter from './modules/biz'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -140,6 +141,7 @@ export const asyncRouterMap = [
   coreRouter,
   monitorRouter,
   sysRouter,
+  bizRouter,
   { path: '*', redirect: '/404', hidden: true }
 ]
 

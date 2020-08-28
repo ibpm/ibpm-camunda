@@ -2,9 +2,6 @@ package com.github.ibpm.common.result.core.job;
 
 import lombok.ToString;
 
-import java.util.Date;
-import java.util.List;
-
 @ToString
 public class Job {
 

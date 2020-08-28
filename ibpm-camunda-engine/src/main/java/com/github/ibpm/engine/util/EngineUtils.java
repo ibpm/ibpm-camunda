@@ -6,8 +6,12 @@ import org.camunda.bpm.model.bpmn.instance.Process;
 
 import java.io.ByteArrayInputStream;
 import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EngineUtils {
+
+    private static final String PARAM_EXPRESSION = "^\\$\\{(.*)\\}$";
 
     public static String toBpmnXmlContent(String id, String name, String xmlContent) {
         BpmnModelInstance bpmnModelInstance = toBpmnModelInstance(xmlContent);
@@ -21,5 +25,15 @@ public class EngineUtils {
 
     public static BpmnModelInstance toBpmnModelInstance(String xmlContent) {
         return Bpmn.readModelFromStream(new ByteArrayInputStream(xmlContent.getBytes(IoUtils.ENCODING_CHARSET)));
+    }
+
+    public static synchronized boolean isExpression(String expression) {
+        Matcher matcher = Pattern.compile(PARAM_EXPRESSION).matcher(expression);
+        return matcher.find();
+    }
+
+    public static synchronized String extractFromExpression(String expression) {
+        Matcher matcher = Pattern.compile(PARAM_EXPRESSION).matcher(expression);
+        return matcher.find() ? matcher.group(1) : expression;
     }
 }

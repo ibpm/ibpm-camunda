@@ -4,7 +4,7 @@ import com.github.ibpm.config.annotation.MultiDataSource;
 import com.github.ibpm.config.dao.ApiLogMapper;
 import com.github.ibpm.config.entity.ApiLog;
 import com.github.ibpm.config.id.MyIdGenerator;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;

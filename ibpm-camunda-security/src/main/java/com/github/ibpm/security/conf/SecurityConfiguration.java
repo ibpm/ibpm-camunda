@@ -1,5 +1,6 @@
 package com.github.ibpm.security.conf;
 
+import com.github.ibpm.biz.conf.BizConfiguration;
 import com.github.ibpm.core.conf.CoreConfiguration;
 import com.github.ibpm.security.controller.LoginController;
 import com.github.ibpm.security.service.LoginService;
@@ -13,7 +14,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
 @Import({
-        CoreConfiguration.class
+        CoreConfiguration.class,
+        BizConfiguration.class,
 })
 @Configuration
 @ComponentScan(basePackageClasses = {

@@ -1,6 +1,30 @@
 import request from '@/utils/request'
 import { APIPath } from '@/settings'
 
+export const listTodoReq = (params) => {
+  return request({
+    url: APIPath.CORE + APIPath.INSTANCE + '/todo',
+    method: 'get',
+    params: params
+  })
+}
+
+export const listDoingReq = (params) => {
+  return request({
+    url: APIPath.CORE + APIPath.INSTANCE + '/doing',
+    method: 'get',
+    params: params
+  })
+}
+
+export const listDoneReq = (params) => {
+  return request({
+    url: APIPath.CORE + APIPath.INSTANCE + '/done',
+    method: 'get',
+    params: params
+  })
+}
+
 export const listReq = (params) => {
   return request({
     url: APIPath.CORE + APIPath.INSTANCE,
@@ -60,6 +84,14 @@ export const terminateReq = (data) => {
 export const getArgsReq = (params) => {
   return request({
     url: APIPath.CORE + APIPath.INSTANCE + '/arg',
+    method: 'get',
+    params: params
+  })
+}
+
+export const openFormReq = (params) => {
+  return request({
+    url: APIPath.CORE + APIPath.INSTANCE + '/openForm',
     method: 'get',
     params: params
   })

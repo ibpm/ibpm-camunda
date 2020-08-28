@@ -24,17 +24,6 @@ const coreRouter = {
       }
     },
     {
-      path: 'calendar',
-      component: () => import('@/views/core/calendar'),
-      name: 'calendar',
-      meta: {
-        title: 'calendar',
-        icon: 'calendar',
-        noCache: false,
-        buttons: ['saveDate']
-      }
-    },
-    {
       path: 'flow/:key',
       component: () => import('@/views/core/flow'),
       name: 'flow',
@@ -43,6 +32,62 @@ const coreRouter = {
         title: route => `${route.params.key}`,
         notMenu: true,
         noCache: false
+      }
+    },
+    {
+      path: 'start',
+      component: () => import('@/views/core/start'),
+      name: 'start',
+      meta: {
+        title: 'start',
+        icon: 'start'
+      }
+    },
+    {
+      path: 'todo',
+      component: () => import('@/views/core/todo'),
+      name: 'todo',
+      meta: {
+        title: 'todo',
+        icon: 'todo'
+      }
+    },
+    {
+      path: 'doing',
+      component: () => import('@/views/core/doing'),
+      name: 'doing',
+      meta: {
+        title: 'doing',
+        icon: 'doing'
+      }
+    },
+    {
+      path: 'done',
+      component: () => import('@/views/core/done'),
+      name: 'done',
+      meta: {
+        title: 'done',
+        icon: 'done'
+      }
+    },
+    {
+      path: 'draft',
+      component: () => import('@/views/core/draft'),
+      name: 'draft',
+      meta: {
+        title: 'draft',
+        icon: 'el-icon-edit-outline'
+      }
+    },
+    {
+      path: 'calendar',
+      component: () => import('@/views/core/calendar'),
+      name: 'calendar',
+      meta: {
+        title: 'calendar',
+        icon: 'calendar',
+        noCache: false,
+        buttons: ['saveDate']
       }
     }
   ]

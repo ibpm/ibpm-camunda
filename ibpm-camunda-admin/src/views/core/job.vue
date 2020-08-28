@@ -9,8 +9,8 @@
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="search" />
       <el-button class="filter-item table-external-button" type="success" icon="el-icon-plus" @click="add" />
       <el-button :disabled="!selections || !selections.length" class="filter-item table-external-button" type="danger" icon="el-icon-delete" @click="remove" />
-      <el-button :disabled="!selections || !selections.length" class="filter-item table-external-button" type="warning" @click="manualBatch">
-        <svg-icon icon-class="hand" />{{ $t('actions.manual') }}
+      <el-button :disabled="!selections || !selections.length" class="filter-item table-external-button" type="warning" @click="start">
+        <svg-icon icon-class="hand" />{{ $t('actions.start') }}
       </el-button>
       <div style="float: right">
         <el-popover placement="bottom" trigger="hover">
@@ -109,9 +109,8 @@
 </template>
 
 <script>
-import { listReq, /* getReq,*/ removeReq, addReq, updateReq, enableReq, disableReq, publishReq, manualBatchReq, importModelReq, exportModelReq, manualReq } from '@/api/core/job'
+import { listReq, removeReq, addReq, updateReq, enableReq, disableReq, publishReq, startReq, importModelReq, exportModelReq } from '@/api/core/job'
 import * as calendarApi from '@/api/core/calendar'
-import * as toolApi from '@/api/core/tool'
 import { buildMsg, getTimeStr, download } from '@/utils/tools'
 import Pagination from '@/components/Pagination'
 import JobInfoForm from './components/job/jobInfoForm'
@@ -173,7 +172,6 @@ export default {
   created() {
     this.loadConst()
     this.initCalendars()
-    this.initTimeZones()
   },
   methods: {
     search() {
@@ -382,50 +380,28 @@ export default {
       }
       this.$router.push(route)
     },
-    initTimeZones() {
-      toolApi.listTimeZoneReq().then(res => {
-        this.timeZones = res.data.result
-      })
-    },
-    manualBatch() {
-      if (this.selections.length === 1) {
-        if (this.selections[0].status === 1) {
-          this.$message.warning(this.$t('tip.disabledJobError') + ':' + this.selections[0].jobName)
+    start() {
+      if (this.selections.length === 1 && this.selections[0].status === 1) {
+        this.$message.warning(this.$t('tip.disabledJobError') + ':' + this.selections[0].jobName)
+        return
+      }
+      const jobNames = []
+      for (let i = 0; i < this.selections.length; i++) {
+        const sel = this.selections[i]
+        if (sel.status === 1) {
+          this.$message.warning(this.$t('tip.disabledJobError') + ':' + sel.jobName)
           return
         }
-        this.manual()
-      } else {
-        const jobNames = []
-        for (let i = 0; i < this.selections.length; i++) {
-          const sel = this.selections[i]
-          if (sel.status === 1) {
-            this.$message.warning(this.$t('tip.disabledJobError') + ':' + sel.jobName)
-            return
-          }
-          jobNames.push(sel.jobName)
-        }
-        this.$confirm(buildMsg(this, jobNames), this.$t('tip.confirmMsg'), { type: 'warning' })
-          .then(() => {
-            manualBatchReq({ jobNames: jobNames }).then(res => {
-              this.$message.success(res.data.msg)
-              setTimeout(() => {
-                this.$router.push({ name: 'total', replace: true })
-              }, 600)
-            })
-          })
+        jobNames.push(sel.jobName)
       }
-    },
-    manual() {
-      this.$confirm(this.$t('tip.confirm'), this.$t('tip.confirmMsg'), { type: 'warning' })
+      this.$confirm(buildMsg(this, jobNames), this.$t('tip.confirmMsg'), { type: 'warning' })
         .then(() => {
-          manualReq({
-            jobName: this.selections[0].jobName,
-            jsonData: (!this.jsonData ? null : (typeof this.jsonData === 'string' ? JSON.parse(this.jsonData) : this.jsonData))
-          }).then(res => {
-            this.$message.success(res.data.msg)
-            setTimeout(() => {
-              this.$router.push({ name: 'total', replace: true })
-            }, 600)
+          startReq({ jobNames: jobNames }).then(res => {
+            if (res.data.result) {
+              this.$router.push({ name: res.data.result, replace: false })
+            } else {
+              this.$message.success(res.data.msg)
+            }
           })
         })
     },

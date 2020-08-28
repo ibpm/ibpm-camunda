@@ -123,58 +123,67 @@ export const uriTypes_zh = [
   }
 ]
 
-export const runningInstanceStatus_zh = [
+export const draftInstanceStatus_zh = [
   {
-    label: '执行中',
+    label: '草稿',
     value: 0
   }
 ]
 
-export const successInstanceStatus_zh = [
+export const runningInstanceStatus_zh = [
   {
-    label: '成功',
+    label: '流转中',
     value: 1
   }
 ]
 
-export const failureInstanceStatus_zh = [
+export const rejectedInstanceStatus_zh = [
   {
-    label: '失败',
+    label: '被驳回',
     value: 2
+  }
+]
+
+export const doneInstanceStatus_zh = [
+  {
+    label: '办结',
+    value: -1
   }
 ]
 
 export const terminatedInstanceStatus_zh = [
   {
     label: '终止',
-    value: 3
+    value: -2
   }
 ]
 
-export const unmetInstanceStatus_zh = [
+export const removedInstanceStatus_zh = [
   {
-    label: '跳过',
-    value: 4
+    label: '删除',
+    value: -3
   }
 ]
 
 export const doingInstanceStatuses_zh = [
-  ...runningInstanceStatus_zh
+  ...draftInstanceStatus_zh,
+  ...runningInstanceStatus_zh,
+  ...rejectedInstanceStatus_zh
 ]
 
 export const doneInstanceStatuses_zh = [
-  ...successInstanceStatus_zh,
-  ...failureInstanceStatus_zh,
+  ...doneInstanceStatus_zh,
   ...terminatedInstanceStatus_zh,
-  ...unmetInstanceStatus_zh
+  ...removedInstanceStatus_zh
 ]
 
 export const instanceStatuses_zh = [
+  ...draftInstanceStatus_zh,
   ...runningInstanceStatus_zh,
-  ...successInstanceStatus_zh,
-  ...failureInstanceStatus_zh,
+  ...rejectedInstanceStatus_zh,
+  ...doneInstanceStatus_zh,
   ...terminatedInstanceStatus_zh,
-  ...unmetInstanceStatus_zh
+  ...removedInstanceStatus_zh
 ]
 
 export const requestMethods_zh = [
@@ -425,58 +434,67 @@ export const uriTypes_en = [
   }
 ]
 
-export const runningInstanceStatus_en = [
+export const draftInstanceStatus_en = [
   {
-    label: 'Running',
+    label: 'Draft',
     value: 0
   }
 ]
 
-export const successInstanceStatus_en = [
+export const runningInstanceStatus_en = [
   {
-    label: 'Success',
+    label: 'Running',
     value: 1
   }
 ]
 
-export const failureInstanceStatus_en = [
+export const rejectedInstanceStatus_en = [
   {
-    label: 'Failure',
+    label: 'Rejected',
     value: 2
+  }
+]
+
+export const doneInstanceStatus_en = [
+  {
+    label: 'Done',
+    value: -1
   }
 ]
 
 export const terminatedInstanceStatus_en = [
   {
     label: 'Terminated',
-    value: 3
+    value: -2
   }
 ]
 
-export const unmetInstanceStatus_en = [
+export const removedInstanceStatus_en = [
   {
-    label: 'Unmet',
-    value: 4
+    label: 'Removed',
+    value: -3
   }
 ]
 
 export const doingInstanceStatuses_en = [
-  ...runningInstanceStatus_en
+  ...draftInstanceStatus_en,
+  ...runningInstanceStatus_en,
+  ...rejectedInstanceStatus_en
 ]
 
 export const doneInstanceStatuses_en = [
-  ...successInstanceStatus_en,
-  ...failureInstanceStatus_en,
+  ...doneInstanceStatus_en,
   ...terminatedInstanceStatus_en,
-  ...unmetInstanceStatus_en
+  ...removedInstanceStatus_en
 ]
 
 export const instanceStatuses_en = [
+  ...draftInstanceStatus_en,
   ...runningInstanceStatus_en,
-  ...successInstanceStatus_en,
-  ...failureInstanceStatus_en,
+  ...rejectedInstanceStatus_en,
+  ...doneInstanceStatus_en,
   ...terminatedInstanceStatus_en,
-  ...unmetInstanceStatus_en
+  ...removedInstanceStatus_en
 ]
 
 export const requestMethods_en = [

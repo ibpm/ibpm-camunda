@@ -1,11 +1,10 @@
 package com.github.ibpm.common.param.statistics;
 
 import com.github.ibpm.common.param.PageSortParam;
-import com.github.ibpm.common.param.PageSortParam;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 @Getter

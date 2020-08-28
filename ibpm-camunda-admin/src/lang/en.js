@@ -12,9 +12,15 @@ export default {
     monitor: 'Monitor',
     total: 'Execution',
     retry: 'Retry',
-    scheduler: 'Scheduler',
-    executor: 'Executor',
-    application: 'Application'
+    start: 'Start Process',
+    todo: 'Todo List',
+    doing: 'Doing List',
+    done: 'Done List',
+    draft: 'Draft',
+    application: 'Application',
+    biz: 'Biz',
+    demo01Form: 'Business Trip',
+    demo02Form: 'Apply Holiday'
   },
   actions: {
     handle: 'Handle',
@@ -37,7 +43,8 @@ export default {
     ok: 'OK',
     download: 'Download',
     use: 'Use',
-    manual: 'Manual',
+    start: 'Start',
+    draft: 'Draft',
     showCurrent: 'Show current',
     showAll: 'Show all',
     highOperation: 'High operation',
@@ -124,13 +131,14 @@ export default {
     endTime: 'End time',
     repeatInterval: 'Repeat Interval',
     prefix: 'Prefix',
-    nodeId: 'Node Id',
-    nodeName: 'Node Name',
+    actId: 'Activity Id',
+    actName: 'Activity Name',
     assignTime: 'Assign Time',
-    assignees: 'Assignees',
-    assignNames: 'Assign Names',
-    granters: 'Granters',
-    grantNames: 'Grant Names'
+    assignee: 'Assignee(s)',
+    assignName: 'Assign Name(s)',
+    granter: 'Granter(s)',
+    grantName: 'Grant Name(s)',
+    title: 'Title'
   },
   rules: {
     userName: 'The user name can not be blank',
@@ -190,15 +198,15 @@ export default {
     title: 'Core',
     job: {
       rules: {
-        jobName: 'The job name can not be blank'
+        jobName: 'The process name can not be blank'
       },
       columns: {
         reversion: 'Reversion',
         version: 'Version',
-        jobName: 'Job name'
+        jobName: 'Process name'
       },
       placeholder: {
-        jobName: 'Please entry job name'
+        jobName: 'Please entry process name'
       },
       actions: {
         design: 'Design',
@@ -223,7 +231,7 @@ export default {
         exchange: 'Exchange to latest using current version',
         copyConfirm: 'Confirm to copy',
         exchangeConfirm: 'Confirm to exchange',
-        jobNameNotChanged: 'Must rename the job name when you copy it',
+        jobNameNotChanged: 'Must rename the process name when you copy it',
         versionIsLatest: 'The version is latest, need not to exchange'
       }
     },
@@ -343,5 +351,18 @@ export default {
     theme: 'Theme color',
     tagsView: 'Open tags view',
     sidebarLogo: 'Sidebar logo'
+  },
+  biz: {
+    startDate: 'Start Date',
+    dayNum: 'Day Number',
+    destination: 'Destination',
+    trafficTool: 'Traffic Tool',
+    reason: 'Reason',
+    bei_jing: 'Bei Jing',
+    shang_hai: 'Shang Hai',
+    guang_zhou: 'Guang Zhou',
+    shen_zhen: 'Shen Zhen',
+    air_plane: 'Air Plane',
+    high_speed_railway: 'High-Speed Railway'
   }
 }

@@ -6,7 +6,7 @@ import com.github.ibpm.common.param.core.instance.*;
 import com.github.ibpm.common.result.CommonResult;
 import com.github.ibpm.common.result.core.instance.InstanceAct;
 import com.github.ibpm.common.result.core.instance.InstanceWithChildren;
-import com.github.ibpm.core.service.instance.InstanceService;
+import com.github.ibpm.engine.service.instance.InstanceService;
 import com.github.ibpm.web.service.instance.InstanceOperatedService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
-@Tag(name ="Instance")
+@Tag(name = "Instance")
 @RestController
 public class InstanceController {
 
@@ -29,6 +29,30 @@ public class InstanceController {
 
     @Autowired
     private InstanceOperatedService instanceOperatedService;
+
+    @Operation(summary = "List todo", parameters = {@Parameter(name = "param", required = true)})
+    @GetMapping(APIPath.InstancePath.TODO)
+    public CommonResult<Map<String, Object>> listTodo(InstanceListParam param) {
+        return CommonResult.putResult(instanceService.listTodo(param));
+    }
+
+    @Operation(summary = "List doing", parameters = {@Parameter(name = "param", required = true)})
+    @GetMapping(APIPath.InstancePath.DOING)
+    public CommonResult<Map<String, Object>> listDoing(InstanceListParam param) {
+        return CommonResult.putResult(instanceService.listDoing(param));
+    }
+
+    @Operation(summary = "List done", parameters = {@Parameter(name = "param", required = true)})
+    @GetMapping(APIPath.InstancePath.DONE)
+    public CommonResult<Map<String, Object>> listDone(InstanceListParam param) {
+        return CommonResult.putResult(instanceService.listDone(param));
+    }
+
+    @Operation(summary = "Open Form", parameters = {@Parameter(name = "param", required = true)})
+    @GetMapping(APIPath.InstancePath.OPEN_FORM)
+    public CommonResult<String> openForm(TaskIdParam param) {
+        return CommonResult.putResult(instanceService.openForm(param));
+    }
 
     @Operation(summary = "List job instances", parameters = {@Parameter(name = "param", required = true)})
     @GetMapping(APIPath.InstancePath.$)

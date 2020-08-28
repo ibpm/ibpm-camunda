@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
-@Tag(name ="Job")
+@Tag(name = "Job")
 @RestController
 public class JobController {
 	
@@ -106,16 +106,10 @@ public class JobController {
 		return CommonResult.putResult(jobOperatedService.exchange(param));
 	}
 
-	@Operation(summary = "Manual start jobs", parameters = {@Parameter(name = "param", required = true)})
-	@PostMapping(APIPath.JobPath.MANUAL_BATCH)
-	public CommonResult<Void> manualBatch(@RequestBody JobNamesParam param) {
-		return CommonResult.putResult(jobOperatedService.manualBatch(param));
-	}
-
-	@Operation(summary = "Manual start job with param", parameters = {@Parameter(name = "param", required = true)})
-	@PostMapping(APIPath.JobPath.MANUAL)
-	public CommonResult<Void> manual(@RequestBody JobNameParam param) {
-		return CommonResult.putResult(jobOperatedService.manual(param));
+	@Operation(summary = "Manual start process(es)", parameters = {@Parameter(name = "param", required = true)})
+	@PostMapping(APIPath.JobPath.START)
+	public CommonResult<String> start(@RequestBody JobNamesParam param) {
+		return CommonResult.putResult(jobOperatedService.start(param));
 	}
 
 	@Operation(summary = "Export model", parameters = {@Parameter(name = "param", required = true)})

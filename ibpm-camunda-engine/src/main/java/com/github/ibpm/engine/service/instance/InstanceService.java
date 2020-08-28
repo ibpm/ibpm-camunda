@@ -1,47 +1,41 @@
-package com.github.ibpm.core.service.instance;
+package com.github.ibpm.engine.service.instance;
 
 import com.github.ibpm.common.constant.CommonConstants;
-import com.github.ibpm.common.enums.InstanceStatus;
+import com.github.ibpm.common.exception.RTException;
 import com.github.ibpm.common.param.core.instance.InstanceActParam;
 import com.github.ibpm.common.param.core.instance.InstanceGetParam;
 import com.github.ibpm.common.param.core.instance.InstanceListParam;
-import com.github.ibpm.common.param.sys.user.UserNameParam;
-import com.github.ibpm.common.property.TipProperty;
+import com.github.ibpm.common.param.core.instance.TaskIdParam;
 import com.github.ibpm.common.result.core.instance.Instance;
 import com.github.ibpm.common.result.core.instance.InstanceAct;
 import com.github.ibpm.common.result.core.instance.InstanceWithChildren;
-import com.github.ibpm.common.result.sys.user.User;
-import com.github.ibpm.common.util.DateUtil;
 import com.github.ibpm.config.util.BeanUtil;
-import com.github.ibpm.core.dao.instance.InstanceMapper;
-import com.github.ibpm.core.ext.notice.MessageBean;
-import com.github.ibpm.core.ext.notice.NoticeService;
-import com.github.ibpm.core.ext.notice.channel.Sender;
+import com.github.ibpm.engine.dao.InstanceMapper;
+import com.github.ibpm.engine.model.ProcessData;
+import com.github.ibpm.engine.service.CommandService;
+import com.github.ibpm.engine.service.IbpmEngineService;
+import com.github.ibpm.sys.holder.UserHolder;
 import com.github.ibpm.sys.service.BaseServiceAdapter;
-import com.github.ibpm.sys.service.UserService;
 import com.github.ibpm.sys.util.PageUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.camunda.bpm.engine.impl.cfg.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
 
 @Slf4j
 @Service
-@Transactional(propagation = Propagation.REQUIRES_NEW)
+@Transactional/*(propagation = Propagation.REQUIRES_NEW)*/
 public class InstanceService extends BaseServiceAdapter {
 
     @Autowired
     private InstanceMapper mapper;
-
+    /*
     @Autowired
     private NoticeService noticeService;
 
@@ -50,6 +44,16 @@ public class InstanceService extends BaseServiceAdapter {
 
     @Autowired
     private ScheduledExecutorService scheduledExecutorService;
+    */
+
+    @Autowired
+    private IdGenerator idGenerator;
+
+    @Autowired
+    private CommandService commandService;
+
+    @Autowired
+    private IbpmEngineService ibpmEngineService;
 
     public Instance get(String id) {
         return mapper.getById(id);
@@ -65,6 +69,37 @@ public class InstanceService extends BaseServiceAdapter {
 
     public int count(InstanceListParam param) {
         return mapper.count(BeanUtil.bean2Map(param));
+    }
+
+    public Map<String, Object> listTodo(InstanceListParam param) {
+        Map<String, Object> paramMap = BeanUtil.bean2Map(param);
+        paramMap.put(CommonConstants.userName, UserHolder.get().getUserName());
+        PageHelper.startPage(param.getCurrentPage(), param.getPageSize());
+        Page<InstanceWithChildren> list = (Page<InstanceWithChildren>) mapper.listTodo(paramMap);
+        if (param.isListChildren()) {
+            list.parallelStream().forEach(item -> {
+                if (item.getProcInstId() != null) {
+                    item.setHasChildren(mapper.countProcessChildren(item.getProcInstId()) > 0);
+                }
+            });
+        }
+        return PageUtil.toResultMap(list);
+    }
+
+    public Map<String, Object> listDoing(InstanceListParam param) {
+        Map<String, Object> paramMap = BeanUtil.bean2Map(param);
+        paramMap.put(CommonConstants.userName, UserHolder.get().getUserName());
+        PageHelper.startPage(param.getCurrentPage(), param.getPageSize());
+        Page<Instance> list = (Page<Instance>) mapper.listDoing(paramMap);
+        return PageUtil.toResultMap(list);
+    }
+
+    public Map<String, Object> listDone(InstanceListParam param) {
+        Map<String, Object> paramMap = BeanUtil.bean2Map(param);
+        paramMap.put(CommonConstants.userName, UserHolder.get().getUserName());
+        PageHelper.startPage(param.getCurrentPage(), param.getPageSize());
+        Page<Instance> list = (Page<Instance>) mapper.listDone(paramMap);
+        return PageUtil.toResultMap(list);
     }
 
     public Map<String, Object> listMonitor(InstanceListParam param) {
@@ -132,8 +167,16 @@ public class InstanceService extends BaseServiceAdapter {
 
     public void updateDone(Instance instance) {
         mapper.updateDone(instance);
-        mapper.deleteExecution(instance);
+        deleteExecution(instance.getProcInstId());
         noticeWithInstance(instance);
+    }
+
+    public void deleteExecution(String procInstId) {
+        mapper.deleteExecution(procInstId);
+    }
+
+    public void deleteInstance(String procInstId) {
+        mapper.deleteInstance(procInstId);
     }
 
     public void addAct(InstanceAct instanceAct) {
@@ -164,6 +207,7 @@ public class InstanceService extends BaseServiceAdapter {
             }, 5 + (int) (Math.random() * 3), TimeUnit.SECONDS);
         }*/
     }
+    /*
 
     private void sendNotice(Instance instance, String noticeTime) {
         User user = userService.get(new UserNameParam());
@@ -241,8 +285,8 @@ public class InstanceService extends BaseServiceAdapter {
             }
         } else {
             alarmPosition = TipProperty.getValue(10052);
-            /*logKeySB.append(instance.getCode());
-            errorMsgSB.append(instance.getMsg());*/
+            logKeySB.append(instance.getCode());
+            errorMsgSB.append(instance.getMsg());
         }
         String subject = MessageFormat.format(TipProperty.getValue(10050),
                 instance.getJobName(),
@@ -256,8 +300,8 @@ public class InstanceService extends BaseServiceAdapter {
                 instance.getStartTime() == null ? CommonConstants.EMPTY : DateUtil.format(instance.getStartTime(), DateUtil.DATE_FORMAT_YYYYMMDDHHMMSS),
                 actIdSB,
                 actNameSB,
-                //instance.getSchedulerUri(),
-                //StringUtils.trimToEmpty(instance.getExecutorUri()),
+                instance.getSchedulerUri(),
+                StringUtils.trimToEmpty(instance.getExecutorUri()),
                 bizUriSB,
                 alarmPosition,
                 logKeySB,
@@ -267,5 +311,30 @@ public class InstanceService extends BaseServiceAdapter {
                 .setTo(user)
                 .setSubject(subject)
                 .setContent(content);
+    }
+    */
+
+    public void add(ProcessData processData) {
+        Instance instance = new Instance()
+                .setProcInstId(processData.getProcInstId())
+                .setJobName(processData.getJobName())
+                .setTitle(processData.getTitle())
+                .setStatus(processData.getStatus());
+        mapper.addExecution(instance);
+        mapper.addInstance(instance);
+    }
+
+    public void update(ProcessData processData) {
+        Instance instance = mapper.getByInstId(processData.getProcInstId());
+        if (instance == null) {
+            throw new RTException(6100, processData.getProcInstId());
+        }
+        instance.setTitle(processData.getTitle());
+        mapper.updateExecution(instance);
+        mapper.updateInstance(instance);
+    }
+
+    public String openForm(TaskIdParam param) {
+        return ibpmEngineService.getTaskFormKey(param.getTaskId());
     }
 }

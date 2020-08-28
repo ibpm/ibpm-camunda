@@ -9,7 +9,7 @@ import com.github.ibpm.config.util.BeanUtil;
 import com.github.ibpm.core.dao.core.CalendarMapper;
 import com.github.ibpm.engine.util.IoUtils;
 import com.github.ibpm.sys.service.BaseServiceAdapter;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

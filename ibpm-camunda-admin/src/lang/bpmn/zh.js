@@ -188,7 +188,7 @@ export default {
   'Output Parameter': '输出参数',
   'Type': '类型',
   'Forms': '表单',
-  'Form Key': '表单主键',
+  'Form Key': '表单路径',
   'Form Fields': '表单元素',
   'Default Value': '默认值',
   'Validation': '验证',
@@ -258,5 +258,7 @@ export default {
   'Ftp Prefix': 'Ftp参数前缀',
   'Result Type': '结果类型',
   'Language': '编程语言',
-  'Charset': '字符集'
+  'Charset': '字符集',
+  'Custom User Task': '用户任务',
+  'Form Uri': '表单路径'
 }

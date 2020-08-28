@@ -45,9 +45,9 @@
             </el-button>
           </span>
         </el-tooltip>
-        <el-tooltip :content="$t('actions.manual')" effect="dark" placement="top-start">
+        <el-tooltip :content="$t('actions.start')" effect="dark" placement="top-start">
           <span style="margin-left: 10px;">
-            <el-button :disabled="!job.procDefId && job.version === 0" type="danger" @click="manual">
+            <el-button :disabled="!job.procDefId && job.version === 0" type="danger" @click="start">
               <svg-icon icon-class="hand" />
             </el-button>
           </span>
@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { getContentReq, updateContentReq, versionsReq, copyReq, exchangeReq, publishReq, manualReq } from '@/api/core/job'
+import { getContentReq, updateContentReq, versionsReq, copyReq, exchangeReq, publishReq, startReq } from '@/api/core/job'
 import BpmnModeler from 'bpmn-js/lib/Modeler'
 import propertiesPanelModule from 'bpmn-js-properties-panel'
 import propertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/camunda'
@@ -263,7 +263,7 @@ export default {
           })
         })
     },
-    manual() {
+    start() {
       if (!this.job.version) {
         this.$message.warning(this.$t('tip.manualWithNoVersion'))
         return
@@ -273,7 +273,7 @@ export default {
       }
       this.$confirm(this.$t('tip.confirm'), this.$t('tip.confirmMsg'), { type: 'warning' })
         .then(() => {
-          manualReq({
+          startReq({
             jobName: this.job.jobName,
             jsonData: (!this.jsonData ? null : (typeof this.jsonData === 'string' ? JSON.parse(this.jsonData) : this.jsonData))
           }).then(res => {
@@ -310,7 +310,6 @@ export default {
       try {
         const result = await this.bpmnModeler.saveSVG()
         const { svg } = result
-        console.log(svg)
         done(svg)
       } catch (err) {
         console.error(err)
@@ -320,7 +319,6 @@ export default {
       try {
         const result = await this.bpmnModeler.saveXML({ format: true })
         const { xml } = result
-        console.log(xml)
         done(xml)
       } catch (err) {
         console.error(err)

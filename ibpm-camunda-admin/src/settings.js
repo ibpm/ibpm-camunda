@@ -50,6 +50,7 @@ module.exports = {
     ROLE: '/role',
     RESOURCE: '/resource',
     JOB: '/job',
+    BPM: '/bpm',
     ARG: '/arg',
     CALENDAR: '/calendar',
     INSTANCE: '/instance',

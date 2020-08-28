@@ -3,10 +3,10 @@ package com.github.ibpm.web.service.instance;
 import com.github.ibpm.common.enums.InstanceStatus;
 import com.github.ibpm.common.param.IdsParam;
 import com.github.ibpm.common.result.core.instance.Instance;
-import com.github.ibpm.core.service.instance.InstanceService;
+import com.github.ibpm.engine.service.instance.InstanceService;
 import com.github.ibpm.web.ext.app.ExecutorHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +51,6 @@ public class InstanceOperatedService {
     }
 
     private boolean isDoing(int status) {
-        return status == InstanceStatus.RUNNING.getStatus();
+        return status == InstanceStatus.DRAFT.getStatus();
     }
 }

@@ -388,9 +388,14 @@ insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','user-update');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','calendar');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','core');
+insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','doing');
+insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','done');
+insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','draft');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','monitor');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','retry');
+insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','start');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','sys');
+insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','todo');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','total');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','user');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('common','user-update');

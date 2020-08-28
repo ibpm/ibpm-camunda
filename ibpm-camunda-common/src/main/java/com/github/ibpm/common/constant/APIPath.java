@@ -72,16 +72,29 @@ public class APIPath {
 
         public static final String EXCHANGE = $ + "/exchange";
 
-        public static final String MANUAL_BATCH = $ + "/manual/batch";
-
-        public static final String MANUAL = $ + "/manual";
+        public static final String START = $ + "/start";
 
         public static final String EXPORT_MODEL = $ + "/export/model";
 
         public static final String IMPORT_MODEL = $ + "/import/model";
 
-        public static final String TRIGGER = $ + "/trigger";
+        //public static final String OPEN_FORM = $ + "/form/open";
 
+    }
+
+    public static final class BpmPath {
+
+        public static final String SUB_PATH = "/bpm";
+
+        public static final String $ = API_PATH + CORE + SUB_PATH;
+
+        public static final String GET = $ + _GET;
+
+        public static final String DRAFT = $ + "/draft";
+
+        public static final String CREATE = $ + "/create";
+
+        public static final String APPROVE = $ + "/approve";
 
     }
 
@@ -99,6 +112,14 @@ public class APIPath {
         private static final String SUB_PATH = "/instance";
 
         public static final String $ = API_PATH + CORE + SUB_PATH;
+
+        public static final String TODO = $ + "/todo";
+
+        public static final String DOING = $ + "/doing";
+
+        public static final String DONE = $ + "/done";
+
+        public static final String OPEN_FORM = $ + "/openForm";
 
         public static final String CHILDREN = $ + "/children";
 
@@ -142,11 +163,6 @@ public class APIPath {
 
         public static final String TRADE_DATE_UNITS = API_PATH + CORE + SUB_PATH + "/tradeDateUnits";
 
-    }
-
-    public static final class ExecutorPath {
-
-        public static final String TERMINATE = API_PATH + EXECUTOR + "/terminate";
     }
 
     public static final class CommonPath {

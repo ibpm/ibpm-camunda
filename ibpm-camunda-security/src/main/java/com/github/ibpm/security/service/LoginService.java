@@ -12,7 +12,7 @@ import com.github.ibpm.sys.ext.jwt.JWTService;
 import com.github.ibpm.sys.service.BaseServiceAdapter;
 import com.github.ibpm.sys.service.UserService;
 import com.github.ibpm.sys.util.PasswordUtil;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

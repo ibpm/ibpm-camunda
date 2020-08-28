@@ -2,7 +2,7 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.github.ibpm.core.dao.instance.InstanceMapper">
+<mapper namespace="com.github.ibpm.engine.dao.InstanceMapper">
 
     <select id="getById" parameterType="java.lang.String"
             resultType="com.github.ibpm.common.result.core.instance.Instance">
@@ -13,7 +13,9 @@
     <select id="getByInstId" parameterType="java.lang.String"
             resultType="com.github.ibpm.common.result.core.instance.Instance">
         <include refid="instanceJoinJob" />
-        WHERE j.PROC_INST_ID = #{1, jdbcType=VARCHAR}
+        <where>
+            j.PROC_INST_ID = #{1, jdbcType=VARCHAR}
+        </where>
     </select>
 
     <select id="getByIds" parameterType="list"
@@ -90,41 +92,21 @@
 
     <sql id="insertSql">
         (
-            ID,
             PROC_INST_ID,
             ROOT_PROC_INST_ID,
             SUPER_PROC_INST_ID,
             JOB_NAME,
-            TRIGGER_NAME,
-            PROC_DEF_ID,
-            START_TIME,
-            END_TIME,
-            DURATION,
-            STATUS,
-            CODE,
-            MSG,
-            PARENT_ID,
-            SCHEDULER_URI,
-            EXECUTOR_URI
+            TITLE,
+            STATUS
         )
         VALUES
         (
-            #{id, jdbcType=VARCHAR},
             #{procInstId, jdbcType=VARCHAR},
             #{rootProcInstId, jdbcType=VARCHAR},
             #{superProcInstId, jdbcType=VARCHAR},
             #{jobName, jdbcType=VARCHAR},
-            #{triggerName, jdbcType=VARCHAR},
-            #{procDefId, jdbcType=VARCHAR},
-            #{startTime, jdbcType=INTEGER},
-            #{endTime, jdbcType=INTEGER},
-            #{duration, jdbcType=INTEGER},
-            #{status, jdbcType=INTEGER},
-            #{code, jdbcType=INTEGER},
-            #{msg, jdbcType=VARCHAR},
-            #{parentId, jdbcType=VARCHAR},
-            #{schedulerUri, jdbcType=VARCHAR},
-            #{executorUri, jdbcType=VARCHAR}
+            #{title, jdbcType=VARCHAR},
+            #{status, jdbcType=INTEGER}
         )
     </sql>
 
@@ -141,71 +123,46 @@
     <update id="updateDone" parameterType="com.github.ibpm.common.result.core.instance.Instance">
         UPDATE ${tablePrefix}instance
         <set>
-            <if test="endTime != null">
-                END_TIME = #{endTime, jdbcType=INTEGER},
-            </if>
-            <if test="duration != null">
-                DURATION = #{duration, jdbcType=INTEGER},
-            </if>
             <if test="status != null">
                 STATUS = #{status, jdbcType=INTEGER},
             </if>
-            CODE = #{code, jdbcType=INTEGER},
-            MSG = #{msg, jdbcType=VARCHAR},
-            <if test="parentId != null">
-                PARENT_ID = #{parentId, jdbcType=VARCHAR},
-            </if>
         </set>
         <where>
-            <include refid="condId_"/>
+            <include refid="condProcInstId_"/>
         </where>
     </update>
 
-    <delete id="deleteExecution" parameterType="com.github.ibpm.common.result.core.instance.Instance">
+    <delete id="deleteExecution" parameterType="string">
         DELETE FROM ${tablePrefix}execution
         <where>
-            <include refid="condProcInstId_"/>
+            PROC_INST_ID = #{1, jdbcType=VARCHAR}
+        </where>
+    </delete>
+
+    <delete id="deleteInstance" parameterType="string">
+        DELETE FROM ${tablePrefix}instance
+        <where>
+            PROC_INST_ID = #{1, jdbcType=VARCHAR}
         </where>
     </delete>
 
     <sql id="updateSql">
         <set>
-            <if test="procInstId != null">
-                PROC_INST_ID = #{procInstId, jdbcType=VARCHAR},
-            </if>
             <if test="rootProcInstId != null">
                 ROOT_PROC_INST_ID = #{rootProcInstId, jdbcType=VARCHAR},
             </if>
             <if test="superProcInstId != null">
                 SUPER_PROC_INST_ID = #{superProcInstId, jdbcType=VARCHAR},
             </if>
-            <if test="procDefId != null">
-                PROC_DEF_ID = #{procDefId, jdbcType=VARCHAR},
-            </if>
-            <if test="startTime != null">
-                START_TIME = #{startTime, jdbcType=INTEGER},
-            </if>
-            <if test="endTime != null">
-                END_TIME = #{endTime, jdbcType=INTEGER},
-            </if>
-            <if test="duration != null">
-                DURATION = #{duration, jdbcType=INTEGER},
+            <if test="title != null">
+                TITLE = #{title, jdbcType=VARCHAR},
             </if>
             <if test="status != null">
                 STATUS = #{status, jdbcType=INTEGER},
             </if>
-            <if test="code != null">
-                CODE = #{code, jdbcType=INTEGER},
-            </if>
-            <if test="msg != null">
-                MSG = #{msg, jdbcType=VARCHAR},
-            </if>
-            <if test="parentId != null">
-                PARENT_ID = #{parentId, jdbcType=VARCHAR},
-            </if>
         </set>
         <where>
-            <include refid="condId_"/>
+            <include refid="condProcInstId_"/>
         </where>
     </sql>
 
@@ -310,6 +267,166 @@
         </choose>
     </select>
 
+    <select id="listTodo" parameterType="map"
+            resultType="com.github.ibpm.common.result.core.instance.InstanceWithChildren">
+        SELECT * FROM (<include refid="todoListSql" />)j
+        <where>
+            AND j.SUPER_PROC_INST_ID IS NULL
+            <if test="userName != null">
+                AND j.ASSIGNEE = #{userName, jdbcType=VARCHAR}
+            </if>
+            <if test="jobName != null">
+                AND LOWER(j.JOB_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{jobName, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="displayName != null">
+                AND LOWER(j.DISPLAY_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{displayName, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="title != null">
+                AND LOWER(j.TITLE) LIKE CONCAT(CONCAT('%', LOWER(#{title, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="lowerStartTime != null">
+                AND j.START_TIME &gt;= #{lowerStartTime, jdbcType=INTEGER}
+            </if>
+            <if test="upperStartTime != null">
+                AND j.START_TIME &lt;= #{upperStartTime, jdbcType=INTEGER}
+            </if>
+            <if test="status != null">
+                AND j.STATUS = #{status, jdbcType=INTEGER}
+            </if>
+            <include refid="condProcInstId"/>
+        </where>
+        <choose>
+            <when test="sort == null">
+                order by PROC_INST_ID DESC
+            </when>
+            <otherwise>
+                order by ${sort}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="listDoing" parameterType="map"
+            resultType="com.github.ibpm.common.result.core.instance.Instance">
+        SELECT
+            ins.PROC_INST_ID_ AS PROC_INST_ID,
+            ins.PROC_DEF_ID_ AS PROC_DEF_ID,
+            d.VERSION_ AS VERSION,
+            d.KEY_ AS JOB_NAME,
+            d.NAME_ AS DISPLAY_NAME,
+            ii.TITLE,
+            ii.STATUS,
+            ins.BUSINESS_KEY_ AS BUSINESS_KEY,
+            ins.START_USER_ID_ AS STARTER,
+            ins.START_TIME_ AS START_TIME,
+            ins.ROOT_PROC_INST_ID_ AS ROOT_PROC_INST_ID,
+            ins.SUPER_PROCESS_INSTANCE_ID_ AS SUPER_PROC_INST_ID
+        FROM
+            ${tablePrefix}execution ii
+            JOIN act_hi_procinst ins
+            ON ins.proc_inst_id_ = ii.proc_inst_id
+            JOIN act_re_procdef d
+            ON d.ID_ = ins.proc_def_id_
+        <where>
+            ins.END_TIME_ IS NULL
+            AND EXISTS
+            (SELECT
+                1
+            FROM
+                act_hi_taskinst t
+            WHERE t.end_time_ IS NOT NULL
+                AND t.proc_inst_id_ = ins.proc_inst_id_
+                AND t.ASSIGNEE_ = #{userName, jdbcType=VARCHAR})
+            <if test="jobName != null">
+                AND LOWER(j.JOB_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{jobName, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="displayName != null">
+                AND LOWER(j.DISPLAY_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{displayName, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="title != null">
+                AND LOWER(j.TITLE) LIKE CONCAT(CONCAT('%', LOWER(#{title, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="lowerStartTime != null">
+                AND j.START_TIME &gt;= #{lowerStartTime, jdbcType=INTEGER}
+            </if>
+            <if test="upperStartTime != null">
+                AND j.START_TIME &lt;= #{upperStartTime, jdbcType=INTEGER}
+            </if>
+            <if test="status != null">
+                AND j.STATUS = #{status, jdbcType=INTEGER}
+            </if>
+        </where>
+        <choose>
+            <when test="sort == null">
+                order by PROC_INST_ID DESC
+            </when>
+            <otherwise>
+                order by ${sort}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="listDone" parameterType="map"
+            resultType="com.github.ibpm.common.result.core.instance.Instance">
+        SELECT
+            ins.PROC_INST_ID_ AS PROC_INST_ID,
+            ins.PROC_DEF_ID_ AS PROC_DEF_ID,
+            d.VERSION_ AS VERSION,
+            d.KEY_ AS JOB_NAME,
+            d.NAME_ AS DISPLAY_NAME,
+            ii.TITLE,
+            ii.STATUS,
+            ins.BUSINESS_KEY_ AS BUSINESS_KEY,
+            ins.START_USER_ID_ AS STARTER,
+            ins.START_TIME_ AS START_TIME,
+            ins.END_TIME_ AS END_TIME,
+            ins.DURATION_ AS DURATION,
+            ins.ROOT_PROC_INST_ID_ AS ROOT_PROC_INST_ID,
+            ins.SUPER_PROCESS_INSTANCE_ID_ AS SUPER_PROC_INST_ID
+        FROM
+            ${tablePrefix}instance ii
+        JOIN act_hi_procinst ins
+            ON ins.proc_inst_id_ = ii.proc_inst_id
+        JOIN act_re_procdef d
+            ON d.ID_ = ins.proc_def_id_
+        <where>
+            ins.END_TIME_ IS NOT NULL
+            AND EXISTS
+            (SELECT
+                1
+            FROM
+                act_hi_taskinst t
+            WHERE t.end_time_ IS NOT NULL
+            AND t.proc_inst_id_ = ins.proc_inst_id_
+            AND t.ASSIGNEE_ = #{userName, jdbcType=VARCHAR})
+            <if test="jobName != null">
+                AND LOWER(j.JOB_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{jobName, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="displayName != null">
+                AND LOWER(j.DISPLAY_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{displayName, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="title != null">
+                AND LOWER(j.TITLE) LIKE CONCAT(CONCAT('%', LOWER(#{title, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="lowerStartTime != null">
+                AND j.START_TIME &gt;= #{lowerStartTime, jdbcType=INTEGER}
+            </if>
+            <if test="upperStartTime != null">
+                AND j.START_TIME &lt;= #{upperStartTime, jdbcType=INTEGER}
+            </if>
+            <if test="status != null">
+                AND j.STATUS = #{status, jdbcType=INTEGER}
+            </if>
+        </where>
+        <choose>
+            <when test="sort == null">
+                order by PROC_INST_ID DESC
+            </when>
+            <otherwise>
+                order by ${sort}
+            </otherwise>
+        </choose>
+    </select>
+
     <select id="listAct" parameterType="map"
             resultType="com.github.ibpm.common.result.core.instance.InstanceAct">
         SELECT j.* FROM (
@@ -343,22 +460,23 @@
             ta.VERSION,
             ta.JOB_NAME,
             ta.DISPLAY_NAME,
+            ta.TITLE,
+            ta.STATUS,
+            ta.BUSINESS_KEY,
             ta.STARTER,
-            ta.DURATION,
             ta.ROOT_PROC_INST_ID,
             ta.SUPER_PROC_INST_ID,
             GROUP_CONCAT(DISTINCT ta.ASSIGNEE SEPARATOR ',') AS ASSIGNEES,
             GROUP_CONCAT(DISTINCT ta.ASSIGN_NAME SEPARATOR ',') AS ASSIGN_NAMES,
             GROUP_CONCAT(DISTINCT ta.GRANTER SEPARATOR ',') AS GRANTERS,
             GROUP_CONCAT(DISTINCT ta.GRANT_NAME SEPARATOR ',') AS GRANT_NAMES,
-            ta.NODE_ID,
-            ta.NODE_NAME,
+            ta.ACT_ID,
+            ta.ACT_NAME,
             ta.START_TIME,
-            ta.END_TIME,
             ta.ASSIGN_TIME
         FROM
           (<include refid="todoListSql" />) ta
-        GROUP BY ta.PROC_INST_ID, ta.NODE_ID
+        GROUP BY ta.PROC_INST_ID, ta.ACT_ID
     </sql>
 
     <sql id="todoListSql">
@@ -369,14 +487,15 @@
             task.VERSION,
             task.JOB_NAME,
             task.DISPLAY_NAME,
+            task.TITLE,
+            task.STATUS,
+            task.BUSINESS_KEY,
             task.STARTER,
             task.START_TIME,
-            task.END_TIME,
-            task.DURATION,
             task.ROOT_PROC_INST_ID,
             task.SUPER_PROC_INST_ID,
-            task.NODE_ID,
-            task.NODE_NAME,
+            task.ACT_ID,
+            task.ACT_NAME,
             task.ASSIGNEE AS GRANTER,
             u.DISPLAY_NAME AS GRANT_NAME,
             IFNULL(o.ASSIGNEE, task.ASSIGNEE) AS ASSIGNEE,
@@ -384,20 +503,21 @@
             task.ASSIGN_TIME
         FROM
             (SELECT
-                t.PROC_INST_ID_ AS PROC_INST_ID,
+                ins.PROC_INST_ID_ AS PROC_INST_ID,
                 t.ID_ AS TASK_ID,
-                t.PROC_DEF_ID_ AS PROC_DEF_ID,
+                ins.PROC_DEF_ID_ AS PROC_DEF_ID,
                 d.VERSION_ AS VERSION,
                 d.KEY_ AS JOB_NAME,
                 d.NAME_ AS DISPLAY_NAME,
-                t.TASK_DEF_KEY_ AS NODE_ID,
-                t.NAME_ AS NODE_NAME,
+                t.TASK_DEF_KEY_ AS ACT_ID,
+                t.NAME_ AS ACT_NAME,
                 IFNULL(t.ASSIGNEE_, l.USER_ID_) AS ASSIGNEE,
                 t.CREATE_TIME_ AS ASSIGN_TIME,
+                ii.TITLE,
+                ii.STATUS,
+                ins.BUSINESS_KEY_ AS BUSINESS_KEY,
                 ins.START_USER_ID_ AS STARTER,
                 ins.START_TIME_ AS START_TIME,
-                ins.END_TIME_ AS END_TIME,
-                ins.DURATION_ AS DURATION,
                 ins.ROOT_PROC_INST_ID_ AS ROOT_PROC_INST_ID,
                 ins.SUPER_PROCESS_INSTANCE_ID_ AS SUPER_PROC_INST_ID
             FROM act_ru_task t
@@ -408,6 +528,8 @@
                 AND t.ASSIGNEE_ IS NULL
             JOIN act_hi_procinst ins
               ON t.proc_inst_id_ = ins.proc_inst_id_
+            JOIN ${tablePrefix}execution ii
+              ON t.proc_inst_id_ = ii.proc_inst_id
             JOIN act_re_procdef d
               ON d.ID_ = ins.proc_def_id_) task
             LEFT JOIN (<include refid="proxySql"/>) o

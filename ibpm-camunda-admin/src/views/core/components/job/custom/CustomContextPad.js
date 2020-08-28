@@ -35,13 +35,13 @@ export default class CustomContextPad {
     }
 
     // ParallelGateway
-    /* function appendParallelGateway(event, element) {
+    function appendParallelGateway(event, element) {
       append(event, element, 'ParallelGateway')
     }
 
     function appendParallelGatewayStart(event) {
       appendStart(event, element, 'ParallelGateway')
-    }*/
+    }
 
     // UserTask
     function appendUserTask(event, element) {
@@ -53,6 +53,7 @@ export default class CustomContextPad {
     }
 
     // ServiceTask
+    /*
     function appendServiceTask(event, element) {
       append(event, element, 'ServiceTask')
     }
@@ -60,8 +61,9 @@ export default class CustomContextPad {
     function appendServiceTaskStart(event) {
       appendStart(event, element, 'ServiceTask')
     }
-
+    */
     // ScriptTask
+    /*
     function appendScriptTask(event, element) {
       append(event, element, 'ScriptTask')
     }
@@ -69,7 +71,7 @@ export default class CustomContextPad {
     function appendScriptTaskStart(event) {
       appendStart(event, element, 'ScriptTask')
     }
-
+    */
     // CallActivity
     function appendCallActivity(event, element) {
       append(event, element, 'CallActivity')
@@ -80,7 +82,7 @@ export default class CustomContextPad {
     }
 
     return {
-      /* 'append.parallel-gateway': {
+      'append.parallel-gateway': {
         group: 'model',
         className: 'bpmn-icon-gateway-parallel',
         title: translate('Append ParallelGateway'),
@@ -88,7 +90,7 @@ export default class CustomContextPad {
           click: appendParallelGateway,
           dragstart: appendParallelGatewayStart
         }
-      },*/
+      },
       'append.user-task': {
         group: 'model',
         className: 'bpmn-icon-user-task',
@@ -97,7 +99,7 @@ export default class CustomContextPad {
           click: appendUserTask,
           dragstart: appendUserTaskStart
         }
-      },
+      }, /*
       'append.service-task': {
         group: 'model',
         className: 'bpmn-icon-service-task',
@@ -115,7 +117,7 @@ export default class CustomContextPad {
           click: appendScriptTask,
           dragstart: appendScriptTaskStart
         }
-      },
+      },*/
       'append.call-activity': {
         group: 'model',
         className: 'bpmn-icon-call-activity',

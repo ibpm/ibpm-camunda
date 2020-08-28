@@ -105,17 +105,17 @@ export const exchangeReq = (data) => {
   })
 }
 
-export const manualBatchReq = (data) => {
+export const startReq = (data) => {
   return request({
-    url: APIPath.CORE + APIPath.JOB + '/manual/batch',
+    url: APIPath.CORE + APIPath.JOB + '/start',
     method: 'post',
     data: data
   })
 }
 
-export const manualReq = (data) => {
+export const createReq = (data) => {
   return request({
-    url: APIPath.CORE + APIPath.JOB + '/manual',
+    url: APIPath.CORE + APIPath.JOB + '/create',
     method: 'post',
     data: data
   })

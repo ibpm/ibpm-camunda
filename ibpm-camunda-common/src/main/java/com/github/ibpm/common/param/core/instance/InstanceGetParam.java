@@ -1,7 +1,7 @@
 package com.github.ibpm.common.param.core.instance;
 
 import com.github.ibpm.common.param.CommonParam;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class InstanceGetParam implements CommonParam {
 

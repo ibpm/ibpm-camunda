@@ -1,4 +1,4 @@
-package com.github.ibpm.core.dao.instance;
+package com.github.ibpm.engine.dao;
 
 import com.github.ibpm.common.result.core.instance.Instance;
 import com.github.ibpm.common.result.core.instance.InstanceAct;
@@ -27,7 +27,17 @@ public interface InstanceMapper {
 
     void updateInstance(Instance instance);
 
+    void deleteExecution(String procInstId);
+
+    void deleteInstance(String procInstId);
+
     List<InstanceWithChildren> listInstance(Map<String, Object> paramMap);
+
+    List<InstanceWithChildren> listTodo(Map<String, Object> paramMap);
+
+    List<Instance> listDoing(Map<String, Object> paramMap);
+
+    List<Instance> listDone(Map<String, Object> paramMap);
 
     int countProcessChildren(String superProcInstId);
 
@@ -47,9 +57,8 @@ public interface InstanceMapper {
 
     void updateDone(Instance instance);
 
-    void deleteExecution(Instance instance);
-
     List<Instance> listRunningOfExecutor(String executorAddress);
 
     List<Instance> getByIds(List<String> ids);
+
 }

@@ -2,26 +2,23 @@ package com.github.ibpm.common.enums;
 
 public enum InstanceStatus {
 
-    /** running */
-    RUNNING(0),
+    // draft
+    DRAFT(0),
 
-    /** success */
-    SUCCESS(1),
+    // running normally
+    RUNNING(1),
 
-    /**
-     * FAILURE
-     */
-    FAILURE(2),
+    // rejected and go back
+    REJECTED(2),
 
-    /**
-     * terminated
-     */
-    TERMINATED(3),
+    // process is handled
+    DONE(-1),
 
-    /**
-     * unreached
-     */
-    UNMET(4),
+    // cancelled
+    TERMINATED(-2),
+
+    // removed
+    REMOVED(-3),
 
     ;
 

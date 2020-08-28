@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.ibpm.biz.dao.Demo02Mapper">
+
+    <insert id="add" parameterType="com.github.ibpm.biz.model.Demo02Data">
+        INSERT INTO proc_demo02_apply_holiday (
+            BUSINESS_KEY,
+            START_DATE,
+            NUM,
+            REASON
+        )
+        VALUES
+        (
+            #{businessKey, jdbcType=VARCHAR},
+            #{startDate, jdbcType=INTEGER},
+            #{num, jdbcType=INTEGER},
+            #{reason, jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.github.ibpm.biz.model.Demo02Data">
+        UPDATE proc_demo02_apply_holiday
+        <set>
+            START_DATE = #{startDate, jdbcType=INTEGER},
+            NUM = #{num, jdbcType=INTEGER},
+            REASON = #{reason, jdbcType=VARCHAR},
+        </set>
+        <where>
+            BUSINESS_KEY = #{businessKey, jdbcType=VARCHAR}
+        </where>
+    </update>
+
+    <select id="get" parameterType="string" resultType="com.github.ibpm.biz.model.Demo02Data">
+        SELECT * from proc_demo02_apply_holiday
+        <where>
+            BUSINESS_KEY = #{1, jdbcType=VARCHAR}
+        </where>
+    </select>
+</mapper>

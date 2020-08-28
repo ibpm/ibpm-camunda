@@ -30,9 +30,9 @@ public class Instance {
 
     protected String grantNames;
 
-    protected String nodeId;
+    protected String actId;
 
-    protected String nodeName;
+    protected String actName;
 
     protected Date startTime;
 
@@ -40,6 +40,11 @@ public class Instance {
 
     protected Date assignTime;
 
+    protected String businessKey;
+
+    protected String title;
+
+    protected Integer status;
 
     protected String jobName;
 
@@ -184,21 +189,21 @@ public class Instance {
         return this;
     }
 
-    public String getNodeId() {
-        return nodeId;
+    public String getActId() {
+        return actId;
     }
 
-    public Instance setNodeId(String nodeId) {
-        this.nodeId = nodeId;
+    public Instance setActId(String actId) {
+        this.actId = actId;
         return this;
     }
 
-    public String getNodeName() {
-        return nodeName;
+    public String getActName() {
+        return actName;
     }
 
-    public Instance setNodeName(String nodeName) {
-        this.nodeName = nodeName;
+    public Instance setActName(String actName) {
+        this.actName = actName;
         return this;
     }
 
@@ -226,6 +231,33 @@ public class Instance {
 
     public Instance setAssignTime(Date assignTime) {
         this.assignTime = assignTime;
+        return this;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Instance setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public Instance setStatus(Integer status) {
+        this.status = status;
+        return this;
+    }
+
+    public String getBusinessKey() {
+        return businessKey;
+    }
+
+    public Instance setBusinessKey(String businessKey) {
+        this.businessKey = businessKey;
         return this;
     }
 }

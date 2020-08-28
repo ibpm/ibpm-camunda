@@ -1,7 +1,11 @@
 package com.github.ibpm.engine.conf;
 
 import com.github.ibpm.config.id.MyIdGenerator;
+import com.github.ibpm.engine.controller.BpmController;
+import com.github.ibpm.engine.dao.InstanceMapper;
+import com.github.ibpm.engine.service.BpmService;
 import com.github.ibpm.engine.service.IbpmEngineService;
+import com.github.ibpm.engine.service.instance.InstanceService;
 import com.github.ibpm.sys.conf.SysConfiguration;
 import org.camunda.bpm.engine.impl.cfg.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +19,13 @@ import org.springframework.context.annotation.Import;
 })
 @Configuration
 @ComponentScan(basePackageClasses = {
-        IbpmEngineService.class
+        InstanceMapper.class,
+
+        IbpmEngineService.class,
+        InstanceService.class,
+        BpmService.class,
+
+        BpmController.class,
 })
 public class EngineConfiguration {
 
