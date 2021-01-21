@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="page.jobName" :placeholder="$t('core.job.columns.jobName')" class="filter-item search-input" @keyup.enter.native="search" />
-      <el-input v-model="page.displayName" :placeholder="$t('columns.displayName')" class="filter-item search-input" @keyup.enter.native="search" />
+      <el-input v-model="page.processDefinitionKey" :placeholder="$t('core.process.columns.processDefinitionKey')" class="filter-item search-input" @keyup.enter.native="search" />
+      <el-input v-model="page.processDefinitionName" :placeholder="$t('core.process.columns.processDefinitionName')" class="filter-item search-input" @keyup.enter.native="search" />
       <el-select v-model="page.status" :placeholder="$t('columns.status')" multiple clearable collapse-tags class="filter-item search-select">
-        <el-option v-for="item in jobStatuses" :key="item.value" :label="item.label" :value="item.value" />
+        <el-option v-for="item in processStatuses" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="search" />
     </div>
@@ -20,19 +20,19 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column :label="$t('core.job.columns.jobName')" prop="jobName" min-width="100px">
+      <el-table-column :label="$t('core.process.columns.processDefinitionKey')" prop="processDefinitionKey" min-width="100px">
         <template slot-scope="scope">
-          <el-link :type="scope.row.status | renderJobStatus" @click="draft(scope.row)">{{ scope.row.jobName }}</el-link>
+          <el-link :type="scope.row.status | renderProcessStatus" @click="draft(scope.row)">{{ scope.row.processDefinitionKey }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('columns.displayName')" min-width="150px">
+      <el-table-column :label="$t('core.process.columns.processDefinitionName')" min-width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.displayName }}</span>
+          <span>{{ scope.row.processDefinitionName }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('columns.status')" align="center" class-name="status-col" width="80">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | renderJobStatus">{{ formatStatus(scope.row.status) }}</el-tag>
+          <el-tag :type="scope.row.status | renderProcessStatus">{{ formatStatus(scope.row.status) }}</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -48,14 +48,14 @@
 </template>
 
 <script>
-import { listReq, startReq } from '@/api/core/job'
+import { listReq, startReq } from '@/api/core/process'
 import * as calendarApi from '@/api/core/calendar'
 import { buildMsg } from '@/utils/tools'
 import Pagination from '@/components/Pagination'
 
 const DEF_OBJ = {
-  jobName: undefined,
-  displayName: '',
+  processDefinitionKey: undefined,
+  processDefinitionName: '',
   status: 0,
   remark: '',
   content: ''
@@ -74,23 +74,23 @@ export default {
         currentPage: 1,
         pageSize: 10,
         total: 0,
-        displayName: undefined,
+        processDefinitionName: undefined,
         status: [],
-        sort: 'JOB_NAME'
+        sort: 'PROC_DEF_KEY'
       },
-      jobStatuses: [],
+      processStatuses: [],
       milliSecondTimeUnits: [],
       inDayTimeUnits: [],
       dayTimeUnit: [],
       overDayTimeUnits: [],
       daysOfWeek: [],
       showCreateTime: false,
-      job: DEF_OBJ,
+      process: DEF_OBJ,
       downloadLoading: false,
       calendars: [],
       timeZones: [],
       jsonData: null,
-      jobCharts: null
+      processCharts: null
     }
   },
   created() {
@@ -100,18 +100,18 @@ export default {
   methods: {
     draft(row) {
       if (row.status === 1) {
-        this.$message.warning(this.$t('tip.disabledJobError') + ':' + row.jobName)
+        this.$message.warning(this.$t('tip.disabledProcessError') + ':' + row.processDefinitionKey)
         return
       }
-      const jobNames = [row.jobName]
-      this.$confirm(buildMsg(this, jobNames), this.$t('tip.confirmMsg'), { type: 'warning' })
+      const processDefinitionKeys = [row.processDefinitionKey]
+      this.$confirm(buildMsg(this, processDefinitionKeys), this.$t('tip.confirmMsg'), { type: 'warning' })
         .then(() => {
-          startReq({ jobNames: jobNames }).then(res => {
+          startReq({ processDefinitionKeys: processDefinitionKeys }).then(res => {
             if (res.data.result) {
               this.$router.push({
                 name: res.data.result,
                 params: {
-                  jobName: row.jobName
+                  processDefinitionKey: row.processDefinitionKey
                 }
               })
             } else {
@@ -133,21 +133,21 @@ export default {
     },
     sortChange(data) {
       const { prop, order } = data
-      if (prop === 'jobName') {
+      if (prop === 'processDefinitionKey') {
         this.sortByName(order)
       }
     },
     sortByName(order) {
       if (order === 'ascending') {
-        this.page.sort = 'JOB_NAME'
+        this.page.sort = 'PROC_DEF_KEY'
       } else {
-        this.page.sort = 'JOB_NAME DESC'
+        this.page.sort = 'PROC_DEF_KEY DESC'
       }
       this.search()
     },
     formatStatus(item) {
-      for (let i = 0; i < this.jobStatuses.length; i++) {
-        const option = this.jobStatuses[i]
+      for (let i = 0; i < this.processStatuses.length; i++) {
+        const option = this.processStatuses[i]
         if (option.value === item) {
           return option.label
         }
@@ -157,13 +157,13 @@ export default {
     loadConst() {
       const lang = localStorage.getItem('language')
       import('@/lang/dict.js').then(array => {
-        this.jobStatuses = array['jobStatuses_' + lang]
+        this.processStatuses = array['processStatuses_' + lang]
         this.milliSecondTimeUnits = array['milliSecondTimeUnits_' + lang]
         this.inDayTimeUnits = array['inDayTimeUnits_' + lang]
         this.dayTimeUnit = array['dayTimeUnit_' + lang]
         this.overDayTimeUnits = array['overDayTimeUnits_' + lang]
         this.daysOfWeek = array['daysOfWeek_' + lang]
-        this.jobCharts = array['jobCharts_' + lang]
+        this.processCharts = array['processCharts_' + lang]
         this.search()
       })
     },
@@ -174,7 +174,7 @@ export default {
     },
     initPageStatus() {
       if (this.page.status.length === 0) {
-        this.page.status = this.jobStatuses.map(item => item.value)
+        this.page.status = this.processStatuses.map(item => item.value)
       }
     }
   }
@@ -182,5 +182,5 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  @import "./styles/jobs.scss";
+  @import "./styles/processes.scss";
 </style>

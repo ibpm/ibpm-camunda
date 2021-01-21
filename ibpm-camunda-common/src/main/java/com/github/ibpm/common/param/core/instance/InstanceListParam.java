@@ -8,9 +8,9 @@ import java.util.List;
 @ToString
 public class InstanceListParam extends PageSortParam {
 
-    protected String procInstId;
+    protected String processInstanceId;
 
-    protected String jobName;
+    protected String processDefinitionKey;
 
     protected String displayName;
 
@@ -32,21 +32,21 @@ public class InstanceListParam extends PageSortParam {
 
     protected boolean listChildren;
 
-    public String getProcInstId() {
-        return procInstId;
+    public String getProcessInstanceId() {
+        return processInstanceId;
     }
 
-    public InstanceListParam setProcInstId(String procInstId) {
-        this.procInstId = procInstId;
+    public InstanceListParam setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
         return this;
     }
 
-    public String getJobName() {
-        return jobName;
+    public String getProcessDefinitionKey() {
+        return processDefinitionKey;
     }
 
-    public InstanceListParam setJobName(String jobName) {
-        this.jobName = jobName;
+    public InstanceListParam setProcessDefinitionKey(String processDefinitionKey) {
+        this.processDefinitionKey = processDefinitionKey;
         return this;
     }
 

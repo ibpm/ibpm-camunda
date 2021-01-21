@@ -7,7 +7,7 @@ export default {
     role: '角色管理',
     calendar: '日历管理',
     core: '流程管理',
-    job: '流程设计',
+    process: '流程设计',
     arg: '参数管理',
     monitor: '监控管理',
     total: '执行监控',
@@ -75,7 +75,7 @@ export default {
     saveConfirm: '确定保存',
     publishConfirm: '确定发布',
     saveAndPublishConfirm: '确定保存并发布',
-    disabledJobError: '禁用的流程不可被发起',
+    disabledProcessError: '禁用的流程不可被发起',
     adminUserCannotBeRemoved: '超管用户不能删除',
     preview: '预览',
     selectSql: '必须是查询语句(以select开头)',
@@ -110,7 +110,7 @@ export default {
     doubleNewPassword: '重复新密码',
     differentOldPassword: '新旧密码不能相同',
     differentNewPassword: '两次密码不一致',
-    jobNoInstance: '根据查询条件未查询到任何实例',
+    processNoInstance: '根据查询条件未查询到任何实例',
     noResources: '无菜单权限，请联系超管分配',
     today: '今天',
     yesterday: '昨天',
@@ -196,17 +196,20 @@ export default {
   },
   core: {
     title: '流程',
-    job: {
+    process: {
       rules: {
-        jobName: '流程名称不能为空'
+        processDefinitionKey: '流程主键不能为空',
+        processDefinitionName: '流程名称不能为空'
       },
       columns: {
         reversion: '模型版本',
         version: '发布版本',
-        jobName: '流程名称'
+        processDefinitionKey: '流程主键',
+        processDefinitionName: '流程名称'
       },
       placeholder: {
-        jobName: '请输入流程名称'
+        processDefinitionKey: '请输入流程主键',
+        processDefinitionName: '请输入流程名称'
       },
       actions: {
         design: '设计',
@@ -231,7 +234,7 @@ export default {
         exchange: '将当前模型切换为最新的版本',
         copyConfirm: '确定复制',
         exchangeConfirm: '确定将当前模型切换为最新的版本',
-        jobNameNotChanged: '复制任务时，流程名称必须修改',
+        processDefinitionKeyNotChanged: '复制任务时，流程名称必须修改',
         versionIsLatest: '当前版本已为最新，无需切换'
       }
     },
@@ -261,7 +264,7 @@ export default {
       starter: '发起人'
     },
     label: {
-      job: '流程',
+      process: '流程',
       record: '执行记录',
       task: '任务节点'
     }
@@ -321,12 +324,12 @@ export default {
   statistics: {
     chart: '图表',
     instance: '实例',
-    job: '流程',
+    process: '流程',
     user: '用户'
   },
   chart: {
     instance: '实例状态分布',
-    job: '流程状态分布',
+    process: '流程状态分布',
     user: '用户状态分布',
     instanceDuration: '执行时长趋势图'
   },

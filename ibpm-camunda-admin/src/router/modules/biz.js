@@ -1,4 +1,4 @@
-/** When your routing job is too long, you can split it into small modules**/
+/** When your routing process is too long, you can split it into small modules**/
 
 import Layout from '@/layout'
 

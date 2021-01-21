@@ -15,7 +15,7 @@ public interface InstanceMapper {
 
     Instance getById(String id);
 
-    Instance getByInstId(String procInstId);
+    Instance getByInstId(String processInstanceId);
 
     int count(Map<String, Object> paramMap);
 
@@ -27,25 +27,25 @@ public interface InstanceMapper {
 
     void updateInstance(Instance instance);
 
-    void deleteExecution(String procInstId);
+    void deleteExecution(String processInstanceId);
 
-    void deleteInstance(String procInstId);
+    void deleteInstance(String processInstanceId);
 
     List<InstanceWithChildren> listInstance(Map<String, Object> paramMap);
 
     List<InstanceWithChildren> listTodo(Map<String, Object> paramMap);
 
-    List<Instance> listDoing(Map<String, Object> paramMap);
+    List<InstanceWithChildren> listDoing(Map<String, Object> paramMap);
 
-    List<Instance> listDone(Map<String, Object> paramMap);
+    List<InstanceWithChildren> listDone(Map<String, Object> paramMap);
 
-    int countProcessChildren(String superProcInstId);
+    int countProcessChildren(String superProcessInstanceId);
 
     int countRetriedChildren(String parentId);
 
     int countInstance(Map<String, Object> paramMap);
 
-    List<InstanceWithChildren> listProcessChildren(String superProcInstId);
+    List<InstanceWithChildren> listProcessChildren(String superProcessInstanceId);
 
     List<InstanceWithChildren> listRetriedChildren(String parentId);
 

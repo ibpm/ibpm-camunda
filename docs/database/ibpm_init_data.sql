@@ -376,7 +376,7 @@ insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','calendar-saveDate');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','core');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','executor');
-insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','job');
+insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','process');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','monitor');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','role');
 insert  into `ibpm_role_resource`(`ROLE_NAME`,`RESOURCE_NAME`) values ('admin','scheduler');

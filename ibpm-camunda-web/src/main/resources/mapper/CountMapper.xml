@@ -9,9 +9,9 @@
         GROUP BY STATUS
     </select>
 
-    <select id="getJobCount" parameterType="map" resultType="com.github.ibpm.common.result.MapResult">
+    <select id="getProcessCount" parameterType="map" resultType="com.github.ibpm.common.result.MapResult">
         SELECT STATUS AS name, COUNT(*) AS value
-        FROM ${tablePrefix}job j
+        FROM ${tablePrefix}process j
         GROUP BY STATUS
     </select>
 
@@ -28,14 +28,14 @@
             <if test="firedSource != null">
                 AND TRIGGER_NAME ${firedSource}
             </if>
-            <include refid="condJobName"/>
+            <include refid="condProcessDefinitionKey"/>
         </where>
         GROUP BY STATUS
     </select>
 
-    <sql id="condJobName">
-        <if test="jobName != null">
-            AND j.JOB_NAME = #{jobName, jdbcType=VARCHAR}
+    <sql id="condProcessDefinitionKey">
+        <if test="processDefinitionKey != null">
+            AND j.PROC_DEF_KEY = #{processDefinitionKey, jdbcType=VARCHAR}
         </if>
     </sql>
 

@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 @ToString
 public class CountInstanceParam implements CommonParam {
 
-    protected String jobName;
+    protected String processDefinitionKey;
 
     protected Long lowerStartTime;
 

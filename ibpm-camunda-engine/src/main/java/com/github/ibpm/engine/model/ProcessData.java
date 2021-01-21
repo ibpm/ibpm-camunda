@@ -5,11 +5,11 @@ import lombok.Getter;
 @Getter
 public class ProcessData {
 
-    protected String procInstId;
+    protected String processInstanceId;
 
     protected String taskId;
 
-    protected String jobName;
+    protected String processDefinitionKey;
 
     protected String businessKey;
 
@@ -17,8 +17,8 @@ public class ProcessData {
 
     protected Integer status;
 
-    public ProcessData setProcInstId(String procInstId) {
-        this.procInstId = procInstId;
+    public ProcessData setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
         return this;
     }
 
@@ -27,8 +27,8 @@ public class ProcessData {
         return this;
     }
 
-    public ProcessData setJobName(String jobName) {
-        this.jobName = jobName;
+    public ProcessData setProcessDefinitionKey(String processDefinitionKey) {
+        this.processDefinitionKey = processDefinitionKey;
         return this;
     }
 

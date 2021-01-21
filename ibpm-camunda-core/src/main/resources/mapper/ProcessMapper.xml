@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.ibpm.core.dao.core.ProcessMapper">
+
+    <insert id="add" parameterType="com.github.ibpm.common.result.core.process.ProcessModel">
+        INSERT INTO ${tablePrefix}process (
+            PROC_DEF_KEY,
+            PROC_DEF_NAME,
+            CONTENT,
+            STATUS,
+            UPDATE_TIME,
+            REMARK
+        )
+        VALUES
+        (
+            #{processDefinitionKey, jdbcType=VARCHAR},
+            #{processDefinitionName, jdbcType=VARCHAR},
+            #{content, jdbcType=VARCHAR},
+            #{status, jdbcType=INTEGER},
+            #{updateTime, jdbcType=INTEGER},
+            #{remark, jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.github.ibpm.common.result.core.process.ProcessModel">
+        UPDATE ${tablePrefix}process
+        <set>
+            STATUS = #{status, jdbcType=INTEGER},
+            UPDATE_TIME = #{updateTime, jdbcType=INTEGER},
+            REMARK = #{remark, jdbcType=VARCHAR},
+        </set>
+        <where>
+            <include refid="condProcessDefinitionKey_"/>
+        </where>
+    </update>
+
+    <update id="updateContent" parameterType="com.github.ibpm.common.result.core.process.ProcessModel">
+        UPDATE ${tablePrefix}process
+        <set>
+            UPDATE_TIME = #{updateTime, jdbcType=INTEGER},
+            CONTENT = #{content, jdbcType=VARCHAR},
+        </set>
+        <where>
+            <include refid="condProcessDefinitionKey_"/>
+        </where>
+    </update>
+
+    <select id="get" parameterType="map" resultMap="processResultMap">
+        SELECT *
+        FROM ${tablePrefix}process j
+        <where>
+            <include refid="condProcessDefinitionKey"/>
+        </where>
+    </select>
+
+    <select id="list" parameterType="map" resultMap="processResultMap">
+        SELECT PROC_DEF_KEY, PROC_DEF_NAME, STATUS, UPDATE_TIME, REMARK
+        FROM ${tablePrefix}process j
+        <where>
+            <if test="processDefinitionKey != null">
+                AND LOWER(PROC_DEF_KEY) LIKE CONCAT(CONCAT('%', LOWER(#{processDefinitionKey, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="processDefinitionName != null">
+                AND LOWER(PROC_DEF_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{processDefinitionName, jdbcType=VARCHAR})), '%')
+            </if>
+            <if test="status != null &amp;&amp;status.size() &gt; 0">
+                AND STATUS IN
+                <foreach item="item" collection="status" open="(" separator="," close=")">
+                    #{item, jdbcType=INTEGER}
+                </foreach>
+            </if>
+        </where>
+        <choose>
+            <when test="sort == null">
+                order by PROC_DEF_KEY
+            </when>
+            <otherwise>
+                order by ${sort}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="versions" parameterType="map" resultMap="processWithVersionResultMap">
+        SELECT
+        *
+        FROM
+        (SELECT
+        a.PROC_DEF_KEY,
+        a.PROC_DEF_NAME,
+        a.STATUS,
+        a.REMARK,
+        b.ID_ AS PROC_DEF_ID,
+        b.VERSION_ AS VERSION,
+        c.DEPLOY_TIME_ AS DEPLOY_TIME
+        FROM
+        ${tablePrefix}process a
+        JOIN act_re_procdef b
+        ON a.PROC_DEF_KEY = b.KEY_
+        JOIN act_re_deployment c
+        ON b.DEPLOYMENT_ID_ = c.ID_) j
+        <where>
+            <include refid="condProcessDefinitionKey"/>
+        </where>
+        ORDER BY VERSION
+    </select>
+
+    <delete id="delete" parameterType="map">
+        DELETE FROM ${tablePrefix}process
+        <where>
+            PROC_DEF_KEY IN
+            <foreach item="processDefinitionKey" collection="processDefinitionKeys" open="(" separator="," close=")">
+                #{processDefinitionKey, jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </delete>
+
+    <update id="updateStatus" parameterType="map">
+        UPDATE ${tablePrefix}process
+        <set>
+            STATUS = #{status, jdbcType=INTEGER},
+        </set>
+        <where>
+            PROC_DEF_KEY IN
+            <foreach item="processDefinitionKey" collection="processDefinitionKeys" open="(" separator="," close=")">
+                #{processDefinitionKey, jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </update>
+
+    <sql id="condProcessDefinitionKey">
+        <if test="processDefinitionKey != null">
+          AND j.PROC_DEF_KEY = #{processDefinitionKey, jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <sql id="condProcessDefinitionKey_">
+        <if test="processDefinitionKey != null">
+            AND PROC_DEF_KEY = #{processDefinitionKey, jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <resultMap type="com.github.ibpm.common.result.core.process.ProcessModel" id="processResultMap">
+        <id property="processDefinitionKey" column="PROC_DEF_KEY" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="processDefinitionName" column="PROC_DEF_NAME" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap type="com.github.ibpm.common.result.core.process.ProcessWithVersionResult" id="processWithVersionResultMap" extends="processResultMap">
+        <result property="processDefinitionId" column="PROC_DEF_ID" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </resultMap>
+
+</mapper>

@@ -14,14 +14,14 @@
     <div class="custom-area">
       <el-select
         v-model="currentVersion"
-        :placeholder="$t('core.job.columns.reversion') + '-' + $t('core.job.columns.version')"
+        :placeholder="$t('core.process.columns.reversion') + '-' + $t('core.process.columns.version')"
         class="filter-item"
         style="width: 160px"
-        @change="changeJob"
+        @change="changeProcess"
       >
-        <el-option v-for="item in jobWithVersions" :key="item.version" :label="createVersionLabel(item)" :value="item.version">
+        <el-option v-for="item in processWithVersions" :key="item.version" :label="createVersionLabel(item)" :value="item.version">
           <span style="float: left; font-size: 13px">{{ createVersionLabel(item) }}</span>
-          <span style="float: right; color: #8492a6; margin-left: 20px;">{{ item.updateTime | parseTime }}</span>
+          <span style="float: right; color: #8492a6; margin-left: 20px;">{{ item.deployTime | parseTime }}</span>
         </el-option>
       </el-select>
       <span style="margin-left: 40px;">
@@ -47,7 +47,7 @@
         </el-tooltip>
         <el-tooltip :content="$t('actions.start')" effect="dark" placement="top-start">
           <span style="margin-left: 10px;">
-            <el-button :disabled="!job.procDefId && job.version === 0" type="danger" @click="start">
+            <el-button :disabled="!process.processDefinitionId && process.version === 0" type="danger" @click="start">
               <svg-icon icon-class="hand" />
             </el-button>
           </span>
@@ -66,49 +66,49 @@
       :before-close="close"
     >
       <div v-show="editDialog.copy.visible">
-        <job-info-form :job="targetJobParam" @save="copy" @cancel="editDialog.copy.visible = false" />
+        <process-info-form :process="targetProcessParam" @save="copy" @cancel="editDialog.copy.visible = false" />
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getContentReq, updateContentReq, versionsReq, copyReq, exchangeReq, publishReq, startReq } from '@/api/core/job'
+import { getContentReq, updateContentReq, versionsReq, copyReq, exchangeReq, publishReq, startReq } from '@/api/core/process'
 import BpmnModeler from 'bpmn-js/lib/Modeler'
 import propertiesPanelModule from 'bpmn-js-properties-panel'
 import propertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/camunda'
 import camundaModdleDescriptor from 'camunda-bpmn-moddle/resources/camunda'
 import miniMapModule from 'diagram-js-minimap'
 import customTranslate from '@/utils/customTranslate'
-import JobInfoForm from './components/job/jobInfoForm'
+import ProcessInfoForm from './components/process/editForm'
 import { getTimeStr } from '@/utils/tools'
-import customElementTemplate from './components/job/element-templates/custom'
-import customControlsModule from './components/job/custom'
+import customElementTemplate from './components/process/element-templates/custom'
+import customControlsModule from './components/process/custom'
 
 export default {
   name: 'flow',
   components: {
-    JobInfoForm
+    ProcessInfoForm
   },
   data() {
     return {
-      job: {},
+      process: {},
       jsonData: null,
       currentVersion: -1,
       bpmnModeler: null,
-      jobWithVersions: [],
+      processWithVersions: [],
       editDialog: {
         title: undefined,
         copy: {
           visible: false
         }
       },
-      targetJobParam: {}
+      targetProcessParam: {}
     }
   },
   created() {
     setTimeout(() => this.bindBpmn(), 20)
-    this.initJobWithVersions()
+    this.initProcessWithVersions()
   },
   methods: {
     bindBpmn() {
@@ -148,8 +148,8 @@ export default {
           self.setEncoded(downloadLink, self.getExportFileName() + '.bpmn.xml', xml)
         })
 
-        self.bindJobContent(function(xml) {
-          self.job.content = xml
+        self.bindProcessContent(function(xml) {
+          self.process.content = xml
         })
       })
       this.initWidget()
@@ -173,9 +173,9 @@ export default {
         this.$t('tip.confirm'),
         { type: 'info' })
         .then(() => {
-          updateContentReq(this.job).then(res => {
+          updateContentReq(this.process).then(res => {
             this.$message.success(res.data.msg)
-            this.openNewJobPage(this.job.jobName)
+            this.openNewProcessPage(this.process.processDefinitionKey)
           })
         })
     },
@@ -185,9 +185,9 @@ export default {
         this.$t('tip.confirm'),
         { type: 'info' })
         .then(() => {
-          publishReq({ jobNames: [this.job.jobName] }).then(res => {
+          publishReq({ processDefinitionKeys: [this.process.processDefinitionKey] }).then(res => {
             this.$message.success(res.data.msg)
-            this.openNewJobPage(this.job.jobName)
+            this.openNewProcessPage(this.process.processDefinitionKey)
           })
         })
     },
@@ -197,84 +197,84 @@ export default {
         this.$t('tip.confirm'),
         { type: 'info' })
         .then(() => {
-          updateContentReq(this.job).then(res => {
-            publishReq({ jobNames: [this.job.jobName] }).then(res => {
+          updateContentReq(this.process).then(res => {
+            publishReq({ processDefinitionKeys: [this.process.processDefinitionKey] }).then(res => {
               this.$message.success(res.data.msg)
-              this.openNewJobPage(this.job.jobName)
+              this.openNewProcessPage(this.process.processDefinitionKey)
             })
           })
         })
     },
-    changeJob() {
+    changeProcess() {
       const loading = this.getLoading()
       this.renderContent()
       this.closeLoading(loading)
     },
-    initJobWithVersions() {
-      versionsReq({ jobName: this.$route.params.key }).then(res => {
-        this.jobWithVersions = res.data.result.reverse()
-        this.currentVersion = this.jobWithVersions[0].version
+    initProcessWithVersions() {
+      versionsReq({ processDefinitionKey: this.$route.params.key }).then(res => {
+        this.processWithVersions = res.data.result.reverse()
+        this.currentVersion = this.processWithVersions[0].version
         this.renderContent()
       })
     },
     renderContent() {
-      this.job = Object.assign({}, this.jobWithVersions.find(item => item.version === this.currentVersion))
-      getContentReq(this.job).then(res => {
-        this.job.content = res.data.result
-        this.openDiagram(this.job.content) // open the job content
+      this.process = Object.assign({}, this.processWithVersions.find(item => item.version === this.currentVersion))
+      getContentReq(this.process).then(res => {
+        this.process.content = res.data.result
+        this.openDiagram(this.process.content) // open the process content
       })
     },
     openCopyDialog() {
       this.editDialog.title = this.$t('core.flow.tip.copy')
       this.editDialog.copy.visible = true
-      this.targetJobParam = Object.assign({}, this.job)
+      this.targetProcessParam = Object.assign({}, this.process)
     },
-    // copy job with current version to another job(if the target was existent, will add its version)
+    // copy process with current version to another process(if the target was existent, will add its version)
     copy() {
-      if (this.job.jobName === this.targetJobParam.jobName) {
-        this.$message.warning(this.$t('core.flow.tip.jobNameNotChanged'))
+      if (this.process.processDefinitionKey === this.targetProcessParam.processDefinitionKey) {
+        this.$message.warning(this.$t('core.flow.tip.processDefinitionKeyNotChanged'))
         return
       }
       this.$confirm(this.$t('core.flow.tip.copyConfirm'), this.$t('tip.confirm'), { type: 'info' })
         .then(() => {
           const data = {
-            jobName: this.job.jobName,
-            procDefId: this.job.procDefId,
-            targetJobParam: this.targetJobParam
+            processDefinitionKey: this.process.processDefinitionKey,
+            processDefinitionId: this.process.processDefinitionId,
+            targetProcessParam: this.targetProcessParam
           }
           copyReq(data).then(res => {
             this.$message.success(res.data.msg)
             this.editDialog.copy.visible = false
-            this.openNewJobPage(this.targetJobParam.jobName)
+            this.openNewProcessPage(this.targetProcessParam.processDefinitionKey)
           })
         })
     },
     // exchange current version to the latest
     exchange() {
-      if (this.currentVersion === this.jobWithVersions[0].version) {
+      if (this.currentVersion === this.processWithVersions[0].version) {
         this.$message.warning(this.$t('core.flow.tip.versionIsLatest'))
         return
       }
       this.$confirm(this.$t('core.flow.tip.exchangeConfirm'), this.$t('tip.confirm'), { type: 'info' })
         .then(() => {
-          exchangeReq(this.job).then(res => {
+          exchangeReq(this.process).then(res => {
             this.$message.success(res.data.msg)
-            this.openNewJobPage(this.job.jobName)
+            this.openNewProcessPage(this.process.processDefinitionKey)
           })
         })
     },
     start() {
-      if (!this.job.version) {
+      if (!this.process.version) {
         this.$message.warning(this.$t('tip.manualWithNoVersion'))
         return
-      } else if (this.job.status === 1) {
-        this.$message.warning(this.$t('tip.disabledJobError'))
+      } else if (this.process.status === 1) {
+        this.$message.warning(this.$t('tip.disabledProcessError'))
         return
       }
       this.$confirm(this.$t('tip.confirm'), this.$t('tip.confirmMsg'), { type: 'warning' })
         .then(() => {
           startReq({
-            jobName: this.job.jobName,
+            processDefinitionKey: this.process.processDefinitionKey,
             jsonData: (!this.jsonData ? null : (typeof this.jsonData === 'string' ? JSON.parse(this.jsonData) : this.jsonData))
           }).then(res => {
             this.$message.success(res.data.msg)
@@ -285,7 +285,7 @@ export default {
         })
     },
     // open new route
-    openNewJobPage(key) {
+    openNewProcessPage(key) {
       const loading = this.getLoading()
       setTimeout(() => {
         const route = {
@@ -296,12 +296,12 @@ export default {
         }
         this.$router.push(route)
       }, 100)
-      this.initJobWithVersions()
+      this.initProcessWithVersions()
       this.closeLoading(loading)
     },
     createVersionLabel(item) {
       let label = item.version
-      if (item.procDefId) {
+      if (item.processDefinitionId) {
         label += ' - ' + item.version
       }
       return label
@@ -333,9 +333,9 @@ export default {
       }
     },
     getExportFileName() {
-      return (this.job.displayName || this.job.jobName || 'undefined') + '-' + getTimeStr()
+      return (this.process.processDefinitionName || this.process.processDefinitionKey || 'undefined') + '-' + getTimeStr()
     },
-    bindJobContent(done) {
+    bindProcessContent(done) {
       this.exportBPMN(done)
     },
     initWidget() {

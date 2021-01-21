@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="page.jobName" :placeholder="$t('core.job.columns.jobName')" class="filter-item search-input" @keyup.enter.native="search" />
+      <el-input v-model="page.processDefinitionKey" :placeholder="$t('core.process.columns.processDefinitionKey')" class="filter-item search-input" @keyup.enter.native="search" />
       <el-input v-model="page.displayName" :placeholder="$t('columns.displayName')" class="filter-item search-input" @keyup.enter.native="search" />
       <el-select v-model="page.status" :placeholder="$t('columns.status')" multiple clearable collapse-tags class="filter-item search-select">
         <el-option v-for="item in instanceStatuses" :key="item.value" :label="item.label" :value="item.value" />
@@ -48,7 +48,7 @@
       ref="tables"
       v-loading="listLoading"
       :data="list"
-      row-key="procInstId"
+      row-key="processInstanceId"
       border
       fit
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
@@ -63,7 +63,7 @@
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="table-expand">
-            <el-form-item :label="$t('core.job.columns.version')">
+            <el-form-item :label="$t('core.process.columns.version')">
               <span>{{ props.row.version }}</span>
             </el-form-item>
             <el-form-item :label="$t('monitor.columns.starter')">
@@ -97,17 +97,17 @@
         type="selection"
         width="45"
       />
-      <el-table-column :label="$t('core.job.columns.jobName')" show-overflow-tooltip min-width="120px">
+      <el-table-column :label="$t('core.process.columns.processDefinitionKey')" show-overflow-tooltip min-width="120px">
         <template slot-scope="scope">
-          <span>{{ scope.row.jobName }}</span>
+          <span>{{ scope.row.processDefinitionKey }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('columns.displayName')" min-width="120px">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>{{ scope.row.displayName || scope.row.jobName }}</p>
+            <p>{{ scope.row.displayName || scope.row.processDefinitionKey }}</p>
             <div slot="reference">
-              <span class="single-line">{{ scope.row.displayName || scope.row.jobName }}</span>
+              <span class="single-line">{{ scope.row.displayName || scope.row.processDefinitionKey }}</span>
             </div>
           </el-popover>
         </template>
@@ -165,7 +165,7 @@ export default {
         currentPage: 1,
         pageSize: 10,
         total: 0,
-        jobName: undefined,
+        processDefinitionKey: undefined,
         displayName: undefined,
         lowerStartTime: null,
         upperStartTime: null,
@@ -210,14 +210,14 @@ export default {
   },
   methods: {
     retry() {
-      if (!this.selections[0].procInstId) {
+      if (!this.selections[0].processInstanceId) {
         this.$message.info(this.$t('tip.flowNotStart'))
         return
       }
       this.$confirm(this.$t('tip.confirmMsg'), this.$t('tip.confirm'), { type: 'info' })
         .then(() => {
           retryReq({
-            procInstId: this.instance.procInstId
+            processInstanceId: this.instance.processInstanceId
           })
             .then(res => {
               this.$message.success(res.data.msg)
@@ -316,16 +316,16 @@ export default {
       }
     },
     openTrace(row) {
-      if (!row.procInstId) {
+      if (!row.processInstanceId) {
         this.$message.info(this.$t('tip.flowNotStart'))
         return
       }
       const route = {
         name: 'trace',
         params: {
-          key: row.jobName,
-          procInstId: row.procInstId,
-          procDefId: row.procDefId
+          key: row.processDefinitionKey,
+          processInstanceId: row.processInstanceId,
+          processDefinitionId: row.processDefinitionId
         }
       }
       this.$router.push(route)
@@ -337,7 +337,7 @@ export default {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
         const translatedHeader = [
-          this.$t('core.job.columns.jobName'),
+          this.$t('core.process.columns.processDefinitionKey'),
           this.$t('columns.displayName'),
           this.$t('columns.status'),
           this.$t('columns.startTime'),
@@ -346,7 +346,7 @@ export default {
           'code',
           'msg'
         ]
-        const columnNames = ['jobName', 'displayName', 'status', 'startTime', 'endTime', 'duration', 'code', 'msg']
+        const columnNames = ['processDefinitionKey', 'displayName', 'status', 'startTime', 'endTime', 'duration', 'code', 'msg']
         const data = this.formatJson(columnNames, this.list)
         excel.export_json_to_excel({
           header: translatedHeader,

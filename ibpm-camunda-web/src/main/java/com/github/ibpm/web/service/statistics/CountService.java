@@ -21,9 +21,9 @@ public class CountService extends BaseServiceAdapter {
         return mapper.getUserCount();
     }
 
-    public List<MapResult<String, Integer>> getJobCount() {
+    public List<MapResult<String, Integer>> getProcessCount() {
         Map<String, Object> paramMap = BeanUtil.bean2Map(null);
-        return mapper.getJobCount(paramMap);
+        return mapper.getProcessCount(paramMap);
     }
 
     public List<MapResult<String, Integer>> getInstanceCount(CountInstanceParam param) {

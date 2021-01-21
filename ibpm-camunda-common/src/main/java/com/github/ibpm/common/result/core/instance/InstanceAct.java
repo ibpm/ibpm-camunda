@@ -11,9 +11,9 @@ public class InstanceAct {
 
     protected String parentActInstId;
 
-    protected String procInstId;
+    protected String processInstanceId;
 
-    protected String rootProcInstId;
+    protected String rootProcessInstanceId;
 
     protected String actId;
 
@@ -65,21 +65,21 @@ public class InstanceAct {
         return this;
     }
 
-    public String getProcInstId() {
-        return procInstId;
+    public String getProcessInstanceId() {
+        return processInstanceId;
     }
 
-    public InstanceAct setProcInstId(String procInstId) {
-        this.procInstId = procInstId;
+    public InstanceAct setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
         return this;
     }
 
-    public String getRootProcInstId() {
-        return rootProcInstId;
+    public String getRootProcessInstanceId() {
+        return rootProcessInstanceId;
     }
 
-    public InstanceAct setRootProcInstId(String rootProcInstId) {
-        this.rootProcInstId = rootProcInstId;
+    public InstanceAct setRootProcessInstanceId(String rootProcessInstanceId) {
+        this.rootProcessInstanceId = rootProcessInstanceId;
         return this;
     }
 

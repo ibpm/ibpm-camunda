@@ -54,28 +54,16 @@ public class InstanceController {
         return CommonResult.putResult(instanceService.openForm(param));
     }
 
-    @Operation(summary = "List job instances", parameters = {@Parameter(name = "param", required = true)})
+    @Operation(summary = "List process instances", parameters = {@Parameter(name = "param", required = true)})
     @GetMapping(APIPath.InstancePath.$)
     public CommonResult<Map<String, Object>> listMonitor(InstanceListParam param) {
         return CommonResult.putResult(instanceService.listMonitor(param));
     }
 
-    @Operation(summary = "List job instances children", parameters = {@Parameter(name = "param", required = true)})
+    @Operation(summary = "List process instances children", parameters = {@Parameter(name = "param", required = true)})
     @GetMapping(APIPath.InstancePath.CHILDREN)
     public CommonResult<List<InstanceWithChildren>> listMonitor(InstanceGetParam param) {
         return CommonResult.putResult(instanceService.listMonitorChildren(param));
-    }
-
-    @Operation(summary = "List retried job instances", parameters = {@Parameter(name = "param", required = true)})
-    @GetMapping(APIPath.InstancePath.RETRY)
-    public CommonResult<Map<String, Object>> listRetry(InstanceListParam param) {
-        return CommonResult.putResult(instanceService.listRetry(param));
-    }
-
-    @Operation(summary = "List retried job instances children", parameters = {@Parameter(name = "param", required = true)})
-    @GetMapping(APIPath.InstancePath.RETRY_CHILDREN)
-    public CommonResult<List<InstanceWithChildren>> listRetry(InstanceGetParam param) {
-        return CommonResult.putResult(instanceService.listRetriedChildren(param));
     }
 
     @Operation(summary = "List all activity nodes of one instance", parameters = {@Parameter(name = "param", required = true)})

@@ -41,12 +41,12 @@ public class BpmService {
     public Void draft(Map<String, Object> paramMap) {
         ProcessData processData = save(paramMap);
         processData.setStatus(InstanceStatus.DRAFT.getStatus());
-        String procInstId = processData.getProcInstId();
-        if (StringUtils.isBlank(procInstId)) {
-            processData.setProcInstId(idGenerator.getNextId());
+        String processInstanceId = processData.getProcessInstanceId();
+        if (StringUtils.isBlank(processInstanceId)) {
+            processData.setProcessInstanceId(idGenerator.getNextId());
             instanceService.add(processData);
-            ProcessDefinition processDefinition = ibpmEngineService.getLatestProcessDefinitionByKey(processData.getJobName());
-            commandService.addDraft(processData.getProcInstId(), processData.getBusinessKey(), processData.getJobName(), processDefinition.getId(),
+            ProcessDefinition processDefinition = ibpmEngineService.getLatestProcessDefinitionByKey(processData.getProcessDefinitionKey());
+            commandService.addDraft(processData.getProcessInstanceId(), processData.getBusinessKey(), processData.getProcessDefinitionKey(), processDefinition.getId(),
                     new Date(), UserHolder.get().getUserName(), idGenerator.getNextId());
         } else {
             instanceService.update(processData);
@@ -58,12 +58,12 @@ public class BpmService {
         ProcessData processData = save(paramMap);
         Integer status = processData.getStatus();
         if (status != null && status == InstanceStatus.DRAFT.getStatus()) {
-            instanceService.deleteExecution(processData.getProcInstId());
-            instanceService.deleteInstance(processData.getProcInstId());
-            commandService.deleteDraft(processData.getProcInstId());
+            instanceService.deleteExecution(processData.getProcessInstanceId());
+            instanceService.deleteInstance(processData.getProcessInstanceId());
+            commandService.deleteDraft(processData.getProcessInstanceId());
         }
-        ProcessInstance processInstance = ibpmEngineService.create(processData.getJobName(), processData.getBusinessKey(), paramMap);
-        processData.setProcInstId(processInstance.getProcessInstanceId())
+        ProcessInstance processInstance = ibpmEngineService.create(processData.getProcessDefinitionKey(), processData.getBusinessKey(), paramMap);
+        processData.setProcessInstanceId(processInstance.getProcessInstanceId())
                 .setStatus(InstanceStatus.RUNNING.getStatus());
         instanceService.add(processData);
         ibpmEngineService.approve(processInstance.getProcessInstanceId(), paramMap);
@@ -73,7 +73,7 @@ public class BpmService {
     public Void approve(Map<String, Object> paramMap) {
         ProcessData processData = save(paramMap);
         instanceService.update(processData);
-        ibpmEngineService.approve(new TaskEntity().setProcessInstanceId(processData.getProcInstId()).setTaskId(processData.getTaskId()), paramMap);
+        ibpmEngineService.approve(new TaskEntity().setProcessInstanceId(processData.getProcessInstanceId()).setTaskId(processData.getTaskId()), paramMap);
         return null;
     }
 
@@ -86,7 +86,7 @@ public class BpmService {
 
     public ProcessData save(Map<String, Object> paramMap) {
         ProcessData processData = BeanUtil.map2Bean(ProcessData.class, paramMap);
-        BizService bizService = (BizService) SpringContextAware.getBean(processData.getJobName());
+        BizService bizService = (BizService) SpringContextAware.getBean(processData.getProcessDefinitionKey());
         String businessKey = processData.getBusinessKey();
         if (StringUtils.isBlank(businessKey)) {
             businessKey = myIdGenerator.getNextId();

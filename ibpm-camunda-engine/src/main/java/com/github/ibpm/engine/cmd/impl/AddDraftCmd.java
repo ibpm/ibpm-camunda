@@ -62,7 +62,7 @@ public class AddDraftCmd extends ParentCmd {
                     "?" +
                     ")";
 
-    protected String procInstId;
+    protected String processInstanceId;
 
     protected String businessKey;
 
@@ -76,8 +76,8 @@ public class AddDraftCmd extends ParentCmd {
 
     protected String taskId;
 
-    public AddDraftCmd(String procInstId, String businessKey, String processDefinitionKey, String processDefinitionId, Date startTime, String startUserId, String taskId) {
-        this.procInstId = procInstId;
+    public AddDraftCmd(String processInstanceId, String businessKey, String processDefinitionKey, String processDefinitionId, Date startTime, String startUserId, String taskId) {
+        this.processInstanceId = processInstanceId;
         this.businessKey = businessKey;
         this.processDefinitionKey = processDefinitionKey;
         this.processDefinitionId = processDefinitionId;
@@ -89,9 +89,9 @@ public class AddDraftCmd extends ParentCmd {
     @Override
     public Void execute(CommandContext commandContext) {
         JdbcTemplate jdbcTemplate = super.injectJdbcTemplate(commandContext);
-        jdbcTemplate.update(SQL_HI_PROCINST, procInstId, procInstId, businessKey, processDefinitionKey, processDefinitionId, startTime, startUserId);
-        jdbcTemplate.update(SQL_RU_EXECUTION, procInstId, procInstId, businessKey, processDefinitionId);
-        jdbcTemplate.update(SQL_RU_TASK, taskId, procInstId, procInstId, processDefinitionId, startUserId, startTime);
+        jdbcTemplate.update(SQL_HI_PROCINST, processInstanceId, processInstanceId, businessKey, processDefinitionKey, processDefinitionId, startTime, startUserId);
+        jdbcTemplate.update(SQL_RU_EXECUTION, processInstanceId, processInstanceId, businessKey, processDefinitionId);
+        jdbcTemplate.update(SQL_RU_TASK, taskId, processInstanceId, processInstanceId, processDefinitionId, startUserId, startTime);
         return null;
     }
 }

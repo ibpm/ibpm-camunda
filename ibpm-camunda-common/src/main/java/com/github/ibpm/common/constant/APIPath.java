@@ -50,9 +50,9 @@ public class APIPath {
         public static final String RESOURCE = $ + "/resource";
     }
 
-    public static final class JobPath {
+    public static final class ProcessPath {
 
-        public static final String SUB_PATH = "/job";
+        public static final String SUB_PATH = "/process";
 
         public static final String $ = API_PATH + CORE + SUB_PATH;
 
@@ -139,7 +139,7 @@ public class APIPath {
 
         public static final String USER = API_PATH + STATISTICS + SUB_PATH + UserPath.SUB_PATH;
 
-        public static final String JOB = API_PATH + STATISTICS + SUB_PATH + JobPath.SUB_PATH;
+        public static final String JOB = API_PATH + STATISTICS + SUB_PATH + ProcessPath.SUB_PATH;
 
         public static final String INSTANCE = API_PATH + STATISTICS + SUB_PATH + InstancePath.SUB_PATH;
     }

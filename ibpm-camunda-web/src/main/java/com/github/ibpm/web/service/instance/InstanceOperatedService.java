@@ -40,7 +40,7 @@ public class InstanceOperatedService {
                     .setEndTime(current)
                     .setDuration(current - instance.getStartTime());
             instanceService.updateDone(instance);*/
-            if (StringUtils.isBlank(instance.getProcInstId())) {
+            if (StringUtils.isBlank(instance.getProcessInstanceId())) {
                 instances.remove(i);
             }
         }

@@ -2,8 +2,8 @@
   <div>
     <el-button type="info" @click="goBack">返回</el-button>
     <el-button type="primary" @click="seeDiagram">流程图</el-button>
-    <el-button v-if="isDraft || !bizData.procInstId" type="primary" @click="save">保存</el-button>
-    <el-button v-if="isDraft || !bizData.procInstId" type="success" @click="create">发起</el-button>
+    <el-button v-if="isDraft || !bizData.processInstanceId" type="primary" @click="save">保存</el-button>
+    <el-button v-if="isDraft || !bizData.processInstanceId" type="success" @click="create">发起</el-button>
     <el-button v-if="!isDraft && bizData.taskId" type="success" @click="approve">审批</el-button>
   </div>
 </template>

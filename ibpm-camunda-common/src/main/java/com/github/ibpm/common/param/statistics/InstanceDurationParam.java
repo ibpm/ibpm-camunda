@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 @ToString
 public class InstanceDurationParam extends PageSortParam {
 
-    protected String jobName;
+    protected String processDefinitionKey;
 
     protected Long lowerStartTime;
 
@@ -27,7 +27,7 @@ public class InstanceDurationParam extends PageSortParam {
 
     @Override
     public String validate() {
-        if (StringUtils.isBlank(jobName)) {
+        if (StringUtils.isBlank(processDefinitionKey)) {
             return "6000";
         }
         return null;

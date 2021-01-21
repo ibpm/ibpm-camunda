@@ -15,18 +15,18 @@ public class DeleteDraftCmd extends ParentCmd {
     private static final String SQL_RU_EXECUTION =
             "DELETE FROM act_ru_execution WHERE PROC_INST_ID_ = ?";
 
-    protected String procInstId;
+    protected String processInstanceId;
 
-    public DeleteDraftCmd(String procInstId) {
-        this.procInstId = procInstId;
+    public DeleteDraftCmd(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
     }
 
     @Override
     public Void execute(CommandContext commandContext) {
         JdbcTemplate jdbcTemplate = super.injectJdbcTemplate(commandContext);
-        jdbcTemplate.update(SQL_HI_PROCINST, procInstId);
-        jdbcTemplate.update(SQL_RU_TASK, procInstId);
-        jdbcTemplate.update(SQL_RU_EXECUTION, procInstId);
+        jdbcTemplate.update(SQL_HI_PROCINST, processInstanceId);
+        jdbcTemplate.update(SQL_RU_TASK, processInstanceId);
+        jdbcTemplate.update(SQL_RU_EXECUTION, processInstanceId);
         return null;
     }
 }

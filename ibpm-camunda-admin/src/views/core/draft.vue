@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="page.jobName" :placeholder="$t('core.job.columns.jobName')" class="filter-item search-input" @keyup.enter.native="search" />
-      <el-input v-model="page.displayName" :placeholder="$t('columns.displayName')" class="filter-item search-input" @keyup.enter.native="search" />
+      <el-input v-model="page.processDefinitionKey" :placeholder="$t('core.process.columns.processDefinitionKey')" class="filter-item search-input" @keyup.enter.native="search" />
+      <el-input v-model="page.processDefinitionName" :placeholder="$t('core.process.columns.processDefinitionName')" class="filter-item search-input" @keyup.enter.native="search" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="search" />
     </div>
 
@@ -22,14 +22,14 @@
           <el-link type="primary" @click="openForm(scope.row)">{{ scope.row.title }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('core.job.columns.jobName')" prop="jobName" min-width="100px">
+      <el-table-column :label="$t('core.process.columns.processDefinitionKey')" prop="processDefinitionKey" min-width="100px">
         <template slot-scope="scope">
-          <span>{{ scope.row.jobName }}</span>
+          <span>{{ scope.row.processDefinitionKey }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('columns.displayName')" min-width="150px">
+      <el-table-column :label="$t('core.process.columns.processDefinitionName')" min-width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.displayName }}</span>
+          <span>{{ scope.row.processDefinitionName }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('columns.startTime')" min-width="100px">
@@ -51,14 +51,14 @@
 
 <script>
 import { listTodoReq } from '@/api/instance/instance'
-import { startReq } from '@/api/core/job'
+import { startReq } from '@/api/core/process'
 import * as calendarApi from '@/api/core/calendar'
 import { buildMsg } from '@/utils/tools'
 import Pagination from '@/components/Pagination'
 
 const DEF_OBJ = {
-  jobName: undefined,
-  displayName: '',
+  processDefinitionKey: undefined,
+  processDefinitionName: '',
   status: 0,
   remark: '',
   content: ''
@@ -77,23 +77,23 @@ export default {
         currentPage: 1,
         pageSize: 10,
         total: 0,
-        displayName: undefined,
+        processDefinitionName: undefined,
         status: 0,
         sort: 'START_TIME DESC'
       },
-      jobStatuses: [],
+      processStatuses: [],
       milliSecondTimeUnits: [],
       inDayTimeUnits: [],
       dayTimeUnit: [],
       overDayTimeUnits: [],
       daysOfWeek: [],
       showCreateTime: false,
-      job: DEF_OBJ,
+      process: DEF_OBJ,
       downloadLoading: false,
       calendars: [],
       timeZones: [],
       jsonData: null,
-      jobCharts: null
+      processCharts: null
     }
   },
   created() {
@@ -102,10 +102,10 @@ export default {
   },
   methods: {
     openForm(row) {
-      const jobNames = [row.jobName]
-      this.$confirm(buildMsg(this, jobNames), this.$t('tip.confirmMsg'), { type: 'warning' })
+      const processDefinitionKeys = [row.processDefinitionKey]
+      this.$confirm(buildMsg(this, processDefinitionKeys), this.$t('tip.confirmMsg'), { type: 'warning' })
         .then(() => {
-          startReq({ jobNames: jobNames }).then(res => {
+          startReq({ processDefinitionKeys: processDefinitionKeys }).then(res => {
             if (res.data.result) {
               this.$router.push({
                 name: res.data.result,
@@ -132,7 +132,7 @@ export default {
     },
     sortChange(data) {
       const { prop, order } = data
-      if (prop === 'jobName') {
+      if (prop === 'processDefinitionKey') {
         this.sortByName(order)
       }
     },
@@ -145,8 +145,8 @@ export default {
       this.search()
     },
     formatStatus(item) {
-      for (let i = 0; i < this.jobStatuses.length; i++) {
-        const option = this.jobStatuses[i]
+      for (let i = 0; i < this.processStatuses.length; i++) {
+        const option = this.processStatuses[i]
         if (option.value === item) {
           return option.label
         }
@@ -156,13 +156,13 @@ export default {
     loadConst() {
       const lang = localStorage.getItem('language')
       import('@/lang/dict.js').then(array => {
-        this.jobStatuses = array['jobStatuses_' + lang]
+        this.processStatuses = array['processStatuses_' + lang]
         this.milliSecondTimeUnits = array['milliSecondTimeUnits_' + lang]
         this.inDayTimeUnits = array['inDayTimeUnits_' + lang]
         this.dayTimeUnit = array['dayTimeUnit_' + lang]
         this.overDayTimeUnits = array['overDayTimeUnits_' + lang]
         this.daysOfWeek = array['daysOfWeek_' + lang]
-        this.jobCharts = array['jobCharts_' + lang]
+        this.processCharts = array['processCharts_' + lang]
         this.search()
       })
     },
@@ -176,5 +176,5 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  @import "./styles/jobs.scss";
+  @import "./styles/processes.scss";
 </style>

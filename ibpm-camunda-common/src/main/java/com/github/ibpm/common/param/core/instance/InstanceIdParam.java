@@ -11,11 +11,11 @@ import org.apache.commons.lang3.StringUtils;
 @ToString
 public class InstanceIdParam implements CommonParam {
 
-    protected String procInstId;
+    protected String processInstanceId;
 
     @Override
     public String validate() {
-        if (StringUtils.isBlank(procInstId)) {
+        if (StringUtils.isBlank(processInstanceId)) {
             return "6200";
         }
         return null;

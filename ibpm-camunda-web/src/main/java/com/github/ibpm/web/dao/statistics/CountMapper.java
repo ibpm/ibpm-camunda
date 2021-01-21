@@ -13,7 +13,7 @@ public interface CountMapper {
 
     List<MapResult<String, Integer>> getUserCount();
 
-    List<MapResult<String, Integer>> getJobCount(Map<String, Object> paramMap);
+    List<MapResult<String, Integer>> getProcessCount(Map<String, Object> paramMap);
 
     List<MapResult<String, Integer>> getInstanceCount(Map<String, Object> paramMap);
 }

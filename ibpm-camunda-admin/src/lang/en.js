@@ -7,7 +7,7 @@ export default {
     role: 'Role',
     calendar: 'Calendar',
     core: 'Core',
-    job: 'Job',
+    process: 'Process',
     arg: 'Arg',
     monitor: 'Monitor',
     total: 'Execution',
@@ -75,7 +75,7 @@ export default {
     saveConfirm: 'Make sure to save',
     publishConfirm: 'Make sure to publish',
     saveAndPublishConfirm: 'Make sure to save and publish',
-    disabledJobError: 'Can not start the disabled job',
+    disabledProcessError: 'Can not start the disabled process',
     adminUserCannotBeRemoved: 'Can not delete super user',
     preview: 'Preview',
     selectSql: 'Must start with select',
@@ -87,7 +87,7 @@ export default {
     pingError: 'Can not ping successfully',
     yes: 'Yes',
     no: 'No',
-    flowNotStart: 'Job was not started successfully, can not retry or view detail',
+    flowNotStart: 'Process was not started successfully, can not retry or view detail',
     fileSizeOutOfBound: 'File size can not more than ',
     currentFileSize: 'The file size is ',
     entryVersion: 'Please entry version',
@@ -104,13 +104,13 @@ export default {
     testResult: 'Test Result',
     noLongerTriggered: 'The trigger can not be triggered in the future',
     userFrozen: 'User is frozen, login will be denied',
-    userDisabled: 'User is disabled, job will skip executing',
+    userDisabled: 'User is disabled, process will skip executing',
     oldPassword: 'Old password',
     newPassword: 'New Password',
     doubleNewPassword: 'Double check',
     differentOldPassword: 'The old and new password must be different',
     differentNewPassword: 'The new password is different',
-    jobNoInstance: 'No instance based on the query param',
+    processNoInstance: 'No instance based on the query param',
     noResources: 'Menus can\'t be accessible,please contact super admin',
     today: 'Today',
     yesterday: 'Yesterday',
@@ -196,17 +196,20 @@ export default {
   },
   core: {
     title: 'Core',
-    job: {
+    process: {
       rules: {
-        jobName: 'The process name can not be blank'
+        processDefinitionKey: 'The process definition key can not be blank',
+        processDefinitionName: 'The process definition name can not be blank'
       },
       columns: {
         reversion: 'Reversion',
         version: 'Version',
-        jobName: 'Process name'
+        processDefinitionKey: 'Process definition key',
+        processDefinitionName: 'process definition name'
       },
       placeholder: {
-        jobName: 'Please entry process name'
+        processDefinitionKey: 'Please entry process definition key',
+        processDefinitionName: 'Please entry process definition name'
       },
       actions: {
         design: 'Design',
@@ -231,7 +234,7 @@ export default {
         exchange: 'Exchange to latest using current version',
         copyConfirm: 'Confirm to copy',
         exchangeConfirm: 'Confirm to exchange',
-        jobNameNotChanged: 'Must rename the process name when you copy it',
+        processDefinitionKeyNotChanged: 'Must rename the process name when you copy it',
         versionIsLatest: 'The version is latest, need not to exchange'
       }
     },
@@ -261,7 +264,7 @@ export default {
       starter: 'starter'
     },
     label: {
-      job: 'Job',
+      process: 'Process',
       record: 'Record',
       task: 'Task'
     }
@@ -321,12 +324,12 @@ export default {
   statistics: {
     chart: 'Chart',
     instance: 'Instance',
-    job: 'Job',
+    process: 'Process',
     user: 'User'
   },
   chart: {
     instance: 'Instance status chart',
-    job: 'Job status chart',
+    process: 'Process status chart',
     user: 'User status chart',
     instanceDuration: 'Instance duration chart'
   },

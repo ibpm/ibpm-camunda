@@ -21,7 +21,7 @@ public interface CommonConstants {
 
     String result = "result";
 
-    String jobName = "jobName";
+    String processDefinitionKey = "processDefinitionKey";
 
     String delayId = "delayId";
 
@@ -35,7 +35,7 @@ public interface CommonConstants {
 
     String id = "id";
 
-    String procInstId = "procInstId";
+    String processInstanceId = "processInstanceId";
 
     String type = "type";
 

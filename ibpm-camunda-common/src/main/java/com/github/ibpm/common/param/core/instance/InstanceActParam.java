@@ -7,24 +7,24 @@ import org.apache.commons.lang3.StringUtils;
 @ToString
 public class InstanceActParam implements CommonParam {
 
-    protected String procInstId;
+    protected String processInstanceId;
 
     protected String actId;
 
     @Override
     public String validate() {
-        if (StringUtils.isBlank(procInstId)) {
+        if (StringUtils.isBlank(processInstanceId)) {
             return "6200";
         }
         return null;
     }
 
-    public String getProcInstId() {
-        return procInstId;
+    public String getProcessInstanceId() {
+        return processInstanceId;
     }
 
-    public InstanceActParam setProcInstId(String procInstId) {
-        this.procInstId = procInstId;
+    public InstanceActParam setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
         return this;
     }
 

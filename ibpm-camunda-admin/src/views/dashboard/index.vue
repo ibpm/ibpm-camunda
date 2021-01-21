@@ -20,14 +20,14 @@
         <el-col :xs="12" :sm="12" :lg="cellNumber" class="card-panel-col">
           <div class="card-panel">
             <div class="card-panel-icon-wrapper icon-message">
-              <svg-icon icon-class="job" class-name="card-panel-icon" />
+              <svg-icon icon-class="process" class-name="card-panel-icon" />
             </div>
             <div class="card-panel-description">
               <div>
                 <span class="card-panel-text">
-                  {{ $t('statistics.job') }}
+                  {{ $t('statistics.process') }}
                 </span>
-                <count-to :start-val="0" :end-val="totalJobCount" :duration="3000" class="card-panel-num" />
+                <count-to :start-val="0" :end-val="totalProcessCount" :duration="3000" class="card-panel-num" />
               </div>
             </div>
           </div>
@@ -55,7 +55,7 @@
       </el-col>
       <el-col :xs="24" :sm="24" :lg="cellNumber">
         <div class="chart-wrapper">
-          <pie-chart ref="jobChart" />
+          <pie-chart ref="processChart" />
         </div>
       </el-col>
       <el-col v-if="superAdmin > 0" :xs="24" :sm="24" :lg="cellNumber">
@@ -69,7 +69,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { instanceCountReq, jobCountReq, userCountReq } from '@/api/statistics/count'
+import { instanceCountReq, processCountReq, userCountReq } from '@/api/statistics/count'
 import CountTo from 'vue-count-to'
 import PieChart from '@/components/Chart/PieChart'
 const INSTANCE_COLORS = [
@@ -101,7 +101,7 @@ export default {
     return {
       visible: true,
       totalInstanceCount: 0,
-      totalJobCount: 0,
+      totalProcessCount: 0,
       totalUserCount: 0
     }
   },
@@ -152,12 +152,12 @@ export default {
           INSTANCE_COLORS
         ).then(res => { this.totalInstanceCount = res })
 
-        this.renderChart(jobCountReq,
-          array['jobStatuses_' + lang],
-          'jobChart',
-          this.$t('chart.job'),
+        this.renderChart(processCountReq,
+          array['processStatuses_' + lang],
+          'processChart',
+          this.$t('chart.process'),
           JOB_COLORS
-        ).then(res => { this.totalJobCount = res })
+        ).then(res => { this.totalProcessCount = res })
 
         this.renderChart(userCountReq,
           array['userStatuses_' + lang],
@@ -275,7 +275,7 @@ export default {
     margin: 3px 26px 26px 0px;
   }
 
-  .card-panel-job-description {
+  .card-panel-process-description {
     float: right;
     font-weight: bold;
     margin: 30px 26px 26px 0px;

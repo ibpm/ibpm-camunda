@@ -4,18 +4,18 @@ import lombok.Getter;
 
 @Getter
 public class IbpmDraft {
-    private String procInstId;
+    private String processInstanceId;
 
     private String businessKey;
 
-    // = jobName
-    private String jobName;
+    // = processDefinitionKey
+    private String processDefinitionKey;
 
     private String title;
 
     private String displayName;
 
-    private String procDefId;
+    private String processDefinitionId;
 
     private long startTime;
 
@@ -25,8 +25,8 @@ public class IbpmDraft {
 
     private String deleteReason;
 
-    public IbpmDraft setProcInstId(String procInstId) {
-        this.procInstId = procInstId;
+    public IbpmDraft setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
         return this;
     }
 
@@ -35,8 +35,8 @@ public class IbpmDraft {
         return this;
     }
 
-    public IbpmDraft setJobName(String jobName) {
-        this.jobName = jobName;
+    public IbpmDraft setProcessDefinitionKey(String processDefinitionKey) {
+        this.processDefinitionKey = processDefinitionKey;
         return this;
     }
 
@@ -50,8 +50,8 @@ public class IbpmDraft {
         return this;
     }
 
-    public IbpmDraft setProcDefId(String procDefId) {
-        this.procDefId = procDefId;
+    public IbpmDraft setProcessDefinitionId(String processDefinitionId) {
+        this.processDefinitionId = processDefinitionId;
         return this;
     }
 

@@ -7,7 +7,7 @@ public class InstanceGetParam implements CommonParam {
 
     protected String id;
 
-    protected String procInstId;
+    protected String processInstanceId;
 
     @Override
     public String validate() {
@@ -26,12 +26,12 @@ public class InstanceGetParam implements CommonParam {
         return this;
     }
 
-    public String getProcInstId() {
-        return procInstId;
+    public String getProcessInstanceId() {
+        return processInstanceId;
     }
 
-    public InstanceGetParam setProcInstId(String procInstId) {
-        this.procInstId = procInstId;
+    public InstanceGetParam setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
         return this;
     }
 }

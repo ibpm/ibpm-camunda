@@ -32,49 +32,29 @@ CREATE TABLE `ibpm_calendar_day` (
 /*Table structure for table `ibpm_execution` */
 
 CREATE TABLE `ibpm_execution` (
-  `ID` varchar(64) COLLATE utf8_bin NOT NULL,
   `PROC_INST_ID` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   `ROOT_PROC_INST_ID` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   `SUPER_PROC_INST_ID` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-  `JOB_NAME` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-  `TRIGGER_NAME` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-  `PROC_DEF_ID` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-  `START_TIME` bigint(13) DEFAULT NULL,
-  `END_TIME` bigint(13) DEFAULT NULL,
-  `DURATION` bigint(20) DEFAULT NULL,
+  `PROC_DEF_KEY` varchar(64) COLLATE utf8_bin DEFAULT NULL,
+  `TITLE` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `STATUS` int(11) DEFAULT NULL,
-  `CODE` int(11) DEFAULT NULL,
-  `MSG` text COLLATE utf8_bin,
-  `PARENT_ID` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-  `SCHEDULER_URI` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `EXECUTOR_URI` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`ID`),
+  PRIMARY KEY (`PROC_INST_ID`),
   UNIQUE KEY `IDX_PROC_INST_ID` (`PROC_INST_ID`),
-  KEY `IDX_JOB_NAME` (`JOB_NAME`)
+  KEY `IDX_PROC_DEF_KEY` (`PROC_DEF_KEY`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 /*Table structure for table `ibpm_instance` */
 
 CREATE TABLE `ibpm_instance` (
-  `ID` varchar(64) COLLATE utf8_bin NOT NULL,
   `PROC_INST_ID` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   `ROOT_PROC_INST_ID` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   `SUPER_PROC_INST_ID` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-  `JOB_NAME` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-  `TRIGGER_NAME` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-  `PROC_DEF_ID` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-  `START_TIME` bigint(13) DEFAULT NULL,
-  `END_TIME` bigint(13) DEFAULT NULL,
-  `DURATION` bigint(20) DEFAULT NULL,
+  `PROC_DEF_KEY` varchar(64) COLLATE utf8_bin DEFAULT NULL,
+  `TITLE` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `STATUS` int(11) DEFAULT NULL,
-  `CODE` int(11) DEFAULT NULL,
-  `MSG` text COLLATE utf8_bin,
-  `PARENT_ID` varchar(64) COLLATE utf8_bin DEFAULT NULL,
-  `SCHEDULER_URI` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `EXECUTOR_URI` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`ID`),
+  PRIMARY KEY (`PROC_INST_ID`),
   UNIQUE KEY `IDX_PROC_INST_ID` (`PROC_INST_ID`),
-  KEY `IDX_JOB_NAME` (`JOB_NAME`)
+  KEY `IDX_PROC_DEF_KEY` (`PROC_DEF_KEY`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 /*Table structure for table `ibpm_instance_act` */
@@ -99,16 +79,16 @@ CREATE TABLE `ibpm_instance_act` (
   KEY `IDX_PROC_INST_ID` (`PROC_INST_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-/*Table structure for table `ibpm_job` */
+/*Table structure for table `ibpm_process` */
 
-CREATE TABLE `ibpm_job` (
-  `JOB_NAME` varchar(64) COLLATE utf8_bin NOT NULL,
-  `DISPLAY_NAME` varchar(255) COLLATE utf8_bin NOT NULL,
+CREATE TABLE `ibpm_process` (
+  `PROC_DEF_KEY` varchar(64) COLLATE utf8_bin NOT NULL,
+  `PROC_DEF_NAME` varchar(255) COLLATE utf8_bin NOT NULL,
   `CONTENT` text COLLATE utf8_bin,
   `STATUS` int(11) DEFAULT NULL,
   `UPDATE_TIME` bigint(13) DEFAULT NULL,
   `REMARK` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`JOB_NAME`)
+  PRIMARY KEY (`PROC_DEF_KEY`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 /*Table structure for table `ibpm_proxy_proc` */

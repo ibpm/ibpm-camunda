@@ -7,13 +7,11 @@ import java.util.Date;
 @ToString
 public class Instance {
 
-    protected String id;
+    protected String processInstanceId;
 
-    protected String procInstId;
+    protected String rootProcessInstanceId;
 
-    protected String rootProcInstId;
-
-    protected String superProcInstId;
+    protected String superProcessInstanceId;
 
 
     protected String taskId;
@@ -46,74 +44,65 @@ public class Instance {
 
     protected Integer status;
 
-    protected String jobName;
+    protected String processDefinitionKey;
 
-    protected String displayName;
+    protected String processDefinitionName;
 
-    protected String procDefId;
+    protected String processDefinitionId;
 
     protected Long duration;
 
-    public String getId() {
-        return id;
+    public String getProcessInstanceId() {
+        return processInstanceId;
     }
 
-    public Instance setId(String id) {
-        this.id = id;
+    public Instance setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
         return this;
     }
 
-    public String getProcInstId() {
-        return procInstId;
+    public String getRootProcessInstanceId() {
+        return rootProcessInstanceId;
     }
 
-    public Instance setProcInstId(String procInstId) {
-        this.procInstId = procInstId;
+    public Instance setRootProcessInstanceId(String rootProcessInstanceId) {
+        this.rootProcessInstanceId = rootProcessInstanceId;
         return this;
     }
 
-    public String getRootProcInstId() {
-        return rootProcInstId;
+    public String getSuperProcessInstanceId() {
+        return superProcessInstanceId;
     }
 
-    public Instance setRootProcInstId(String rootProcInstId) {
-        this.rootProcInstId = rootProcInstId;
+    public Instance setSuperProcessInstanceId(String superProcessInstanceId) {
+        this.superProcessInstanceId = superProcessInstanceId;
         return this;
     }
 
-    public String getSuperProcInstId() {
-        return superProcInstId;
+    public String getProcessDefinitionKey() {
+        return processDefinitionKey;
     }
 
-    public Instance setSuperProcInstId(String superProcInstId) {
-        this.superProcInstId = superProcInstId;
+    public Instance setProcessDefinitionKey(String processDefinitionKey) {
+        this.processDefinitionKey = processDefinitionKey;
         return this;
     }
 
-    public String getJobName() {
-        return jobName;
+    public String getProcessDefinitionName() {
+        return processDefinitionName;
     }
 
-    public Instance setJobName(String jobName) {
-        this.jobName = jobName;
+    public Instance setProcessDefinitionName(String processDefinitionName) {
+        this.processDefinitionName = processDefinitionName;
         return this;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getProcessDefinitionId() {
+        return processDefinitionId;
     }
 
-    public Instance setDisplayName(String displayName) {
-        this.displayName = displayName;
-        return this;
-    }
-
-    public String getProcDefId() {
-        return procDefId;
-    }
-
-    public Instance setProcDefId(String procDefId) {
-        this.procDefId = procDefId;
+    public Instance setProcessDefinitionId(String processDefinitionId) {
+        this.processDefinitionId = processDefinitionId;
         return this;
     }
 

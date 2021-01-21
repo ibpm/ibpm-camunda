@@ -28,13 +28,13 @@ public class CountController {
     }
 
     @GetMapping(APIPath.CountPath.JOB)
-    @Operation(summary = "Get job's count by status")
-    public CommonResult<List<MapResult<String, Integer>>> getJobCount() {
-        return CommonResult.putResult(service.getJobCount());
+    @Operation(summary = "Get process's count by status")
+    public CommonResult<List<MapResult<String, Integer>>> getProcessCount() {
+        return CommonResult.putResult(service.getProcessCount());
     }
 
     @GetMapping(APIPath.CountPath.INSTANCE)
-    @Operation(summary = "Get job instance's count by status", parameters = {@Parameter(name = "param", required = true)})
+    @Operation(summary = "Get process instance's count by status", parameters = {@Parameter(name = "param", required = true)})
     public CommonResult<List<MapResult<String, Integer>>> getInstanceCount(CountInstanceParam param) {
         return CommonResult.putResult(service.getInstanceCount(param));
     }

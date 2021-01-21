@@ -15,7 +15,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Import({
-        SysConfiguration.class
+        SysConfiguration.class,
+        CustomCamundaConfiguration.class,
+        SpringEventBusListener.class
 })
 @Configuration
 @ComponentScan(basePackageClasses = {

@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row>
       <el-col :offset="1" :span="8">
-        <el-form ref="form" :model="bizData" :rules="rules" :disabled="!bizData.isDraft && bizData.procInstId" label-width="80px">
+        <el-form ref="form" :model="bizData" :rules="rules" :disabled="!bizData.isDraft && bizData.processInstanceId" label-width="80px">
           <el-form-item :label="$t('columns.title')" prop="title">
             <el-input v-model="bizData.title" />
           </el-form-item>
@@ -40,7 +40,7 @@ export default {
     return {
       bizData: {
         title: '',
-        startDate: new Date(),
+        startDate: new Date().getTime(),
         num: 1,
         destination: '',
         tool: '',

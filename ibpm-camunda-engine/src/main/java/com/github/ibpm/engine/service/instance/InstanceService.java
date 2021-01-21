@@ -63,8 +63,8 @@ public class InstanceService extends BaseServiceAdapter {
         return mapper.getByIds(ids);
     }
 
-    public Instance getByInstId(String procInstId) {
-        return mapper.getByInstId(procInstId);
+    public Instance getByInstId(String processInstanceId) {
+        return mapper.getByInstId(processInstanceId);
     }
 
     public int count(InstanceListParam param) {
@@ -78,8 +78,8 @@ public class InstanceService extends BaseServiceAdapter {
         Page<InstanceWithChildren> list = (Page<InstanceWithChildren>) mapper.listTodo(paramMap);
         if (param.isListChildren()) {
             list.parallelStream().forEach(item -> {
-                if (item.getProcInstId() != null) {
-                    item.setHasChildren(mapper.countProcessChildren(item.getProcInstId()) > 0);
+                if (item.getProcessInstanceId() != null) {
+                    item.setHasChildren(mapper.countProcessChildren(item.getProcessInstanceId()) > 0);
                 }
             });
         }
@@ -90,7 +90,14 @@ public class InstanceService extends BaseServiceAdapter {
         Map<String, Object> paramMap = BeanUtil.bean2Map(param);
         paramMap.put(CommonConstants.userName, UserHolder.get().getUserName());
         PageHelper.startPage(param.getCurrentPage(), param.getPageSize());
-        Page<Instance> list = (Page<Instance>) mapper.listDoing(paramMap);
+        Page<InstanceWithChildren> list = (Page<InstanceWithChildren>) mapper.listDoing(paramMap);
+        if (param.isListChildren()) {
+            list.parallelStream().forEach(item -> {
+                if (item.getProcessInstanceId() != null) {
+                    item.setHasChildren(mapper.countProcessChildren(item.getProcessInstanceId()) > 0);
+                }
+            });
+        }
         return PageUtil.toResultMap(list);
     }
 
@@ -98,7 +105,14 @@ public class InstanceService extends BaseServiceAdapter {
         Map<String, Object> paramMap = BeanUtil.bean2Map(param);
         paramMap.put(CommonConstants.userName, UserHolder.get().getUserName());
         PageHelper.startPage(param.getCurrentPage(), param.getPageSize());
-        Page<Instance> list = (Page<Instance>) mapper.listDone(paramMap);
+        Page<InstanceWithChildren> list = (Page<InstanceWithChildren>) mapper.listDone(paramMap);
+        if (param.isListChildren()) {
+            list.parallelStream().forEach(item -> {
+                if (item.getProcessInstanceId() != null) {
+                    item.setHasChildren(mapper.countProcessChildren(item.getProcessInstanceId()) > 0);
+                }
+            });
+        }
         return PageUtil.toResultMap(list);
     }
 
@@ -108,8 +122,8 @@ public class InstanceService extends BaseServiceAdapter {
         Page<InstanceWithChildren> list = (Page<InstanceWithChildren>) mapper.listInstance(paramMap);
         if (param.isListChildren()) {
             list.parallelStream().forEach(item -> {
-                if (item.getProcInstId() != null) {
-                    item.setHasChildren(mapper.countProcessChildren(item.getProcInstId()) > 0);
+                if (item.getProcessInstanceId() != null) {
+                    item.setHasChildren(mapper.countProcessChildren(item.getProcessInstanceId()) > 0);
                 }
             });
         }
@@ -117,32 +131,11 @@ public class InstanceService extends BaseServiceAdapter {
     }
 
     public List<InstanceWithChildren> listMonitorChildren(InstanceGetParam param) {
-        List<InstanceWithChildren> list = mapper.listProcessChildren(param.getProcInstId());
+        List<InstanceWithChildren> list = mapper.listProcessChildren(param.getProcessInstanceId());
         list.parallelStream().forEach(item -> {
-            if (item.getProcInstId() != null) {
-                item.setHasChildren(mapper.countProcessChildren(item.getProcInstId()) > 0);
+            if (item.getProcessInstanceId() != null) {
+                item.setHasChildren(mapper.countProcessChildren(item.getProcessInstanceId()) > 0);
             }
-        });
-        return list;
-    }
-
-    public Map<String, Object> listRetry(InstanceListParam param) {
-        Map<String, Object> paramMap = BeanUtil.bean2Map(param);
-        paramMap.put(CommonConstants.isRetry, true);
-        PageHelper.startPage(param.getCurrentPage(), param.getPageSize());
-        Page<InstanceWithChildren> list = (Page<InstanceWithChildren>) mapper.listInstance(paramMap);
-        if (param.isListChildren()) {
-            list.parallelStream().forEach(item -> {
-                item.setHasChildren(mapper.countRetriedChildren(item.getId()) > 0);
-            });
-        }
-        return PageUtil.toResultMap(list);
-    }
-
-    public List<InstanceWithChildren> listRetriedChildren(InstanceGetParam param) {
-        List<InstanceWithChildren> list = mapper.listRetriedChildren(param.getId());
-        list.parallelStream().forEach(item -> {
-            item.setHasChildren(mapper.countRetriedChildren(item.getId()) > 0);
         });
         return list;
     }
@@ -167,16 +160,16 @@ public class InstanceService extends BaseServiceAdapter {
 
     public void updateDone(Instance instance) {
         mapper.updateDone(instance);
-        deleteExecution(instance.getProcInstId());
+        deleteExecution(instance.getProcessInstanceId());
         noticeWithInstance(instance);
     }
 
-    public void deleteExecution(String procInstId) {
-        mapper.deleteExecution(procInstId);
+    public void deleteExecution(String processInstanceId) {
+        mapper.deleteExecution(processInstanceId);
     }
 
-    public void deleteInstance(String procInstId) {
-        mapper.deleteInstance(procInstId);
+    public void deleteInstance(String processInstanceId) {
+        mapper.deleteInstance(processInstanceId);
     }
 
     public void addAct(InstanceAct instanceAct) {
@@ -241,8 +234,8 @@ public class InstanceService extends BaseServiceAdapter {
         StringBuilder logKeySB = new StringBuilder();
         StringBuilder errorMsgSB = new StringBuilder();
         String alarmPosition = CommonConstants.EMPTY;
-        if (StringUtils.isNotBlank(instance.getProcInstId())) {
-            List<InstanceAct> instanceActs = listAct(new InstanceActParam().setProcInstId(instance.getProcInstId()));
+        if (StringUtils.isNotBlank(instance.getProcessInstanceId())) {
+            List<InstanceAct> instanceActs = listAct(new InstanceActParam().setProcessInstanceId(instance.getProcessInstanceId()));
             for (InstanceAct instanceAct : instanceActs) {
                 if (instanceAct.getStatus() == InstanceStatus.FAILURE.getStatus()
                         && (StringUtils.isNotBlank(instanceAct.getLogKey())
@@ -289,13 +282,13 @@ public class InstanceService extends BaseServiceAdapter {
             errorMsgSB.append(instance.getMsg());
         }
         String subject = MessageFormat.format(TipProperty.getValue(10050),
-                instance.getJobName(),
+                instance.getProcessDefinitionKey(),
                 instance.getDisplayName());
         String content = MessageFormat.format(TipProperty.getValue(10051),
                 now,
                 user.getUserName(),
                 user.getDisplayName(),
-                instance.getJobName(),
+                instance.getProcessDefinitionKey(),
                 instance.getDisplayName(),
                 instance.getStartTime() == null ? CommonConstants.EMPTY : DateUtil.format(instance.getStartTime(), DateUtil.DATE_FORMAT_YYYYMMDDHHMMSS),
                 actIdSB,
@@ -316,8 +309,8 @@ public class InstanceService extends BaseServiceAdapter {
 
     public void add(ProcessData processData) {
         Instance instance = new Instance()
-                .setProcInstId(processData.getProcInstId())
-                .setJobName(processData.getJobName())
+                .setProcessInstanceId(processData.getProcessInstanceId())
+                .setProcessDefinitionKey(processData.getProcessDefinitionKey())
                 .setTitle(processData.getTitle())
                 .setStatus(processData.getStatus());
         mapper.addExecution(instance);
@@ -325,9 +318,9 @@ public class InstanceService extends BaseServiceAdapter {
     }
 
     public void update(ProcessData processData) {
-        Instance instance = mapper.getByInstId(processData.getProcInstId());
+        Instance instance = mapper.getByInstId(processData.getProcessInstanceId());
         if (instance == null) {
-            throw new RTException(6100, processData.getProcInstId());
+            throw new RTException(6100, processData.getProcessInstanceId());
         }
         instance.setTitle(processData.getTitle());
         mapper.updateExecution(instance);

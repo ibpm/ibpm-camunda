@@ -382,7 +382,7 @@ export function renderInstanceStatus(item) {
   return map[item]
 }
 
-export function renderJobStatus(item) {
+export function renderProcessStatus(item) {
   const map = {
     0: 'success',
     1: 'warning'

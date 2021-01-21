@@ -4,22 +4,19 @@
 
 <mapper namespace="com.github.ibpm.engine.dao.InstanceMapper">
 
-    <select id="getById" parameterType="java.lang.String"
-            resultType="com.github.ibpm.common.result.core.instance.Instance">
-        <include refid="instanceJoinJob" />
+    <select id="getById" parameterType="java.lang.String" resultMap="instanceResultMap">
+        <include refid="instanceJoinProcess" />
         WHERE j.ID = #{1, jdbcType=VARCHAR}
     </select>
 
-    <select id="getByInstId" parameterType="java.lang.String"
-            resultType="com.github.ibpm.common.result.core.instance.Instance">
-        <include refid="instanceJoinJob" />
+    <select id="getByInstId" parameterType="java.lang.String" resultMap="instanceResultMap">
+        <include refid="instanceJoinProcess" />
         <where>
             j.PROC_INST_ID = #{1, jdbcType=VARCHAR}
         </where>
     </select>
 
-    <select id="getByIds" parameterType="list"
-            resultType="com.github.ibpm.common.result.core.instance.Instance">
+    <select id="getByIds" parameterType="list" resultMap="instanceResultMap">
         SELECT * FROM ${tablePrefix}instance
         <where>
             AND ID in
@@ -32,7 +29,7 @@
     <select id="count" parameterType="map" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM ${tablePrefix}execution j
         <where>
-            <include refid="condJobName"/>
+            <include refid="condProcessDefinitionKey"/>
             <if test="status != null &amp;&amp;status.size() &gt; 0">
                 AND STATUS IN
                 <foreach item="item" collection="status" open="(" separator="," close=")">
@@ -45,7 +42,7 @@
     <select id="countInstance" parameterType="map" resultType="java.lang.Integer">
         SELECT COUNT(*)  FROM ${tablePrefix}instance j
         <where>
-            <include refid="condJobName" />
+            <include refid="condProcessDefinitionKey" />
             <if test="lowerStartTime != null">
                 AND start_time &gt;= #{lowerStartTime, jdbcType=INTEGER}
             </if>
@@ -74,9 +71,8 @@
         SELECT COUNT(*) FROM ${tablePrefix}instance WHERE parent_id = #{1, jdbcType=VARCHAR} AND id != parent_id
     </select>
 
-    <select id="listRetriedChildren" parameterType="string"
-            resultType="com.github.ibpm.common.result.core.instance.InstanceWithChildren">
-        <include refid="instanceJoinJob" />
+    <select id="listRetriedChildren" parameterType="string" resultMap="instanceWithChildrenResultMap">
+        <include refid="instanceJoinProcess" />
         WHERE j.parent_id = #{1, jdbcType=VARCHAR} AND j.id != j.parent_id ORDER BY j.id DESC
     </select>
 
@@ -95,16 +91,16 @@
             PROC_INST_ID,
             ROOT_PROC_INST_ID,
             SUPER_PROC_INST_ID,
-            JOB_NAME,
+            PROC_DEF_KEY,
             TITLE,
             STATUS
         )
         VALUES
         (
-            #{procInstId, jdbcType=VARCHAR},
-            #{rootProcInstId, jdbcType=VARCHAR},
-            #{superProcInstId, jdbcType=VARCHAR},
-            #{jobName, jdbcType=VARCHAR},
+            #{processInstanceId, jdbcType=VARCHAR},
+            #{rootProcessInstanceId, jdbcType=VARCHAR},
+            #{superProcessInstanceId, jdbcType=VARCHAR},
+            #{processDefinitionKey, jdbcType=VARCHAR},
             #{title, jdbcType=VARCHAR},
             #{status, jdbcType=INTEGER}
         )
@@ -128,7 +124,7 @@
             </if>
         </set>
         <where>
-            <include refid="condProcInstId_"/>
+            <include refid="condProcessInstanceId_"/>
         </where>
     </update>
 
@@ -148,11 +144,11 @@
 
     <sql id="updateSql">
         <set>
-            <if test="rootProcInstId != null">
-                ROOT_PROC_INST_ID = #{rootProcInstId, jdbcType=VARCHAR},
+            <if test="rootProcessInstanceId != null">
+                ROOT_PROC_INST_ID = #{rootProcessInstanceId, jdbcType=VARCHAR},
             </if>
-            <if test="superProcInstId != null">
-                SUPER_PROC_INST_ID = #{superProcInstId, jdbcType=VARCHAR},
+            <if test="superProcessInstanceId != null">
+                SUPER_PROC_INST_ID = #{superProcessInstanceId, jdbcType=VARCHAR},
             </if>
             <if test="title != null">
                 TITLE = #{title, jdbcType=VARCHAR},
@@ -162,7 +158,7 @@
             </if>
         </set>
         <where>
-            <include refid="condProcInstId_"/>
+            <include refid="condProcessInstanceId_"/>
         </where>
     </sql>
 
@@ -186,8 +182,8 @@
             #{id, jdbcType=VARCHAR},
             #{actInstId, jdbcType=VARCHAR},
             #{parentActInstId, jdbcType=VARCHAR},
-            #{procInstId, jdbcType=VARCHAR},
-            #{rootProcInstId, jdbcType=VARCHAR},
+            #{processInstanceId, jdbcType=VARCHAR},
+            #{rootProcessInstanceId, jdbcType=VARCHAR},
             #{actId, jdbcType=VARCHAR},
             #{actName, jdbcType=VARCHAR},
             #{actType, jdbcType=VARCHAR},
@@ -221,21 +217,20 @@
         </set>
         <where>
             <include refid="condId_"/>
-            <include refid="condProcInstId_"/>
+            <include refid="condProcessInstanceId_"/>
             <include refid="condActId_"/>
         </where>
     </update>
 
-    <select id="listInstance" parameterType="map"
-            resultType="com.github.ibpm.common.result.core.instance.InstanceWithChildren">
+    <select id="listInstance" parameterType="map" resultMap="instanceWithChildrenResultMap">
         SELECT * FROM (<include refid="todoListWrapperSql" />)j
         <where>
             AND j.SUPER_PROC_INST_ID IS NULL
-            <if test="jobName != null">
-                AND LOWER(j.JOB_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{jobName, jdbcType=VARCHAR})), '%')
+            <if test="processDefinitionKey != null">
+                AND LOWER(j.PROC_DEF_KEY) LIKE CONCAT(CONCAT('%', LOWER(#{processDefinitionKey, jdbcType=VARCHAR})), '%')
             </if>
-            <if test="displayName != null">
-                AND LOWER(j.DISPLAY_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{displayName, jdbcType=VARCHAR})), '%')
+            <if test="processDefinitionName != null">
+                AND LOWER(j.PROC_DEF_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{processDefinitionName, jdbcType=VARCHAR})), '%')
             </if>
             <if test="lowerStartTime != null">
                 AND j.START_TIME &gt;= #{lowerStartTime, jdbcType=INTEGER}
@@ -255,7 +250,7 @@
             <if test="upperDuration != null">
                 AND j.DURATION &lt;= #{upperDuration, jdbcType=INTEGER}
             </if>
-            <include refid="condProcInstId"/>
+            <include refid="condProcessInstanceId"/>
         </where>
         <choose>
             <when test="sort == null">
@@ -267,19 +262,18 @@
         </choose>
     </select>
 
-    <select id="listTodo" parameterType="map"
-            resultType="com.github.ibpm.common.result.core.instance.InstanceWithChildren">
+    <select id="listTodo" parameterType="map" resultMap="instanceWithChildrenResultMap">
         SELECT * FROM (<include refid="todoListSql" />)j
         <where>
             AND j.SUPER_PROC_INST_ID IS NULL
             <if test="userName != null">
                 AND j.ASSIGNEE = #{userName, jdbcType=VARCHAR}
             </if>
-            <if test="jobName != null">
-                AND LOWER(j.JOB_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{jobName, jdbcType=VARCHAR})), '%')
+            <if test="processDefinitionKey != null">
+                AND LOWER(j.PROC_DEF_KEY) LIKE CONCAT(CONCAT('%', LOWER(#{processDefinitionKey, jdbcType=VARCHAR})), '%')
             </if>
-            <if test="displayName != null">
-                AND LOWER(j.DISPLAY_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{displayName, jdbcType=VARCHAR})), '%')
+            <if test="processDefinitionName != null">
+                AND LOWER(j.PROC_DEF_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{processDefinitionName, jdbcType=VARCHAR})), '%')
             </if>
             <if test="title != null">
                 AND LOWER(j.TITLE) LIKE CONCAT(CONCAT('%', LOWER(#{title, jdbcType=VARCHAR})), '%')
@@ -293,7 +287,7 @@
             <if test="status != null">
                 AND j.STATUS = #{status, jdbcType=INTEGER}
             </if>
-            <include refid="condProcInstId"/>
+            <include refid="condProcessInstanceId"/>
         </where>
         <choose>
             <when test="sort == null">
@@ -305,14 +299,13 @@
         </choose>
     </select>
 
-    <select id="listDoing" parameterType="map"
-            resultType="com.github.ibpm.common.result.core.instance.Instance">
+    <select id="listDoing" parameterType="map" resultMap="instanceWithChildrenResultMap">
         SELECT
             ins.PROC_INST_ID_ AS PROC_INST_ID,
             ins.PROC_DEF_ID_ AS PROC_DEF_ID,
             d.VERSION_ AS VERSION,
-            d.KEY_ AS JOB_NAME,
-            d.NAME_ AS DISPLAY_NAME,
+            d.KEY_ AS PROC_DEF_KEY,
+            d.NAME_ AS PROC_DEF_NAME,
             ii.TITLE,
             ii.STATUS,
             ins.BUSINESS_KEY_ AS BUSINESS_KEY,
@@ -336,11 +329,11 @@
             WHERE t.end_time_ IS NOT NULL
                 AND t.proc_inst_id_ = ins.proc_inst_id_
                 AND t.ASSIGNEE_ = #{userName, jdbcType=VARCHAR})
-            <if test="jobName != null">
-                AND LOWER(j.JOB_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{jobName, jdbcType=VARCHAR})), '%')
+            <if test="processDefinitionKey != null">
+                AND LOWER(j.PROC_DEF_KEY) LIKE CONCAT(CONCAT('%', LOWER(#{processDefinitionKey, jdbcType=VARCHAR})), '%')
             </if>
-            <if test="displayName != null">
-                AND LOWER(j.DISPLAY_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{displayName, jdbcType=VARCHAR})), '%')
+            <if test="processDefinitionName != null">
+                AND LOWER(j.PROC_DEF_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{processDefinitionName, jdbcType=VARCHAR})), '%')
             </if>
             <if test="title != null">
                 AND LOWER(j.TITLE) LIKE CONCAT(CONCAT('%', LOWER(#{title, jdbcType=VARCHAR})), '%')
@@ -365,14 +358,13 @@
         </choose>
     </select>
 
-    <select id="listDone" parameterType="map"
-            resultType="com.github.ibpm.common.result.core.instance.Instance">
+    <select id="listDone" parameterType="map" resultMap="instanceWithChildrenResultMap">
         SELECT
             ins.PROC_INST_ID_ AS PROC_INST_ID,
             ins.PROC_DEF_ID_ AS PROC_DEF_ID,
             d.VERSION_ AS VERSION,
-            d.KEY_ AS JOB_NAME,
-            d.NAME_ AS DISPLAY_NAME,
+            d.KEY_ AS PROC_DEF_KEY,
+            d.NAME_ AS PROC_DEF_NAME,
             ii.TITLE,
             ii.STATUS,
             ins.BUSINESS_KEY_ AS BUSINESS_KEY,
@@ -398,11 +390,11 @@
             WHERE t.end_time_ IS NOT NULL
             AND t.proc_inst_id_ = ins.proc_inst_id_
             AND t.ASSIGNEE_ = #{userName, jdbcType=VARCHAR})
-            <if test="jobName != null">
-                AND LOWER(j.JOB_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{jobName, jdbcType=VARCHAR})), '%')
+            <if test="processDefinitionKey != null">
+                AND LOWER(j.PROC_DEF_KEY) LIKE CONCAT(CONCAT('%', LOWER(#{processDefinitionKey, jdbcType=VARCHAR})), '%')
             </if>
-            <if test="displayName != null">
-                AND LOWER(j.DISPLAY_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{displayName, jdbcType=VARCHAR})), '%')
+            <if test="processDefinitionName != null">
+                AND LOWER(j.PROC_DEF_NAME) LIKE CONCAT(CONCAT('%', LOWER(#{processDefinitionName, jdbcType=VARCHAR})), '%')
             </if>
             <if test="title != null">
                 AND LOWER(j.TITLE) LIKE CONCAT(CONCAT('%', LOWER(#{title, jdbcType=VARCHAR})), '%')
@@ -436,16 +428,16 @@
         FROM ${tablePrefix}instance_act jia
         LEFT JOIN act_hi_incident hi ON jia.PROC_INST_ID = hi.PROC_INST_ID_ AND jia.ACT_ID = hi.ACTIVITY_ID_) j
         <where>
-            <include refid="condProcInstId" />
+            <include refid="condProcessInstanceId" />
             <include refid="condActId_" />
         </where>
     </select>
 
     <select id="listRunningOfExecutor" parameterType="string"
             resultType="com.github.ibpm.common.result.core.instance.Instance">
-        SELECT j.*, b.DISPLAY_NAME FROM ${tablePrefix}execution j
-        LEFT JOIN ${tablePrefix}job b
-        ON j.JOB_NAME = b.JOB_NAME
+        SELECT j.*, b.PROC_DEF_NAME FROM ${tablePrefix}execution j
+        LEFT JOIN ${tablePrefix}process b
+        ON j.PROC_DEF_KEY = b.PROC_DEF_KEY
         <where>
             AND j.EXECUTOR_URI LIKE CONCAT(CONCAT('%', #{1, jdbcType=VARCHAR}), '%')
             AND j.STATUS = 0
@@ -458,8 +450,8 @@
             GROUP_CONCAT(DISTINCT ta.TASK_ID SEPARATOR ',') AS TASK_ID,
             ta.PROC_DEF_ID,
             ta.VERSION,
-            ta.JOB_NAME,
-            ta.DISPLAY_NAME,
+            ta.PROC_DEF_KEY,
+            ta.PROC_DEF_NAME,
             ta.TITLE,
             ta.STATUS,
             ta.BUSINESS_KEY,
@@ -485,8 +477,8 @@
             task.TASK_ID,
             task.PROC_DEF_ID,
             task.VERSION,
-            task.JOB_NAME,
-            task.DISPLAY_NAME,
+            task.PROC_DEF_KEY,
+            task.PROC_DEF_NAME,
             task.TITLE,
             task.STATUS,
             task.BUSINESS_KEY,
@@ -507,8 +499,8 @@
                 t.ID_ AS TASK_ID,
                 ins.PROC_DEF_ID_ AS PROC_DEF_ID,
                 d.VERSION_ AS VERSION,
-                d.KEY_ AS JOB_NAME,
-                d.NAME_ AS DISPLAY_NAME,
+                d.KEY_ AS PROC_DEF_KEY,
+                d.NAME_ AS PROC_DEF_NAME,
                 t.TASK_DEF_KEY_ AS ACT_ID,
                 t.NAME_ AS ACT_NAME,
                 IFNULL(t.ASSIGNEE_, l.USER_ID_) AS ASSIGNEE,
@@ -534,7 +526,7 @@
               ON d.ID_ = ins.proc_def_id_) task
             LEFT JOIN (<include refid="proxySql"/>) o
               ON task.assignee = o.GRANTER
-                AND (ISNULL(o.PROC_DEF_KEY) OR task.JOB_NAME = o.PROC_DEF_KEY)
+                AND (ISNULL(o.PROC_DEF_KEY) OR task.PROC_DEF_KEY = o.PROC_DEF_KEY)
             LEFT JOIN ibpm_user u
               ON task.assignee = u.USER_NAME
     </sql>
@@ -579,10 +571,10 @@
         </where>
     </sql>
 
-    <sql id="instanceJoinJob">
-        SELECT j.*, b.DISPLAY_NAME FROM ${tablePrefix}instance j
-        LEFT JOIN ${tablePrefix}job b
-        ON j.JOB_NAME = b.JOB_NAME
+    <sql id="instanceJoinProcess">
+        SELECT j.*, b.PROC_DEF_NAME FROM ${tablePrefix}instance j
+        LEFT JOIN ${tablePrefix}process b
+        ON j.PROC_DEF_KEY = b.PROC_DEF_KEY
     </sql>
 
     <sql id="condId">
@@ -597,21 +589,21 @@
         </if>
     </sql>
 
-    <sql id="condProcInstId">
-        <if test="procInstId != null">
-            AND j.PROC_INST_ID = #{procInstId, jdbcType=VARCHAR}
+    <sql id="condProcessInstanceId">
+        <if test="processInstanceId != null">
+            AND j.PROC_INST_ID = #{processInstanceId, jdbcType=VARCHAR}
         </if>
     </sql>
 
-    <sql id="condProcInstId_">
-        <if test="procInstId != null">
-            AND PROC_INST_ID = #{procInstId, jdbcType=VARCHAR}
+    <sql id="condProcessInstanceId_">
+        <if test="processInstanceId != null">
+            AND PROC_INST_ID = #{processInstanceId, jdbcType=VARCHAR}
         </if>
     </sql>
 
-    <sql id="condJobName">
-        <if test="jobName != null">
-            AND j.JOB_NAME = #{jobName, jdbcType=VARCHAR}
+    <sql id="condProcessDefinitionKey">
+        <if test="processDefinitionKey != null">
+            AND j.PROC_DEF_KEY = #{processDefinitionKey, jdbcType=VARCHAR}
         </if>
     </sql>
 
@@ -620,4 +612,20 @@
             AND ACT_ID = #{actId, jdbcType=VARCHAR}
         </if>
     </sql>
+
+    <resultMap type="com.github.ibpm.common.result.core.instance.Instance" id="instanceResultMap">
+        <result property="processInstanceId" column="PROC_INST_ID" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="rootProcessInstanceId" column="ROOT_PROC_INST_ID" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="superProcessInstanceId" column="SUPER_PROC_INST_ID" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <!--<result property="taskId" column="TASK_ID" javaType="java.lang.String" jdbcType="VARCHAR" />-->
+        <result property="processDefinitionKey" column="PROC_DEF_KEY" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="processDefinitionName" column="PROC_DEF_NAME" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <!--<result property="status" column="STATUS" javaType="java.lang.Integer" jdbcType="INTEGER" />
+        <result property="duration" column="DURATION" javaType="java.lang.Long" jdbcType="INTEGER" />-->
+    </resultMap>
+
+    <resultMap type="com.github.ibpm.common.result.core.instance.InstanceWithChildren" id="instanceWithChildrenResultMap" extends="instanceResultMap">
+
+    </resultMap>
+
 </mapper>

@@ -21,11 +21,11 @@ public class CommandService {
         return (ServiceImpl) runtimeService;
     }
 
-    public Void addDraft(String procInstId, String businessKey, String processDefinitionKey, String processDefinitionId, Date startTime, String startUserId, String taskId) {
-        return getServiceImpl().getCommandExecutor().execute(new AddDraftCmd(procInstId, businessKey, processDefinitionKey, processDefinitionId, startTime, startUserId, taskId));
+    public Void addDraft(String processInstanceId, String businessKey, String processDefinitionKey, String processDefinitionId, Date startTime, String startUserId, String taskId) {
+        return getServiceImpl().getCommandExecutor().execute(new AddDraftCmd(processInstanceId, businessKey, processDefinitionKey, processDefinitionId, startTime, startUserId, taskId));
     }
 
-    public Void deleteDraft(String procInstId) {
-        return getServiceImpl().getCommandExecutor().execute(new DeleteDraftCmd(procInstId));
+    public Void deleteDraft(String processInstanceId) {
+        return getServiceImpl().getCommandExecutor().execute(new DeleteDraftCmd(processInstanceId));
     }
 }

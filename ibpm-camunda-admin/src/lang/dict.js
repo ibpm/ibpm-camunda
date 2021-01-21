@@ -14,7 +14,7 @@ export const userStatuses_zh = [
   }
 ]
 
-export const jobStatuses_zh = [
+export const processStatuses_zh = [
   {
     label: '启用',
     value: 0
@@ -258,7 +258,7 @@ export const simpleTriggerMisfireInstructions_zh = [
   }
 ]
 
-export const jobCharts_zh = [
+export const processCharts_zh = [
   {
     label: '执行时长',
     value: 'durationChart'
@@ -325,7 +325,7 @@ export const userStatuses_en = [
   }
 ]
 
-export const jobStatuses_en = [
+export const processStatuses_en = [
   {
     label: 'Enable',
     value: 0
@@ -569,7 +569,7 @@ export const simpleTriggerMisfireInstructions_en = [
   }
 ]
 
-export const jobCharts_en = [
+export const processCharts_en = [
   {
     label: 'Duration',
     value: 'durationChart'

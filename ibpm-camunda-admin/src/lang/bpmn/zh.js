@@ -239,7 +239,7 @@ export default {
   'Custom Mail': '发送邮件通知',
   'Custom DingTalk': '发送钉钉通知',
   'Custom WxWork': '发送企业微信通知',
-  'Job Caller': '调用其他任务',
+  'Process Caller': '调用其他任务',
   'Executor Component': '执行器组件',
   'Sub URL': '自定义子路径',
   'Request Method': '请求类型',

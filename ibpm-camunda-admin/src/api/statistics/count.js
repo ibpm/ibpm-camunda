@@ -8,7 +8,7 @@ export const userCountReq = () => {
   })
 }
 
-export const jobCountReq = () => {
+export const processCountReq = () => {
   return request({
     url: APIPath.STATISTICS + APIPath.COUNT + APIPath.JOB,
     method: 'get'

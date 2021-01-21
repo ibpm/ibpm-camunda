@@ -6,7 +6,7 @@
     </div>
     <div class="external">
       <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
-        <el-tab-pane :label="$t('monitor.label.job')" name="flow">
+        <el-tab-pane :label="$t('monitor.label.process')" name="flow">
           <el-timeline>
             <el-timeline-item
               v-for="item in actNodes"
@@ -133,11 +133,11 @@
 
 <script>
 import { listReq, listActReq, retryReq } from '@/api/instance/instance'
-import { getContentReq } from '@/api/core/job'
+import { getContentReq } from '@/api/core/process'
 import BpmnViewer from 'bpmn-js'
 import miniMapModule from 'diagram-js-minimap'
 import customTranslate from '@/utils/customTranslate'
-import customElementTemplate from '../core/components/job/element-templates/custom'
+import customElementTemplate from '../core/components/process/element-templates/custom'
 import Pagination from '@/components/Pagination'
 import DateTimeGenerator from '@/components/DateTimeGenerator'
 
@@ -149,9 +149,9 @@ export default {
   },
   data() {
     return {
-      job: {
-        jobName: null,
-        procDefId: null,
+      process: {
+        processDefinitionKey: null,
+        processDefinitionId: null,
         content: null
       },
       bpmnViewer: null,
@@ -161,7 +161,7 @@ export default {
         currentPage: 1,
         pageSize: 10,
         total: 0,
-        jobName: undefined,
+        processDefinitionKey: undefined,
         status: [],
         sort: 'START_TIME DESC',
         lowerStartTime: null,
@@ -169,7 +169,7 @@ export default {
         lowerEndTime: null,
         upperEndTime: null
       },
-      procInstId: null,
+      processInstanceId: null,
       nodeOverlay: {},
       instanceStatuses: [],
       showAll: false,
@@ -189,7 +189,7 @@ export default {
   },
   activated() {
     this.initData()
-    this.fetchJob()
+    this.fetchProcess()
     this.search()
   },
   methods: {
@@ -197,7 +197,7 @@ export default {
       this.$confirm(this.$t('tip.confirmMsg'), this.$t('tip.confirm'), { type: 'info' })
         .then(() => {
           const data = {
-            procInstId: this.procInstId
+            processInstanceId: this.processInstanceId
           }
           if (direction > 0) {
             data.afterActIds = [this.singleActNodes[0].actId]
@@ -214,11 +214,11 @@ export default {
         })
     },
     initData() {
-      this.page.procInstId = this.procInstId = this.$route.params.procInstId
-      this.page.jobName = this.$route.params.key
-      this.job = {
-        jobName: this.$route.params.key,
-        procDefId: this.$route.params.procDefId
+      this.page.processInstanceId = this.processInstanceId = this.$route.params.processInstanceId
+      this.page.processDefinitionKey = this.$route.params.key
+      this.process = {
+        processDefinitionKey: this.$route.params.key,
+        processDefinitionId: this.$route.params.processDefinitionId
       }
     },
     bindBpmn() {
@@ -241,7 +241,7 @@ export default {
       this.bpmnViewer.on('commandStack.changed', function() {
         self.bindContent(function(err, xml) {
           if (!err) {
-            self.job.content = xml
+            self.process.content = xml
           } else {
             self.$message.error(err)
           }
@@ -266,7 +266,7 @@ export default {
                 overlays.remove(self.nodeOverlay[e.element.id])
                 self.nodeOverlay[e.element.id] = undefined
               }
-              listActReq({ procInstId: self.procInstId, actId: e.element.id }).then(res => {
+              listActReq({ processInstanceId: self.processInstanceId, actId: e.element.id }).then(res => {
                 self.activeName = 'task'
                 self.singleActNodes = res.data.result
                 /* if (nodes.length > 0) {
@@ -316,48 +316,48 @@ export default {
       })
     },
     refresh() {
-      this.fetchJob()
+      this.fetchProcess()
     },
     toggleList() {
       this.showAll = !this.showAll
       if (this.showAll) { // show all
-        this.page.procInstId = undefined
+        this.page.processInstanceId = undefined
       } else { // show only the current
-        this.page.procInstId = this.procInstId
+        this.page.processInstanceId = this.processInstanceId
         this.visible = false
       }
       this.search()
     },
-    fetchJob() {
+    fetchProcess() {
       const params = {
-        jobName: this.job.jobName,
-        procDefId: this.job.procDefId
+        processDefinitionKey: this.process.processDefinitionKey,
+        processDefinitionId: this.process.processDefinitionId
       }
       getContentReq(params).then(res => {
-        this.job.content = res.data.result
+        this.process.content = res.data.result
         if (!this.bpmnViewer) {
           this.bindBpmn()
         }
         setTimeout(() => {
-          this.openDiagram(this.job.content)
+          this.openDiagram(this.process.content)
         }, 50)
         this.getAct()
       })
     },
     selectRow(row) {
       this.$refs.tables.clearSelection()
-      if (row && row.jobName) {
+      if (row && row.processDefinitionKey) {
         this.$refs.tables.toggleRowSelection(row, true)
       }
-      this.job = {
-        jobName: row.jobName,
-        procDefId: row.procDefId
+      this.process = {
+        processDefinitionKey: row.processDefinitionKey,
+        processDefinitionId: row.processDefinitionId
       }
-      this.procInstId = row.procInstId
-      this.fetchJob()
+      this.processInstanceId = row.processInstanceId
+      this.fetchProcess()
     },
     getAct() {
-      listActReq({ procInstId: this.procInstId }).then(res => {
+      listActReq({ processInstanceId: this.processInstanceId }).then(res => {
         this.setActNodes(res.data.result)
         const nodes = res.data.result
         if (nodes.length > 0) {
@@ -399,7 +399,7 @@ export default {
       }
     },
     renderFlow() {
-      listActReq({ procInstId: this.procInstId }).then(res => {
+      listActReq({ processInstanceId: this.processInstanceId }).then(res => {
         this.getAct()
       })
     },

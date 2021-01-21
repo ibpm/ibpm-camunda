@@ -147,16 +147,16 @@ public class IbpmEngineService {
     }
 
     /**
-     * the job was published to camunda or not
-     * @param jobName
+     * the process was published to camunda or not
+     * @param processDefinitionKey
      * @return
      */
-    public void validatePublished(String jobName) {
+    public void validatePublished(String processDefinitionKey) {
         long count = repositoryService.createProcessDefinitionQuery()
-                .processDefinitionKey(jobName)
+                .processDefinitionKey(processDefinitionKey)
                 .count();
         if (count <= 0){
-            throw new RTException(6058, jobName);
+            throw new RTException(6058, processDefinitionKey);
         }
     }
 

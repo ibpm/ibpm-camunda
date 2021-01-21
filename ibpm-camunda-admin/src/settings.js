@@ -49,7 +49,7 @@ module.exports = {
     USER: '/user',
     ROLE: '/role',
     RESOURCE: '/resource',
-    JOB: '/job',
+    JOB: '/process',
     BPM: '/bpm',
     ARG: '/arg',
     CALENDAR: '/calendar',
