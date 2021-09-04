@@ -259,6 +259,11 @@ export default {
   'Result Type': '结果类型',
   'Language': '编程语言',
   'Charset': '字符集',
+  'Available process variables, identified in the diagram.': '可用的流程变量请在流程图中标识',
+  'No variables found.': '没有变量',
+  'No variables defined.': '未定义变量',
+  'Template': '模板',
+  'Unlink': '取消',
   'Custom User Task': '用户任务',
   'Form Uri': '表单路径'
 }

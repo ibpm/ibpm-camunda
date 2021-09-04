@@ -3,7 +3,6 @@ import Vue from 'vue'
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import Element from 'element-ui'
 import './styles/element-variables.scss'
-import 'vue-cron-generator/src/styles/global.less'
 import VCalendar from 'v-calendar'
 import '@/styles/index.scss' // global css
 // https://github.com/apache/incubator-echarts/blob/master/index.js
