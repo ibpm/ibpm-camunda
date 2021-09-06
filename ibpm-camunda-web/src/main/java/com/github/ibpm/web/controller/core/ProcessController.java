@@ -28,7 +28,7 @@ public class ProcessController {
 	@Autowired
 	private ProcessOperatedService processOperatedService;
 
-	@Operation(summary = "List processs", parameters = {@Parameter(name = "param", required = true)})
+	@Operation(summary = "List process(es)", parameters = {@Parameter(name = "param", required = true)})
 	@GetMapping(APIPath.ProcessPath.$)
 	public CommonResult<Map<String, Object>> list(ProcessListParam param) {
 		return CommonResult.putResult(processOperatedService.list(param));
@@ -52,7 +52,7 @@ public class ProcessController {
 		return CommonResult.putResult(processOperatedService.updateContent(param));
 	}
 
-	@Operation(summary = "Remove processs", parameters = {@Parameter(name = "param", required = true)})
+	@Operation(summary = "Remove process(es)", parameters = {@Parameter(name = "param", required = true)})
 	@DeleteMapping(APIPath.ProcessPath.$)
 	public CommonResult<Void> remove(@RequestBody ProcessDefinitionKeysParam param) {
 		return CommonResult.putResult(processOperatedService.remove(param));
@@ -82,7 +82,7 @@ public class ProcessController {
 		return CommonResult.putResult(processOperatedService.getContent(param));
 	}
 
-	@Operation(summary = "List processs by versions", parameters = {@Parameter(name = "param", required = true)})
+	@Operation(summary = "List process(es) by versions", parameters = {@Parameter(name = "param", required = true)})
 	@GetMapping(APIPath.ProcessPath.VERSIONS)
 	public CommonResult<List<ProcessWithVersionResult>> listVersions(ProcessDefinitionKeyParam param) {
 		return CommonResult.putResult(processOperatedService.versions(param));

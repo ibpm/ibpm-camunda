@@ -99,7 +99,7 @@
       />
       <el-table-column :label="$t('core.process.columns.processDefinitionKey')" show-overflow-tooltip min-width="120px">
         <template slot-scope="scope">
-          <span>{{ scope.row.processDefinitionKey }}</span>
+          <el-link class="el-icon-link" :type="scope.row.status | renderInstanceStatus" @click="openTrace(scope.row)">{{ scope.row.processDefinitionKey }}</el-link>
         </template>
       </el-table-column>
       <el-table-column :label="$t('columns.displayName')" min-width="120px">
@@ -117,9 +117,9 @@
           <span>{{ scope.row.assignNames }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('columns.nodeName')" show-overflow-tooltip align="center" class-name="status-col" width="100px">
+      <el-table-column :label="$t('columns.actName')" show-overflow-tooltip align="center" class-name="status-col" width="100px">
         <template slot-scope="scope">
-          <span>{{ scope.row.nodeName }}</span>
+          <span>{{ scope.row.actName }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('columns.assignTime')" width="160px" align="center">
@@ -316,10 +316,6 @@ export default {
       }
     },
     openTrace(row) {
-      if (!row.processInstanceId) {
-        this.$message.info(this.$t('tip.flowNotStart'))
-        return
-      }
       const route = {
         name: 'trace',
         params: {

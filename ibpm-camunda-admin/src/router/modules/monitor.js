@@ -60,24 +60,6 @@ const monitorRouter = {
         title: route => `${route.params.key}`,
         notMenu: true
       }
-    },
-    {
-      path: 'scheduler',
-      component: () => import('@/views/instance/scheduler'),
-      name: 'scheduler',
-      meta: {
-        title: 'scheduler',
-        icon: 'time'
-      }
-    },
-    {
-      path: 'executor',
-      component: () => import('@/views/instance/executor'),
-      name: 'executor',
-      meta: {
-        title: 'executor',
-        icon: 'random'
-      }
     }
   ]
 }

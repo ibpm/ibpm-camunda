@@ -14,9 +14,7 @@ public class InstanceListParam extends PageSortParam {
 
     protected String displayName;
 
-    protected Integer status;
-
-    protected List<Integer> statuses;
+    protected List<Integer> status;
 
     protected Long lowerStartTime;
 
@@ -59,21 +57,12 @@ public class InstanceListParam extends PageSortParam {
         return this;
     }
 
-    public Integer getStatus() {
+    public List<Integer> getStatus() {
         return status;
     }
 
-    public InstanceListParam setStatus(Integer status) {
+    public InstanceListParam setStatus(List<Integer> status) {
         this.status = status;
-        return this;
-    }
-
-    public List<Integer> getStatuses() {
-        return statuses;
-    }
-
-    public InstanceListParam setStatuses(List<Integer> statuses) {
-        this.statuses = statuses;
         return this;
     }
 

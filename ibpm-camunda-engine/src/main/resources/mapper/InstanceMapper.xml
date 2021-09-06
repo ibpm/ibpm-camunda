@@ -619,6 +619,7 @@
         <result property="superProcessInstanceId" column="SUPER_PROC_INST_ID" javaType="java.lang.String" jdbcType="VARCHAR" />
         <!--<result property="taskId" column="TASK_ID" javaType="java.lang.String" jdbcType="VARCHAR" />-->
         <result property="processDefinitionKey" column="PROC_DEF_KEY" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="processDefinitionId" column="PROC_DEF_ID" javaType="java.lang.String" jdbcType="VARCHAR" />
         <result property="processDefinitionName" column="PROC_DEF_NAME" javaType="java.lang.String" jdbcType="VARCHAR" />
         <!--<result property="status" column="STATUS" javaType="java.lang.Integer" jdbcType="INTEGER" />
         <result property="duration" column="DURATION" javaType="java.lang.Long" jdbcType="INTEGER" />-->

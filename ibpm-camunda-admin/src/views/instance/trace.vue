@@ -128,11 +128,41 @@
         </el-tab-pane>
       </el-tabs>
     </div>
+
+    <el-dialog
+      :title="editDialog.title"
+      :visible.sync="editDialog.param.visible "
+      :center="true"
+      :modal="true"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :before-close="close"
+    >
+      <div v-show="editDialog.param.visible">
+        <code-editor v-model="jsonData" :read-only="false" extension=".json" />
+        <el-row style="text-align: center; margin-top: 10px">
+          <el-col :span="3" :offset="6">
+            <el-tooltip :content="$t('tip.beforeActivity')" effect="dark" placement="top-start">
+              <el-button type="primary" @click="retry(-1)">
+                <svg-icon icon-class="hand-up" />
+              </el-button>
+            </el-tooltip>
+          </el-col>
+          <el-col :span="3" :offset="1">
+            <el-tooltip :content="$t('tip.afterActivity')" effect="light" placement="top-start">
+              <el-button type="primary" @click="retry(1)">
+                <svg-icon icon-class="hand-down" />
+              </el-button>
+            </el-tooltip>
+          </el-col>
+        </el-row>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listReq, listActReq, retryReq } from '@/api/instance/instance'
+import { listReq, listActReq, getArgsReq, retryReq } from '@/api/instance/instance'
 import { getContentReq } from '@/api/core/process'
 import BpmnViewer from 'bpmn-js'
 import miniMapModule from 'diagram-js-minimap'
@@ -140,12 +170,14 @@ import customTranslate from '@/utils/customTranslate'
 import customElementTemplate from '../core/components/process/element-templates/custom'
 import Pagination from '@/components/Pagination'
 import DateTimeGenerator from '@/components/DateTimeGenerator'
+import CodeEditor from '@/components/CodeEditor'
 
 export default {
   name: 'trace',
   components: {
     DateTimeGenerator,
-    Pagination
+    Pagination,
+    CodeEditor
   },
   data() {
     return {
@@ -176,7 +208,14 @@ export default {
       visible: false,
       activeName: 'flow',
       actNodes: [],
-      singleActNodes: []
+      singleActNodes: [],
+      jsonData: null,
+      editDialog: {
+        title: undefined,
+        param: {
+          visible: false
+        }
+      }
     }
   },
   computed: {
@@ -193,11 +232,20 @@ export default {
     this.search()
   },
   methods: {
+    openParam() {
+      this.jsonData = null
+      getArgsReq({ processInstanceId: this.processInstanceId }).then(res => {
+        this.editDialog.title = this.$t('dispatch.job.actions.param')
+        this.editDialog.param.visible = true
+        this.jsonData = JSON.parse(res.data.result)
+      })
+    },
     retry(direction) {
       this.$confirm(this.$t('tip.confirmMsg'), this.$t('tip.confirm'), { type: 'info' })
         .then(() => {
           const data = {
-            processInstanceId: this.processInstanceId
+            processInstanceId: this.processInstanceId,
+            jsonData: (!this.jsonData ? null : (typeof this.jsonData === 'string' ? JSON.parse(this.jsonData) : this.jsonData))
           }
           if (direction > 0) {
             data.afterActIds = [this.singleActNodes[0].actId]
@@ -206,6 +254,7 @@ export default {
           }
           retryReq(data)
             .then(res => {
+              this.editDialog.param.visible = false
               this.$message.success(res.data.msg)
               setTimeout(() => {
                 this.$router.push({ name: 'total', replace: true })
@@ -411,6 +460,9 @@ export default {
         })
       }
     },
+    close() {
+      this.editDialog.param.visible = false
+    },
     loadConst() {
       const lang = localStorage.getItem('language')
       import('@/lang/dict.js').then(array => {
@@ -422,5 +474,5 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  @import "~@/styles/bpmn.scss";
+@import "~@/styles/bpmn.scss";
 </style>
