@@ -42,7 +42,7 @@
     "url": "https://github.com/ibpm/ibpm-camunda/issues"
   },
   "dependencies": {
-    "axios": "0.21.1",
+    "axios": "0.21.2",
     "bpmn-js": "8.7.2",
     "bpmn-js-properties-panel": "0.44.0",
     "camunda-bpmn-moddle": "5.1.2",
