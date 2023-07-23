@@ -14,7 +14,7 @@
     <properties>
         <reflections.version>0.9.11</reflections.version>
         <oshi.version>4.2.1</oshi.version>
-        <commons.net.version>3.6</commons.net.version>
+        <commons.net.version>3.9.0</commons.net.version>
     </properties>
 
     <dependencies>
